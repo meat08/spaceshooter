@@ -50,7 +50,9 @@ public class MenuScreen extends BaseScreen {
         if(pos.dst2(touch) > direction.len2()) {
             pos.add(direction);
         }
-        else pos.set(touch);
+        else  {
+            pos.set(touch);
+        }
     }
 
     @Override
