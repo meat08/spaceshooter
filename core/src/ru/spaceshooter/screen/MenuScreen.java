@@ -62,6 +62,11 @@ public class MenuScreen extends BaseScreen {
     }
 
     @Override
+    public void hide() {
+        dispose();
+    }
+
+    @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         exitButtonSprite.touchDown(touch, pointer, button);
         playButtonSprite.touchDown(touch, pointer, button);
