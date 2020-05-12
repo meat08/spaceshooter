@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import ru.spaceshooter.base.Sprite;
 import ru.spaceshooter.math.Rect;
 
-public class BackgroundSprite extends Sprite {
+public class Background extends Sprite {
 
-    public BackgroundSprite(Texture texture) {
+    public Background(Texture texture) {
         super(new TextureRegion(texture));
     }
 

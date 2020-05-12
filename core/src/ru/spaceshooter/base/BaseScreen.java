@@ -11,11 +11,11 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.math.MatrixUtils;
 import ru.spaceshooter.math.Rect;
-import ru.spaceshooter.screen.ScreenController;
 
 public class BaseScreen implements Screen, InputProcessor {
+
     protected SpriteBatch batch;
-    protected ScreenController screenController;
+
     private Rect screenBounds;
     private Rect worldBounds;
     private Rect glBounds;
@@ -24,10 +24,6 @@ public class BaseScreen implements Screen, InputProcessor {
     private Matrix3 screenToWorld;
 
     private Vector2 touch;
-
-    public BaseScreen(ScreenController screenController) {
-        this.screenController = screenController;
-    }
 
     @Override
     public void show() {
@@ -63,17 +59,14 @@ public class BaseScreen implements Screen, InputProcessor {
     }
 
     public void resize(Rect worldBounds) {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override

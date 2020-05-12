@@ -1,82 +1,99 @@
 package ru.spaceshooter.screen;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.base.BaseScreen;
 import ru.spaceshooter.math.Rect;
-import ru.spaceshooter.sprite.BackgroundSprite;
-import ru.spaceshooter.sprite.ExitButtonSprite;
-import ru.spaceshooter.sprite.PlayButtonSprite;
-
+import ru.spaceshooter.sprite.Background;
+import ru.spaceshooter.sprite.ButtonExit;
+import ru.spaceshooter.sprite.ButtonPlay;
+import ru.spaceshooter.sprite.Star;
 
 public class MenuScreen extends BaseScreen {
-    private Texture exitButton;
-    private Texture background;
-    private Texture playButton;
-    private ExitButtonSprite exitButtonSprite;
-    private BackgroundSprite backgroundSprite;
-    private PlayButtonSprite playButtonSprite;
 
+    private final Game game;
+    private Texture bg;
+    private Background background;
+    private TextureAtlas atlas;
+    private ButtonExit buttonExit;
+    private ButtonPlay buttonPlay;
+    private Star[] stars;
 
-    public MenuScreen(ScreenController screenController) {
-        super(screenController);
+    public MenuScreen(Game game) {
+        this.game = game;
     }
 
     @Override
     public void show() {
         super.show();
-        exitButton = new Texture("textures/exit.png");
-        background = new Texture("textures/bg.png");
-        playButton = new Texture("textures/play.png");
+        bg = new Texture("textures/bg.png");
+        background = new Background(bg);
+        atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
+        buttonExit = new ButtonExit(atlas);
+        buttonPlay = new ButtonPlay(atlas, game);
+        stars = new Star[256];
+        for (int i = 0; i < stars.length; i++) {
+            stars[i] = new Star(atlas);
+        }
+    }
 
-        exitButtonSprite = new ExitButtonSprite(exitButton);
-        backgroundSprite = new BackgroundSprite(background);
-        playButtonSprite = new PlayButtonSprite(playButton, screenController);
+    @Override
+    public void resize(Rect worldBounds) {
+        background.resize(worldBounds);
+        buttonExit.resize(worldBounds);
+        buttonPlay.resize(worldBounds);
+        for (Star star : stars) {
+            star.resize(worldBounds);
+        }
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-        batch.begin();
-        backgroundSprite.draw(batch);
-        exitButtonSprite.draw(batch);
-        playButtonSprite.draw(batch);
-        batch.end();
-    }
-
-    @Override
-    public void resize(Rect worldBounds) {
-        super.resize(worldBounds);
-        backgroundSprite.resize(worldBounds);
-        exitButtonSprite.resize(worldBounds);
-        playButtonSprite.resize(worldBounds);
+        update(delta);
+        draw();
     }
 
     @Override
     public void dispose() {
-        background.dispose();
-        exitButton.dispose();
-        playButton.dispose();
+        bg.dispose();
+        atlas.dispose();
         super.dispose();
     }
 
     @Override
-    public void hide() {
-        dispose();
-    }
-
-    @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        exitButtonSprite.touchDown(touch, pointer, button);
-        playButtonSprite.touchDown(touch, pointer, button);
+        buttonExit.touchDown(touch, pointer, button);
+        buttonPlay.touchDown(touch, pointer, button);
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        exitButtonSprite.touchUp(touch, pointer, button);
-        playButtonSprite.touchUp(touch, pointer, button);
+        buttonExit.touchUp(touch, pointer, button);
+        buttonPlay.touchUp(touch, pointer, button);
         return false;
     }
+
+    private void update(float delta) {
+        for (Star star : stars) {
+            star.update(delta);
+        }
+    }
+
+    private void draw() {
+        batch.begin();
+        background.draw(batch);
+        for (Star star : stars) {
+            star.draw(batch);
+        }
+        buttonExit.draw(batch);
+        buttonPlay.draw(batch);
+        batch.end();
+    }
+
 }
