@@ -7,8 +7,10 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.base.BaseScreen;
 import ru.spaceshooter.math.Rect;
+import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.PlayerShip;
+import ru.spaceshooter.sprite.Star;
 
 public class GameScreen extends BaseScreen {
 
@@ -16,6 +18,8 @@ public class GameScreen extends BaseScreen {
     private Background background;
     private TextureAtlas atlas;
     private PlayerShip playerShip;
+    private Star[] stars;
+    private BulletPool bulletPool;
 
     @Override
     public void show() {
@@ -23,19 +27,28 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
-        playerShip = new PlayerShip(atlas);
+        stars = new Star[64];
+        for (int i = 0; i < stars.length; i++) {
+            stars[i] = new Star(atlas);
+        }
+        bulletPool = new BulletPool();
+        playerShip = new PlayerShip(atlas, bulletPool);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
         update(delta);
+        free();
         draw();
     }
 
     @Override
     public void resize(Rect worldBounds) {
         background.resize(worldBounds);
+        for (Star star : stars) {
+            star.resize(worldBounds);
+        }
         playerShip.resize(worldBounds);
     }
 
@@ -43,6 +56,7 @@ public class GameScreen extends BaseScreen {
     public void dispose() {
         bg.dispose();
         atlas.dispose();
+        bulletPool.dispose();
         super.dispose();
     }
 
@@ -77,13 +91,25 @@ public class GameScreen extends BaseScreen {
     }
 
     private void update(float delta) {
+        for (Star star : stars) {
+            star.update(delta);
+        }
+        bulletPool.updateActiveSprites(delta);
         playerShip.update(delta);
     }
 
     private void draw() {
         batch.begin();
         background.draw(batch);
+        for (Star star : stars) {
+            star.draw(batch);
+        }
+        bulletPool.drawActiveSprites(batch);
         playerShip.draw(batch);
         batch.end();
+    }
+
+    private void free() {
+        bulletPool.freeAllDestroyed();
     }
 }

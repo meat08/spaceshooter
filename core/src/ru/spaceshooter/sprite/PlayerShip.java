@@ -1,13 +1,16 @@
 package ru.spaceshooter.sprite;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.base.Sprite;
 import ru.spaceshooter.math.Rect;
+import ru.spaceshooter.pool.BulletPool;
 
 public class PlayerShip extends Sprite {
-    private static final float V_LEN = 0.003f;
+    private static final float V_LEN = 0.004f;
 
     private Vector2 touch;
     private Vector2 v;
@@ -20,11 +23,16 @@ public class PlayerShip extends Sprite {
     private boolean keyLeft = false;
     private boolean mouseClick = false;
 
+    private BulletPool bulletPool;
+    private TextureRegion bulletRegion;
+    private Vector2 bulletV;
 
-    public PlayerShip(TextureAtlas atlas) {
-        super(atlas.findRegion("main_ship")
-                .split(atlas.findRegion("main_ship").originalWidth/2,
-                        atlas.findRegion("main_ship").originalHeight)[0]);
+
+    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
+        super(atlas.findRegion("main_ship"), 1, 2, 2);
+        this.bulletPool = bulletPool;
+        bulletRegion = atlas.findRegion("bulletMainShip");
+        bulletV = new Vector2(0, 0.5f);
         touch = new Vector2();
         v = new Vector2();
         common = new Vector2();
@@ -42,25 +50,25 @@ public class PlayerShip extends Sprite {
                 mouseClick = false;
             }
         }
-        if (keyUp & pos.y < worldBounds.getTop()) {
+        if (keyUp & getTop() < worldBounds.getTop()) {
             pos.add(0, V_LEN);
         }
-        if (keyDown & pos.y > worldBounds.getBottom()) {
+        if (keyDown & getBottom() > worldBounds.getBottom()) {
             pos.add(0, -V_LEN);
         }
-        if (keyRight & pos.x < worldBounds.getRight()) {
+        if (keyRight & getRight() < worldBounds.getRight()) {
             pos.add(V_LEN, 0);
         }
-        if (keyLeft & pos.x > worldBounds.getLeft()) {
+        if (keyLeft & getLeft() > worldBounds.getLeft()) {
             pos.add(-V_LEN, 0);
         }
     }
 
     @Override
     public void resize(Rect worldBounds) {
-        setHeightProportion(0.2f);
-        setBottom(worldBounds.getBottom() + 0.05f);
         this.worldBounds = worldBounds;
+        setHeightProportion(0.15f);
+        setBottom(worldBounds.getBottom() + 0.05f);
     }
 
     @Override
@@ -87,22 +95,22 @@ public class PlayerShip extends Sprite {
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
-            case 19: {
+            case Input.Keys.W:
+            case Input.Keys.UP:
                 keyUp = true;
                 break;
-            }
-            case 20: {
+            case Input.Keys.S:
+            case Input.Keys.DOWN:
                 keyDown = true;
                 break;
-            }
-            case 21: {
+            case Input.Keys.A:
+            case Input.Keys.LEFT:
                 keyLeft = true;
                 break;
-            }
-            case 22: {
+            case Input.Keys.D:
+            case Input.Keys.RIGHT:
                 keyRight = true;
                 break;
-            }
         }
         return false;
     }
@@ -110,23 +118,28 @@ public class PlayerShip extends Sprite {
     @Override
     public boolean keyUp(int keycode) {
         switch (keycode) {
-            case 19: {
+            case Input.Keys.W:
+            case Input.Keys.UP:
                 keyUp = false;
                 break;
-            }
-            case 20: {
+            case Input.Keys.S:
+            case Input.Keys.DOWN:
                 keyDown = false;
                 break;
-            }
-            case 21: {
+            case Input.Keys.A:
+            case Input.Keys.LEFT:
                 keyLeft = false;
                 break;
-            }
-            case 22: {
+            case Input.Keys.D:
+            case Input.Keys.RIGHT:
                 keyRight = false;
                 break;
-            }
         }
         return false;
+    }
+
+    private void shoot() {
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, bulletRegion, pos, bulletV, 0.01f, worldBounds, 1);
     }
 }
