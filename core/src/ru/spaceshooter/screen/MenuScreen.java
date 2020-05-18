@@ -2,6 +2,7 @@ package ru.spaceshooter.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -22,6 +23,7 @@ public class MenuScreen extends BaseScreen {
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
     private Star[] stars;
+    private Music menuMusic;
 
     public MenuScreen(Game game) {
         this.game = game;
@@ -39,6 +41,10 @@ public class MenuScreen extends BaseScreen {
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/mainScreen.mp3"));
+        menuMusic.play();
+        menuMusic.setVolume(0.5f);
+        menuMusic.setLooping(true);
     }
 
     @Override
@@ -62,6 +68,7 @@ public class MenuScreen extends BaseScreen {
     public void dispose() {
         bg.dispose();
         atlas.dispose();
+        menuMusic.dispose();
         super.dispose();
     }
 

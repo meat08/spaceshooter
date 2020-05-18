@@ -1,6 +1,7 @@
 package ru.spaceshooter.sprite;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -26,20 +27,31 @@ public class PlayerShip extends Sprite {
     private BulletPool bulletPool;
     private TextureRegion bulletRegion;
     private Vector2 bulletV;
+    private Sound bulletSound;
+
+    private float shootTimer;
+    private float shootInterval;
 
 
-    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
+    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
         bulletRegion = atlas.findRegion("bulletMainShip");
+        this.bulletSound = bulletSound;
         bulletV = new Vector2(0, 0.5f);
         touch = new Vector2();
         v = new Vector2();
         common = new Vector2();
+        shootInterval = 0.25f;
     }
 
     @Override
     public void update(float delta) {
+        shootTimer += delta;
+        if (shootTimer >= shootInterval) {
+            shoot();
+            shootTimer = 0f;
+        }
         if (mouseClick) {
             common.set(touch);
             if ((common.sub(pos)).len() > V_LEN) {
@@ -141,5 +153,6 @@ public class PlayerShip extends Sprite {
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos, bulletV, 0.01f, worldBounds, 1);
+        bulletSound.play(0.5f);
     }
 }
