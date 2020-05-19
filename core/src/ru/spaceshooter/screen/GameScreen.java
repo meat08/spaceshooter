@@ -6,12 +6,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
 import ru.spaceshooter.base.BaseScreen;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.EnemyPool;
 import ru.spaceshooter.pool.ExplosionPool;
 import ru.spaceshooter.sprite.Background;
+import ru.spaceshooter.sprite.Bullet;
+import ru.spaceshooter.sprite.Enemy;
 import ru.spaceshooter.sprite.MainShip;
 import ru.spaceshooter.sprite.Star;
 import ru.spaceshooter.utils.EnemyEmitter;
@@ -54,6 +57,7 @@ public class GameScreen extends BaseScreen {
     public void render(float delta) {
         super.render(delta);
         update(delta);
+        checkCollision();
         free();
         draw();
     }
@@ -141,5 +145,24 @@ public class GameScreen extends BaseScreen {
         bulletPool.freeAllDestroyed();
         enemyPool.freeAllDestroyed();
         explosionPool.freeAllDestroyed();
+    }
+
+    private void checkCollision () {
+        final List<Enemy> enemies = enemyPool.getActiveObjects();
+        final List<Bullet> bullets = bulletPool.getActiveObjects();
+        for (Enemy enemy : enemies) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            for (Bullet bullet : bullets) {
+                if (bullet.isDestroyed() || bullet.getOwner() != mainShip) {
+                    continue;
+                }
+                if (enemy.isBulletHit(bullet)) {
+                    bullet.destroy();
+                    enemy.destroy();
+                }
+            }
+        }
     }
 }
