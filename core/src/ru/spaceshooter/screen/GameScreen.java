@@ -2,7 +2,6 @@ package ru.spaceshooter.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -10,27 +9,25 @@ import com.badlogic.gdx.math.Vector2;
 import ru.spaceshooter.base.BaseScreen;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
-import ru.spaceshooter.pool.EnemyShipPool;
+import ru.spaceshooter.pool.EnemyPool;
+import ru.spaceshooter.pool.ExplosionPool;
 import ru.spaceshooter.sprite.Background;
-import ru.spaceshooter.sprite.EnemyShip;
-import ru.spaceshooter.sprite.PlayerShip;
+import ru.spaceshooter.sprite.MainShip;
 import ru.spaceshooter.sprite.Star;
+import ru.spaceshooter.utils.EnemyEmitter;
 
 public class GameScreen extends BaseScreen {
-
-    private static final float ENEMY_INTERVAL = 1.5f;
 
     private Texture bg;
     private Background background;
     private TextureAtlas atlas;
-    private PlayerShip playerShip;
+    private MainShip mainShip;
     private Star[] stars;
     private BulletPool bulletPool;
-    private EnemyShipPool enemyShipPool;
-    private Sound bulletSound;
+    private EnemyPool enemyPool;
+    private ExplosionPool explosionPool;
+    private EnemyEmitter enemyEmitter;
     private Music gameMusic;
-    private Rect worldBounds;
-    private float enemyTimer;
 
     @Override
     public void show() {
@@ -43,13 +40,14 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        enemyShipPool = new EnemyShipPool();
-        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
-        playerShip = new PlayerShip(atlas, bulletPool, bulletSound);
+        explosionPool = new ExplosionPool(atlas);
+        enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds);
+        mainShip = new MainShip(atlas, bulletPool, explosionPool);
+        enemyEmitter = new EnemyEmitter(atlas, enemyPool);
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/gameScreen.mp3"));
         gameMusic.play();
-        gameMusic.setVolume(0.5f);
         gameMusic.setLooping(true);
+        gameMusic.setVolume(0.5f);
     }
 
     @Override
@@ -67,7 +65,8 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.resize(worldBounds);
         }
-        playerShip.resize(worldBounds);
+        mainShip.resize(worldBounds);
+        enemyEmitter.resize(worldBounds);
 
     }
 
@@ -76,39 +75,40 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
-        enemyShipPool.dispose();
-        bulletSound.dispose();
+        enemyPool.dispose();
+        explosionPool.dispose();
+        mainShip.dispose();
         gameMusic.dispose();
         super.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        playerShip.keyDown(keycode);
+        mainShip.keyDown(keycode);
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        playerShip.keyUp(keycode);
+        mainShip.keyUp(keycode);
         return false;
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        playerShip.touchDown(touch, pointer, button);
+        mainShip.touchDown(touch, pointer, button);
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        playerShip.touchUp(touch, pointer, button);
+        mainShip.touchUp(touch, pointer, button);
         return false;
     }
 
     @Override
     public boolean touchDragged(Vector2 touch, int pointer) {
-        playerShip.touchDragged(touch, pointer);
+        mainShip.touchDragged(touch, pointer);
         return false;
     }
 
@@ -116,19 +116,11 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.update(delta);
         }
-        enemyTimer += delta;
-        if (enemyTimer >= ENEMY_INTERVAL) {
-            createEnemy();
-            enemyTimer = 0f;
-        }
         bulletPool.updateActiveSprites(delta);
-        enemyShipPool.updateActiveSprites(delta);
-        playerShip.update(delta);
-    }
-
-    private void createEnemy() {
-        EnemyShip enemyShip = enemyShipPool.obtain();
-        enemyShip.set(atlas, worldBounds);
+        enemyPool.updateActiveSprites(delta);
+        explosionPool.updateActiveSprites(delta);
+        mainShip.update(delta);
+        enemyEmitter.generate(delta);
     }
 
     private void draw() {
@@ -138,13 +130,16 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         }
         bulletPool.drawActiveSprites(batch);
-        enemyShipPool.drawActiveSprites(batch);
-        playerShip.draw(batch);
+        enemyPool.drawActiveSprites(batch);
+        mainShip.draw(batch);
+        enemyPool.drawActiveSprites(batch);
+        explosionPool.drawActiveSprites(batch);
         batch.end();
     }
 
     private void free() {
         bulletPool.freeAllDestroyed();
-        enemyShipPool.freeAllDestroyed();
+        enemyPool.freeAllDestroyed();
+        explosionPool.freeAllDestroyed();
     }
 }
