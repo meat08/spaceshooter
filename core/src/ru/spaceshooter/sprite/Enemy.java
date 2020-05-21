@@ -17,6 +17,7 @@ public class Enemy extends Ship {
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound) {
         super(bulletPool, explosionPool, worldBounds, sound);
         startV = new Vector2(0f, -0.5f);
+        this.bulletPos = new Vector2();
     }
 
     @Override
@@ -25,6 +26,7 @@ public class Enemy extends Ship {
             pos.mulAdd(startV, delta);
         } else {
             pos.mulAdd(v, delta);
+            bulletPos.set(pos.x, pos.y - getHalfHeight());
             autoShoot(delta);
         }
         if (getBottom() <= worldBounds.getBottom()) {

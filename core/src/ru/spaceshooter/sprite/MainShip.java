@@ -47,6 +47,7 @@ public class MainShip extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
+        bulletPos.set(pos.x, pos.y + getHalfHeight());
         if (mouseClick) {
             common.set(touch);
             if ((common.sub(pos)).len() > V_LEN) {
