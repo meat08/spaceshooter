@@ -56,6 +56,10 @@ public class Ship extends Sprite {
     @Override
     public void update(float delta) {
         super.update(delta);
+        autoShoot(delta);
+    }
+
+    protected void autoShoot(float delta) {
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
             shoot();

@@ -12,24 +12,20 @@ import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
 
 public class Enemy extends Ship {
-    private Vector2 START_V;
+    private Vector2 startV;
 
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound) {
         super(bulletPool, explosionPool, worldBounds, sound);
-        START_V = new Vector2(0f, -0.5f);
+        startV = new Vector2(0f, -0.5f);
     }
 
     @Override
     public void update(float delta) {
         if (getTop() >= worldBounds.getTop()) {
-            pos.mulAdd(START_V, delta);
+            pos.mulAdd(startV, delta);
         } else {
             pos.mulAdd(v, delta);
-            reloadTimer += delta;
-            if (reloadTimer >= reloadInterval) {
-                shoot();
-                reloadTimer = 0f;
-            }
+            autoShoot(delta);
         }
         if (getBottom() <= worldBounds.getBottom()) {
             destroy();
