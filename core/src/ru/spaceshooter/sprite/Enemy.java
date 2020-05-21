@@ -21,11 +21,15 @@ public class Enemy extends Ship {
 
     @Override
     public void update(float delta) {
-        super.update(delta);
         if (getTop() >= worldBounds.getTop()) {
             pos.mulAdd(START_V, delta);
         } else {
             pos.mulAdd(v, delta);
+            reloadTimer += delta;
+            if (reloadTimer >= reloadInterval) {
+                shoot();
+                reloadTimer = 0f;
+            }
         }
         if (getBottom() <= worldBounds.getBottom()) {
             destroy();
