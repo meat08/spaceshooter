@@ -65,6 +65,7 @@ public class Ship extends Sprite {
     @Override
     public void update(float delta) {
         super.update(delta);
+        pos.mulAdd(v, delta);
         damageAnimateTimer += delta;
         if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL) {
             frame = 0;

@@ -11,20 +11,18 @@ import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
 
 public class Enemy extends Ship {
-    private Vector2 startV;
+
+    private static final float V_Y = -0.3f;
 
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound) {
         super(bulletPool, explosionPool, worldBounds, sound);
-        startV = new Vector2(0f, -0.5f);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        if (getTop() >= worldBounds.getTop()) {
-            pos.mulAdd(startV, delta);
-        } else {
-            pos.mulAdd(v, delta);
+        if (getTop() < worldBounds.getTop()) {
+            v.set(v0);
             bulletPos.set(pos.x, pos.y - getHalfHeight());
             autoShoot(delta);
         }
@@ -54,7 +52,7 @@ public class Enemy extends Ship {
         this.reloadTimer = reloadInterval;
         this.hp = hp;
         setHeightProportion(height);
-        this.v.set(v0);
+        this.v.set(0, V_Y);
     }
 
     public boolean isBulletCollision(Bullet bullet) {

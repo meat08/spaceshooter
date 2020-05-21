@@ -14,17 +14,14 @@ public class MainShip extends Ship {
 
     private static final float SIZE = 0.15f;
     private static final float MARGIN = 0.05f;
-    private static final float V_LEN = 0.004f;
+    private static final int INVALID_POINTER = -1;
     private static final int HP = 100;
 
-    private Vector2 touch;
-    private Vector2 common;
+    private int leftPointer;
+    private int rightPointer;
 
-    private boolean keyUp = false;
-    private boolean keyDown = false;
-    private boolean keyRight = false;
-    private boolean keyLeft = false;
-    private boolean mouseClick = false;
+    private boolean pressedLeft;
+    private boolean pressedRight;
 
 
 
@@ -36,12 +33,13 @@ public class MainShip extends Ship {
         bulletV = new Vector2(0, 0.5f);
         bulletHeight = 0.01f;
         damage = 1;
+        v0.set(0.4f, 0);
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
         reloadInterval = 0.25f;
         reloadTimer = reloadInterval;
         hp = HP;
         sound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
-        touch = new Vector2();
-        common = new Vector2();
     }
 
     @Override
@@ -49,27 +47,13 @@ public class MainShip extends Ship {
         super.update(delta);
         bulletPos.set(pos.x, pos.y + getHalfHeight());
         autoShoot(delta);
-        if (mouseClick) {
-            common.set(touch);
-            if ((common.sub(pos)).len() > V_LEN) {
-                pos.add(v);
-            } else {
-                pos.set(touch);
-                v.setZero();
-                mouseClick = false;
-            }
+        if (getLeft() < worldBounds.getLeft()) {
+            stop();
+            setLeft(worldBounds.getLeft());
         }
-        if (keyUp & getTop() < worldBounds.getTop()) {
-            pos.add(0, V_LEN);
-        }
-        if (keyDown & getBottom() > worldBounds.getBottom()) {
-            pos.add(0, -V_LEN);
-        }
-        if (keyRight & getRight() < worldBounds.getRight()) {
-            pos.add(V_LEN, 0);
-        }
-        if (keyLeft & getLeft() > worldBounds.getLeft()) {
-            pos.add(-V_LEN, 0);
+        if (getRight() > worldBounds.getRight()) {
+            stop();
+            setRight(worldBounds.getRight());
         }
     }
 
@@ -86,43 +70,54 @@ public class MainShip extends Ship {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        mouseClick = true;
-        this.touch.set(touch);
-        v.set(touch.sub(pos)).setLength(V_LEN);
+        if (touch.x < worldBounds.pos.x) {
+            if (leftPointer != INVALID_POINTER) {
+                return false;
+            }
+            leftPointer = pointer;
+            moveLeft();
+        } else {
+            if (rightPointer != INVALID_POINTER) {
+                return false;
+            }
+            rightPointer = pointer;
+            moveRight();
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(Vector2 touch, int pointer) {
-        mouseClick = true;
-        this.touch.set(touch);
-        v.set(touch.sub(pos)).setLength(V_LEN);
+        if (pointer == leftPointer) {
+            leftPointer = INVALID_POINTER;
+            if (rightPointer != INVALID_POINTER) {
+                moveRight();
+            } else {
+                stop();
+            }
+        } else if (pointer == rightPointer) {
+            rightPointer = INVALID_POINTER;
+            if (leftPointer != INVALID_POINTER) {
+                moveLeft();
+            } else {
+                stop();
+            }
+        }
         return false;
     }
 
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
-            case Input.Keys.W:
-            case Input.Keys.UP:
-                keyUp = true;
-                break;
-            case Input.Keys.S:
-            case Input.Keys.DOWN:
-                keyDown = true;
-                break;
             case Input.Keys.A:
             case Input.Keys.LEFT:
-                keyLeft = true;
+                pressedLeft = true;
+                moveLeft();
                 break;
             case Input.Keys.D:
             case Input.Keys.RIGHT:
-                keyRight = true;
+                pressedRight = true;
+                moveRight();
                 break;
         }
         return false;
@@ -131,21 +126,23 @@ public class MainShip extends Ship {
     @Override
     public boolean keyUp(int keycode) {
         switch (keycode) {
-            case Input.Keys.W:
-            case Input.Keys.UP:
-                keyUp = false;
-                break;
-            case Input.Keys.S:
-            case Input.Keys.DOWN:
-                keyDown = false;
-                break;
             case Input.Keys.A:
             case Input.Keys.LEFT:
-                keyLeft = false;
+                pressedLeft = false;
+                if (pressedRight) {
+                    moveRight();
+                } else {
+                    stop();
+                }
                 break;
             case Input.Keys.D:
             case Input.Keys.RIGHT:
-                keyRight = false;
+                pressedRight = false;
+                if (pressedLeft) {
+                    moveLeft();
+                } else {
+                    stop();
+                }
                 break;
         }
         return false;
@@ -157,5 +154,17 @@ public class MainShip extends Ship {
                 || bullet.getBottom() > pos.y
                 || bullet.getTop() < getBottom()
         );
+    }
+
+    private void moveRight() {
+        v.set(v0);
+    }
+
+    private void moveLeft() {
+        v.set(v0).rotate(180);
+    }
+
+    private void stop() {
+        v.setZero();
     }
 }
