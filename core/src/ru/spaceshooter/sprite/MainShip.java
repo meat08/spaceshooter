@@ -19,9 +19,12 @@ public class MainShip extends Ship {
 
     private int leftPointer;
     private int rightPointer;
+    private float accelerometerX;
 
     private boolean pressedLeft;
     private boolean pressedRight;
+    private boolean isTouched;
+    private boolean accelerometerAvailable;
 
 
 
@@ -40,6 +43,8 @@ public class MainShip extends Ship {
         reloadTimer = reloadInterval;
         hp = HP;
         sound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
+        accelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
+        isTouched = false;
     }
 
     @Override
@@ -47,6 +52,18 @@ public class MainShip extends Ship {
         super.update(delta);
         bulletPos.set(pos.x, pos.y + getHalfHeight());
         autoShoot(delta);
+        if (accelerometerAvailable) {
+            accelerometerX = Gdx.input.getAccelerometerX();
+            if (accelerometerX < -1.5f) {
+                moveRight();
+            } else if (accelerometerX > 1.5f) {
+                moveLeft();
+            } else {
+                if(!isTouched) {
+                    stop();
+                }
+            }
+        }
         if (getLeft() < worldBounds.getLeft()) {
             stop();
             setLeft(worldBounds.getLeft());
@@ -75,12 +92,14 @@ public class MainShip extends Ship {
                 return false;
             }
             leftPointer = pointer;
+            isTouched = true;
             moveLeft();
         } else {
             if (rightPointer != INVALID_POINTER) {
                 return false;
             }
             rightPointer = pointer;
+            isTouched = true;
             moveRight();
         }
         return false;
@@ -93,6 +112,7 @@ public class MainShip extends Ship {
             if (rightPointer != INVALID_POINTER) {
                 moveRight();
             } else {
+                isTouched = false;
                 stop();
             }
         } else if (pointer == rightPointer) {
@@ -100,6 +120,7 @@ public class MainShip extends Ship {
             if (leftPointer != INVALID_POINTER) {
                 moveLeft();
             } else {
+                isTouched = false;
                 stop();
             }
         }
