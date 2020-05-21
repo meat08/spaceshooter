@@ -60,6 +60,7 @@ public class Ship extends Sprite {
         if (reloadTimer >= reloadInterval) {
             shoot();
             reloadTimer = 0f;
+
         }
     }
 
