@@ -15,7 +15,7 @@ public class MainShip extends Ship {
     private static final float SIZE = 0.15f;
     private static final float MARGIN = 0.05f;
     private static final int INVALID_POINTER = -1;
-    private static final int HP = 1;
+    private static final int HP = 100;
 
     private int leftPointer;
     private int rightPointer;
