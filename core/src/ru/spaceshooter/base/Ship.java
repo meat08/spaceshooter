@@ -12,6 +12,8 @@ import ru.spaceshooter.sprite.Explosion;
 
 public class Ship extends Sprite {
 
+    private static final float DAMAGE_ANIMATE_INTERVAL = 0.1f;
+
     protected final Vector2 v0;
     protected final Vector2 v;
 
@@ -27,6 +29,7 @@ public class Ship extends Sprite {
 
     protected float reloadInterval;
     protected float reloadTimer;
+    private float damageAnimateTimer;
 
     protected Sound sound;
 
@@ -36,7 +39,9 @@ public class Ship extends Sprite {
         super(region, rows, cols, frames);
         v0 = new Vector2();
         v = new Vector2();
+        bulletV = new Vector2();
         bulletPos = new Vector2();
+        damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
     }
 
     public Ship(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound) {
@@ -47,6 +52,8 @@ public class Ship extends Sprite {
         v0 = new Vector2();
         v = new Vector2();
         bulletV = new Vector2();
+        bulletPos = new Vector2();
+        damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
     }
 
     @Override
@@ -58,7 +65,10 @@ public class Ship extends Sprite {
     @Override
     public void update(float delta) {
         super.update(delta);
-        autoShoot(delta);
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL) {
+            frame = 0;
+        }
     }
 
     protected void autoShoot(float delta) {
@@ -80,6 +90,20 @@ public class Ship extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
         sound.play();
+    }
+
+    public void damage(int damage) {
+        damageAnimateTimer = 0f;
+        frame = 1;
+        hp -= damage;
+        if (hp <= 0) {
+            hp = 0;
+            destroy();
+        }
+    }
+
+    public int getDamage() {
+        return damage;
     }
 
     private void boom() {

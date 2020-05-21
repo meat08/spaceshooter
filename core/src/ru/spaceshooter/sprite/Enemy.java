@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 
 
 import ru.spaceshooter.base.Ship;
-import ru.spaceshooter.base.Sprite;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
@@ -17,11 +16,11 @@ public class Enemy extends Ship {
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound) {
         super(bulletPool, explosionPool, worldBounds, sound);
         startV = new Vector2(0f, -0.5f);
-        this.bulletPos = new Vector2();
     }
 
     @Override
     public void update(float delta) {
+        super.update(delta);
         if (getTop() >= worldBounds.getTop()) {
             pos.mulAdd(startV, delta);
         } else {
@@ -58,9 +57,12 @@ public class Enemy extends Ship {
         this.v.set(v0);
     }
 
-    public boolean isBulletHit(Sprite bullet) {
-        return !(bullet.getBottom() > getTop() || bullet.getTop() < getBottom()
-                || bullet.getRight() < getLeft() || bullet.getLeft() > getRight());
+    public boolean isBulletCollision(Bullet bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > getTop()
+                || bullet.getTop() < pos.y
+        );
     }
 
 }

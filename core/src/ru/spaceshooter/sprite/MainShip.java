@@ -48,6 +48,7 @@ public class MainShip extends Ship {
     public void update(float delta) {
         super.update(delta);
         bulletPos.set(pos.x, pos.y + getHalfHeight());
+        autoShoot(delta);
         if (mouseClick) {
             common.set(touch);
             if ((common.sub(pos)).len() > V_LEN) {
@@ -148,5 +149,13 @@ public class MainShip extends Ship {
                 break;
         }
         return false;
+    }
+
+    public boolean isBulletCollision(Bullet bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > pos.y
+                || bullet.getTop() < getBottom()
+        );
     }
 }
