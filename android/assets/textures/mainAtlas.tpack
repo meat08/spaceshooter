@@ -5,70 +5,77 @@ filter: MipMapLinearNearest,Linear
 repeat: none
 explosion
   rotate: false
-  xy: 8, 84
+  xy: 1, 71
   size: 900, 900
   orig: 900, 900
   offset: 0, 0
   index: 0
 enemy2
   rotate: false
-  xy: 916, 646
+  xy: 903, 633
   size: 784, 338
   orig: 784, 338
   offset: 0, 0
   index: -1
-enemy0
-  rotate: false
-  xy: 1708, 675
-  size: 332, 309
-  orig: 332, 309
-  offset: 0, 0
-  index: -1
 enemy1
   rotate: false
-  xy: 916, 390
+  xy: 903, 383
   size: 440, 248
   orig: 440, 248
   offset: 0, 0
   index: -1
 main_ship
   rotate: false
-  xy: 916, 95
+  xy: 903, 94
   size: 390, 287
   orig: 390, 287
   offset: 0, 0
   index: -1
+enemy0
+  rotate: false
+  xy: 1689, 662
+  size: 332, 309
+  orig: 332, 309
+  offset: 0, 0
+  index: -1
 message_game_over
   rotate: false
-  xy: 8, 8
+  xy: 1, 1
   size: 493, 68
   orig: 493, 68
   offset: 0, 0
   index: -1
 button_new_game
   rotate: false
-  xy: 509, 20
+  xy: 496, 13
   size: 365, 56
   orig: 365, 56
   offset: 0, 0
   index: -1
+hp_bar
+  rotate: false
+  xy: 1345, 567
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 bulletEnemy
   rotate: false
-  xy: 1708, 651
+  xy: 903, 76
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 bulletMainShip
   rotate: false
-  xy: 1364, 622
+  xy: 1295, 365
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 star
   rotate: false
-  xy: 1314, 372
+  xy: 1689, 650
   size: 11, 10
   orig: 11, 10
   offset: 0, 0

@@ -19,6 +19,7 @@ import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.ButtonNewGame;
 import ru.spaceshooter.sprite.Enemy;
 import ru.spaceshooter.sprite.GameOver;
+import ru.spaceshooter.sprite.HpBar;
 import ru.spaceshooter.sprite.MainShip;
 import ru.spaceshooter.sprite.Star;
 import ru.spaceshooter.utils.EnemyEmitter;
@@ -46,6 +47,7 @@ public class GameScreen extends BaseScreen {
     private State state;
     private GameOver gameOver;
     private ButtonNewGame buttonNewGame;
+    private HpBar hpBar;
     private int frags;
     private Font font;
     private StringBuilder sbFrags;
@@ -69,6 +71,7 @@ public class GameScreen extends BaseScreen {
         enemyEmitter = new EnemyEmitter(atlas, enemyPool);
         gameOver = new GameOver(atlas);
         buttonNewGame = new ButtonNewGame(atlas, this);
+        hpBar = new HpBar(atlas);
         font = new Font("font/font.fnt", "font/font.png");
         sbFrags = new StringBuilder();
         sbHp = new StringBuilder();
@@ -100,6 +103,7 @@ public class GameScreen extends BaseScreen {
         enemyEmitter.resize(worldBounds);
         gameOver.resize(worldBounds);
         buttonNewGame.resize(worldBounds);
+        hpBar.resize(worldBounds, mainShip);
         font.setSize(FONT_SIZE);
     }
 
@@ -171,6 +175,7 @@ public class GameScreen extends BaseScreen {
             enemyPool.updateActiveSprites(delta);
             mainShip.update(delta);
             enemyEmitter.generate(delta, frags);
+            hpBar.update(delta);
         } else if (state == State.GAME_OVER) {
             buttonNewGame.update(delta);
         }
@@ -192,6 +197,7 @@ public class GameScreen extends BaseScreen {
         }
         explosionPool.drawActiveSprites(batch);
         printInfo();
+        hpBar.draw(batch, mainShip.getLeft(), mainShip.getBottom() - 0.05f);
         batch.end();
     }
 
@@ -250,7 +256,6 @@ public class GameScreen extends BaseScreen {
         sbLevel.setLength(0);
         font.draw(batch, sbFrags.append(FRAGS).append(frags), worldBounds.getLeft() + TEXT_MARGIN, worldBounds.getTop() - TEXT_MARGIN);
         font.draw(batch, sbHp.append(HP).append(mainShip.getHp()), worldBounds.pos.x, worldBounds.getTop() - TEXT_MARGIN, Align.center);
-        font.draw(batch, sbHp, mainShip.pos.x, mainShip.getBottom() - TEXT_MARGIN, Align.center);
         font.draw(batch, sbLevel.append(LEVEL).append(enemyEmitter.getLevel()), worldBounds.getRight() - TEXT_MARGIN, worldBounds.getTop() - TEXT_MARGIN, Align.right);
     }
 }
