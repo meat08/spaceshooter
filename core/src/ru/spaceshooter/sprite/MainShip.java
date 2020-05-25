@@ -188,4 +188,15 @@ public class MainShip extends Ship {
     private void stop() {
         v.setZero();
     }
+
+    public void startNewGame() {
+        flushDestroy();
+        stop();
+        hp = HP;
+        pressedRight = false;
+        pressedLeft = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+        pos.x = 0f;
+    }
 }
