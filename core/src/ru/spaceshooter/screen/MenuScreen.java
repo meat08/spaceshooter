@@ -9,9 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.base.BaseScreen;
 import ru.spaceshooter.math.Rect;
+import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.ButtonExit;
 import ru.spaceshooter.sprite.ButtonPlay;
+import ru.spaceshooter.sprite.LogoMainMenu;
 import ru.spaceshooter.sprite.Star;
 
 public class MenuScreen extends BaseScreen {
@@ -22,6 +24,8 @@ public class MenuScreen extends BaseScreen {
     private TextureAtlas atlas;
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
+    private LogoMainMenu logoMainMenu;
+    private HitExplodePool hitExplodePool;
     private Star[] stars;
     private Music menuMusic;
 
@@ -37,6 +41,8 @@ public class MenuScreen extends BaseScreen {
         atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas, game);
+        hitExplodePool = new HitExplodePool(atlas);
+        logoMainMenu = new LogoMainMenu(atlas, hitExplodePool);
         stars = new Star[256];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
@@ -52,6 +58,7 @@ public class MenuScreen extends BaseScreen {
         background.resize(worldBounds);
         buttonExit.resize(worldBounds);
         buttonPlay.resize(worldBounds);
+        logoMainMenu.resize(worldBounds);
         for (Star star : stars) {
             star.resize(worldBounds);
         }
@@ -87,6 +94,8 @@ public class MenuScreen extends BaseScreen {
     }
 
     private void update(float delta) {
+        logoMainMenu.update(delta);
+        hitExplodePool.updateActiveSprites(delta);
         for (Star star : stars) {
             star.update(delta);
         }
@@ -100,6 +109,8 @@ public class MenuScreen extends BaseScreen {
         }
         buttonExit.draw(batch);
         buttonPlay.draw(batch);
+        logoMainMenu.draw(batch);
+        hitExplodePool.drawActiveSprites(batch);
         batch.end();
     }
 

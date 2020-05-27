@@ -8,7 +8,7 @@ import ru.spaceshooter.pool.BonusPool;
 
 public class BonusEmitter {
 
-    private static final float GENERATE_INTERVAL = 10f;
+    private static final float GENERATE_INTERVAL = 12f;
 
     private final TextureRegion[] hpBonusRegion;
     private final TextureRegion[] bulletBonusRegion;
@@ -35,13 +35,13 @@ public class BonusEmitter {
             generateTimer = 0f;
             float type = (float) Math.random();
             if (type < 0.5f) {
-                if (ship.getHp() < ship.getMaxHp()) {
-                    bonusPool.obtain().set(hpBonusRegion, 1);
-                }
+                bonusPool.obtain().set(shieldBonusRegion, 3);
             } else if (type < 0.8f) {
                 bonusPool.obtain().set(bulletBonusRegion, 2);
             } else {
-                bonusPool.obtain().set(shieldBonusRegion, 3);
+                if (ship.getHp() < ship.getMaxHp()) {
+                    bonusPool.obtain().set(hpBonusRegion, 1);
+                }
             }
         }
     }

@@ -11,8 +11,8 @@ import ru.spaceshooter.sprite.Enemy;
 
 public class EnemyEmitter {
 
-    private static final float GENERATE_INTERVAL = 4f;
-    private static final float BOOST_GENERATE_INTERVAL = 0.01f;
+    private static final float GENERATE_INTERVAL = 4.05f;
+    private static final float BOOST_GENERATE_INTERVAL = 0.05f;
 
     private static final float ENEMY_SMALL_HEIGHT = 0.1f;
     private static final int ENEMY_SMALL_HP = 1;
@@ -75,7 +75,7 @@ public class EnemyEmitter {
 
     public void generate(float delta) {
         generateTimer += delta;
-        if (generateTimer >= GENERATE_INTERVAL - (level * BOOST_GENERATE_INTERVAL)) {
+        if (generateTimer >= (Math.max(GENERATE_INTERVAL - (level * BOOST_GENERATE_INTERVAL), 1.5f))) {
             generateTimer = 0f;
             Enemy enemy = enemyPool.obtain();
             float type = (float) Math.random();
@@ -86,7 +86,7 @@ public class EnemyEmitter {
                         bulletRegion,
                         ENEMY_SMALL_BULLET_HEIGHT,
                         ENEMY_SMALL_BULLET_VY,
-                        ENEMY_SMALL_BULLET_DAMAGE * level/2,
+                        level > 1 ? ENEMY_SMALL_BULLET_DAMAGE * (level/2) : ENEMY_SMALL_BULLET_DAMAGE,
                         ENEMY_SMALL_RELOAD_INTERVAL,
                         ENEMY_SMALL_HP,
                         ENEMY_SMALL_HEIGHT
@@ -98,7 +98,7 @@ public class EnemyEmitter {
                         bulletRegion,
                         ENEMY_MEDIUM_BULLET_HEIGHT,
                         ENEMY_MEDIUM_BULLET_VY,
-                        ENEMY_MEDIUM_BULLET_DAMAGE * level/2,
+                        level > 1 ? ENEMY_MEDIUM_BULLET_DAMAGE * (level/2) : ENEMY_MEDIUM_BULLET_DAMAGE,
                         ENEMY_MEDIUM_RELOAD_INTERVAL,
                         ENEMY_MEDIUM_HP,
                         ENEMY_MEDIUM_HEIGHT
@@ -110,7 +110,7 @@ public class EnemyEmitter {
                         bulletRegion,
                         ENEMY_BIG_BULLET_HEIGHT,
                         ENEMY_BIG_BULLET_VY,
-                        ENEMY_BIG_BULLET_DAMAGE * level/2,
+                        level > 1 ? ENEMY_BIG_BULLET_DAMAGE * (level/2) : ENEMY_BIG_BULLET_DAMAGE,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         ENEMY_BIG_HP,
                         ENEMY_BIG_HEIGHT

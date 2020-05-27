@@ -34,6 +34,6 @@ public class HpBar extends Sprite {
 
     @Override
     public void update(float delta) {
-        width = getWidth() * (ship.getHp() * 0.01f);
+        width = getWidth() * (((float)ship.getHp() / ship.getMaxHp()));
     }
 }

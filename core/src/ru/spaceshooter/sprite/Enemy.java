@@ -9,13 +9,14 @@ import ru.spaceshooter.base.Ship;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
+import ru.spaceshooter.pool.HitExplodePool;
 
 public class Enemy extends Ship {
 
     private static final float V_Y = -0.3f;
 
-    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound) {
-        super(bulletPool, explosionPool, worldBounds, sound);
+    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound, HitExplodePool hitExplodePool) {
+        super(bulletPool, explosionPool, worldBounds, sound, hitExplodePool);
     }
 
     @Override

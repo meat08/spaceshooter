@@ -20,9 +20,9 @@ public class ButtonPlay extends ScaledButton {
 
     @Override
     public void resize(Rect worldBounds) {
-        setHeightProportion(0.23f);
-        setBottom(worldBounds.getBottom() + MARGIN);
-        setLeft(worldBounds.getLeft() + MARGIN);
+        super.resize(worldBounds);
+        setHeightProportion(0.085f);
+        setBottom(worldBounds.getBottom() + MARGIN + getHeight() + 0.01f);
     }
 
     @Override

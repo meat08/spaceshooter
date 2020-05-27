@@ -9,6 +9,7 @@ import ru.spaceshooter.base.Ship;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
+import ru.spaceshooter.pool.HitExplodePool;
 
 public class MainShip extends Ship {
 
@@ -35,13 +36,14 @@ public class MainShip extends Ship {
 
 
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
-        super(atlas.findRegion("main_ship"), 1, 2, 2);
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, HitExplodePool hitExplodePool) {
+        super(atlas.findRegion("main_ship"), 1, 1, 1);
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
+        this.hitExplodePool = hitExplodePool;
         bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
-        bulletHeight = 0.01f;
+        bulletHeight = 0.03f;
         damage = 1;
         v0.set(0.4f, 0);
         leftPointer = INVALID_POINTER;
@@ -65,7 +67,9 @@ public class MainShip extends Ship {
         if (isShootBoost) {
             boostShoot(delta);
         }
-        activateShield(delta);
+        if (isShield) {
+            activateShield(delta);
+        }
         if (accelerometerAvailable) {
             float accelerometerX = Gdx.input.getAccelerometerX();
             if (accelerometerX < -SENSE) {
@@ -208,6 +212,7 @@ public class MainShip extends Ship {
 
     public void shootSpeedBoost() {
         isShootBoost = !isShootBoost;
+        isShootMulti = !isShootMulti;
         reloadInterval = reloadInterval * BOOST_SHOOT_FACTOR;
     }
 
@@ -233,6 +238,7 @@ public class MainShip extends Ship {
             reloadInterval = DEFAULT_RELOAD_INTERVAL;
             boostTimer = 0f;
             isShootBoost = false;
+            isShootMulti = false;
         }
     }
 

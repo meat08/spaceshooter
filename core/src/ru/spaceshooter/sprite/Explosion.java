@@ -14,14 +14,14 @@ public class Explosion extends Sprite {
     private Sound sound;
 
     public Explosion(TextureAtlas atlas, Sound sound) {
-        super(atlas.findRegion("explosion"), 9, 9, 74);
+        super(atlas.findRegion("explosion"), 4, 4, 16);
         this.sound = sound;
     }
 
     public void set(float height, Vector2 pos) {
         setHeightProportion(height);
         this.pos.set(pos);
-        sound.play();
+        sound.play(0.7f);
         frame = 0;
     }
 

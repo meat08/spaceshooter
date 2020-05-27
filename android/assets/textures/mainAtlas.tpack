@@ -1,103 +1,131 @@
 
 mainAtlas.png
-size: 3644,939
+size: 4055,1124
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
 bonus0
   rotate: false
-  xy: 904, 2
+  xy: 1864, 22
   size: 1500, 201
   orig: 1500, 201
   offset: 0, 0
   index: -1
 bonus1
   rotate: false
-  xy: 904, 415
+  xy: 1606, 600
   size: 1952, 522
   orig: 1952, 522
   offset: 0, 0
   index: -1
 bonus2
   rotate: false
-  xy: 904, 205
+  xy: 2392, 225
   size: 1600, 208
   orig: 1600, 208
   offset: 0, 0
   index: -1
+btExit
+  rotate: false
+  xy: 904, 106
+  size: 633, 114
+  orig: 633, 114
+  offset: 0, 0
+  index: -1
 bulletEnemy
   rotate: false
-  xy: 3584, 331
+  xy: 3955, 786
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 bulletMainShip
   rotate: false
-  xy: 3584, 313
-  size: 16, 16
-  orig: 16, 16
+  xy: 3927, 768
+  size: 26, 34
+  orig: 26, 34
   offset: 0, 0
   index: -1
 button_new_game
   rotate: false
-  xy: 2506, 160
+  xy: 3560, 746
   size: 365, 56
   orig: 365, 56
   offset: 0, 0
   index: -1
 enemy0
   rotate: false
-  xy: 2858, 288
+  xy: 3560, 435
   size: 332, 309
   orig: 332, 309
   offset: 0, 0
   index: -1
 enemy1
   rotate: false
-  xy: 3192, 349
+  xy: 3560, 804
   size: 440, 248
   orig: 440, 248
   offset: 0, 0
   index: -1
 enemy2
   rotate: false
-  xy: 2858, 599
+  xy: 1606, 260
   size: 784, 338
   orig: 784, 338
   offset: 0, 0
   index: -1
 explosion
   rotate: false
-  xy: 2, 37
-  size: 900, 900
-  orig: 900, 900
+  xy: 2, 103
+  size: 900, 1019
+  orig: 900, 1019
   offset: 0, 0
   index: 0
+hit
+  rotate: false
+  xy: 1606, 2
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 hp_bar
   rotate: false
-  xy: 3001, 222
+  xy: 3894, 680
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 main_ship
   rotate: false
-  xy: 3192, 60
-  size: 390, 287
-  orig: 390, 287
+  xy: 904, 222
+  size: 700, 900
+  orig: 700, 900
   offset: 0, 0
   index: -1
 message_game_over
   rotate: false
-  xy: 2506, 218
+  xy: 3560, 1054
   size: 493, 68
   orig: 493, 68
   offset: 0, 0
   index: -1
+pause
+  rotate: false
+  xy: 2392, 449
+  size: 900, 149
+  orig: 900, 149
+  offset: 0, 0
+  index: -1
+resume
+  rotate: false
+  xy: 3366, 113
+  size: 625, 110
+  orig: 625, 110
+  offset: 0, 0
+  index: -1
 star
   rotate: false
-  xy: 3584, 301
+  xy: 3955, 774
   size: 11, 10
   orig: 11, 10
   offset: 0, 0

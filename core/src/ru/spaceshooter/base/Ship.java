@@ -7,12 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
+import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.Explosion;
+import ru.spaceshooter.sprite.HitExplode;
 
 public class Ship extends Sprite {
-
-    private static final float DAMAGE_ANIMATE_INTERVAL = 0.1f;
 
     protected final Vector2 v0;
     protected final Vector2 v;
@@ -22,6 +22,7 @@ public class Ship extends Sprite {
     protected ExplosionPool explosionPool;
     protected BulletPool bulletPool;
     protected TextureRegion bulletRegion;
+    protected HitExplodePool hitExplodePool;
     protected Vector2 bulletV;
     protected Vector2 bulletPos;
     protected float bulletHeight;
@@ -29,7 +30,7 @@ public class Ship extends Sprite {
 
     protected float reloadInterval;
     protected float reloadTimer;
-    private float damageAnimateTimer;
+    protected boolean isShootMulti;
 
     protected Sound sound;
 
@@ -42,19 +43,19 @@ public class Ship extends Sprite {
         v = new Vector2();
         bulletV = new Vector2();
         bulletPos = new Vector2();
-        damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
+        isShootMulti = false;
     }
 
-    public Ship(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound) {
+    public Ship(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound, HitExplodePool hitExplodePool) {
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
+        this.hitExplodePool = hitExplodePool;
         this.worldBounds = worldBounds;
         this.sound = sound;
         v0 = new Vector2();
         v = new Vector2();
         bulletV = new Vector2();
         bulletPos = new Vector2();
-        damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
     }
 
     @Override
@@ -67,16 +68,16 @@ public class Ship extends Sprite {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
-        damageAnimateTimer += delta;
-        if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL) {
-            frame = 0;
-        }
     }
 
     protected void autoShoot(float delta) {
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
-            shoot();
+            if (isShootMulti) {
+                shootMulti();
+            } else {
+                shoot();
+            }
             reloadTimer = 0f;
 
         }
@@ -91,12 +92,22 @@ public class Ship extends Sprite {
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
-        sound.play();
+        sound.play(0.3f);
+    }
+
+    private void shootMulti() {
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
+        Bullet bullet1 = bulletPool.obtain();
+        bullet1.set(this, bulletRegion, bulletPos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage);
+        Bullet bullet2 = bulletPool.obtain();
+        bullet2.set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage);
+        sound.play(0.3f);
     }
 
     public void damage(int damage) {
-        damageAnimateTimer = 0f;
-        frame = 1;
+        final HitExplode hitExplode = hitExplodePool.obtain();
+        hitExplode.set(getHeight(), getLeft(), getRight(), getTop(), getBottom());
         hp -= damage;
         if (hp <= 0) {
             hp = 0;
@@ -116,8 +127,8 @@ public class Ship extends Sprite {
         return maxHp;
     }
 
-    public void setMax_hp(int maxHp) {
-        this.maxHp = maxHp;
+    public void addMaxHp(int hp) {
+        this.maxHp += hp;
     }
 
     private void boom() {

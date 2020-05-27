@@ -45,7 +45,9 @@ public class Star extends Sprite {
     }
 
     public void setV(float vy) {
-        this.v.add(0f, -vy);
+        if (this.v.y > -1f) {
+            this.v.add(0f, -vy);
+        }
     }
 
     public void setVStart() {
