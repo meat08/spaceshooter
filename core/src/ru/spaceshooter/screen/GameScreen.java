@@ -302,7 +302,7 @@ public class GameScreen extends BaseScreen {
             if (mainShip.pos.dst(bonus.pos) < minDist) {
                 switch (bonus.getBonusType()) {
                     case 1: {
-                        mainShip.addHp(10 * enemyEmitter.getLevel());
+                        mainShip.addHp(10 * level);
                         bonus.destroy();
                         break;
                     }
