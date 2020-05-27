@@ -15,16 +15,23 @@ public class MainShip extends Ship {
     private static final float SIZE = 0.15f;
     private static final float MARGIN = 0.05f;
     private static final int INVALID_POINTER = -1;
-    private static final int HP = 100;
+    private static final float BOOST_SHOOT_INTERVAL = 4f;
+    private static final float BOOST_SHOOT_FACTOR = 0.5f;
+    private static final float BOOST_SHIELD_INTERVAL = 5f;
+    private static final float SENSE = 0.85f;
+    private static final float DEFAULT_RELOAD_INTERVAL = 0.25f;
 
     private int leftPointer;
     private int rightPointer;
-    private float accelerometerX;
+    private float boostTimer;
+    private float shieldTimer;
 
     private boolean pressedLeft;
     private boolean pressedRight;
     private boolean isTouched;
     private boolean accelerometerAvailable;
+    private boolean isShield;
+    private boolean isShootBoost;
 
 
 
@@ -39,12 +46,15 @@ public class MainShip extends Ship {
         v0.set(0.4f, 0);
         leftPointer = INVALID_POINTER;
         rightPointer = INVALID_POINTER;
-        reloadInterval = 0.25f;
+        reloadInterval = DEFAULT_RELOAD_INTERVAL;
         reloadTimer = reloadInterval;
-        hp = HP;
+        maxHp = 100;
+        hp = maxHp;
         sound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         accelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
         isTouched = false;
+        isShield = false;
+        isShootBoost = false;
     }
 
     @Override
@@ -52,11 +62,15 @@ public class MainShip extends Ship {
         super.update(delta);
         bulletPos.set(pos.x, pos.y + getHalfHeight());
         autoShoot(delta);
+        if (isShootBoost) {
+            boostShoot(delta);
+        }
+        activateShield(delta);
         if (accelerometerAvailable) {
-            accelerometerX = Gdx.input.getAccelerometerX();
-            if (accelerometerX < -1.5f) {
+            float accelerometerX = Gdx.input.getAccelerometerX();
+            if (accelerometerX < -SENSE) {
                 moveRight();
-            } else if (accelerometerX > 1.5f) {
+            } else if (accelerometerX > SENSE) {
                 moveLeft();
             } else {
                 if(!isTouched) {
@@ -83,6 +97,13 @@ public class MainShip extends Ship {
 
     public void dispose() {
         sound.dispose();
+    }
+
+    @Override
+    public void damage(int damage) {
+        if (!isShield) {
+            super.damage(damage);
+        }
     }
 
     @Override
@@ -177,6 +198,44 @@ public class MainShip extends Ship {
         );
     }
 
+    public void addHp(int hp) {
+        if (this.hp + hp >= maxHp) {
+            this.hp = maxHp;
+        } else {
+            this.hp += hp;
+        }
+    }
+
+    public void shootSpeedBoost() {
+        isShootBoost = !isShootBoost;
+        reloadInterval = reloadInterval * BOOST_SHOOT_FACTOR;
+    }
+
+    public void setShield() {
+        isShield = true;
+    }
+
+    public boolean isShield() {
+        return isShield;
+    }
+
+    private void activateShield(float delta) {
+        shieldTimer += delta;
+        if (shieldTimer >= BOOST_SHIELD_INTERVAL) {
+            shieldTimer = 0f;
+            isShield = false;
+        }
+    }
+
+    private void boostShoot(float delta) {
+        boostTimer += delta;
+        if (boostTimer >= BOOST_SHOOT_INTERVAL) {
+            reloadInterval = DEFAULT_RELOAD_INTERVAL;
+            boostTimer = 0f;
+            isShootBoost = false;
+        }
+    }
+
     private void moveRight() {
         v.set(v0);
     }
@@ -192,7 +251,12 @@ public class MainShip extends Ship {
     public void startNewGame() {
         flushDestroy();
         stop();
-        hp = HP;
+        maxHp = 100;
+        hp = maxHp;
+        reloadInterval = DEFAULT_RELOAD_INTERVAL;
+        isTouched = false;
+        isShield = false;
+        isShootBoost = false;
         pressedRight = false;
         pressedLeft = false;
         leftPointer = INVALID_POINTER;
