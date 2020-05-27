@@ -34,6 +34,7 @@ public class Ship extends Sprite {
     protected Sound sound;
 
     protected int hp;
+    protected int maxHp;
 
     public Ship(TextureRegion region, int rows, int cols, int frames) {
         super(region, rows, cols, frames);
@@ -87,7 +88,7 @@ public class Ship extends Sprite {
         boom();
     }
 
-    protected void shoot() {
+    private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
         sound.play();
@@ -109,6 +110,14 @@ public class Ship extends Sprite {
 
     public int getDamage() {
         return damage;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public void setMax_hp(int maxHp) {
+        this.maxHp = maxHp;
     }
 
     private void boom() {
