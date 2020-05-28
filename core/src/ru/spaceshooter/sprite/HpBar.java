@@ -9,26 +9,27 @@ import ru.spaceshooter.math.Rect;
 
 public class HpBar extends Sprite {
 
-    private float width;
     private Ship ship;
+    private float width;
 
     public HpBar(TextureAtlas atlas) {
         super(atlas.findRegion("hp_bar"));
     }
 
-    public void draw(SpriteBatch batch, float x, float y) {
+    public void draw(SpriteBatch batch) {
         batch.draw(
                 regions[frame],
-                x, y,
+                getLeft(), getBottom(),
                 width, halfHeight
         );
     }
 
     public void resize(Rect worldBounds, Ship ship) {
         super.resize(worldBounds);
-        this.width = ship.getWidth();
         this.ship = ship;
-        setHeightProportion(width);
+        width = worldBounds.getWidth();
+        setHeightProportion(0.01f);
+        setWidth(width);
         setBottom(worldBounds.getBottom());
     }
 

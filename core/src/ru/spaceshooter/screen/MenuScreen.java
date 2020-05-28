@@ -3,6 +3,7 @@ package ru.spaceshooter.screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -12,6 +13,7 @@ import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.ButtonExit;
+import ru.spaceshooter.sprite.ButtonLoad;
 import ru.spaceshooter.sprite.ButtonPlay;
 import ru.spaceshooter.sprite.LogoMainMenu;
 import ru.spaceshooter.sprite.Star;
@@ -24,8 +26,10 @@ public class MenuScreen extends BaseScreen {
     private TextureAtlas atlas;
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
+    private ButtonLoad buttonLoad;
     private LogoMainMenu logoMainMenu;
     private HitExplodePool hitExplodePool;
+    private FileHandle fileHandle;
     private Star[] stars;
     private Music menuMusic;
 
@@ -37,10 +41,12 @@ public class MenuScreen extends BaseScreen {
     public void show() {
         super.show();
         bg = new Texture("textures/bg.png");
+        fileHandle = Gdx.files.local("bin/GameData.json");
         background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas, game);
+        buttonLoad = new ButtonLoad(atlas, game, fileHandle);
         hitExplodePool = new HitExplodePool(atlas);
         logoMainMenu = new LogoMainMenu(atlas, hitExplodePool);
         stars = new Star[256];
@@ -58,6 +64,7 @@ public class MenuScreen extends BaseScreen {
         background.resize(worldBounds);
         buttonExit.resize(worldBounds);
         buttonPlay.resize(worldBounds);
+        buttonLoad.resize(worldBounds);
         logoMainMenu.resize(worldBounds);
         for (Star star : stars) {
             star.resize(worldBounds);
@@ -83,6 +90,7 @@ public class MenuScreen extends BaseScreen {
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         buttonExit.touchDown(touch, pointer, button);
         buttonPlay.touchDown(touch, pointer, button);
+        buttonLoad.touchDown(touch, pointer, button);
         return false;
     }
 
@@ -90,6 +98,7 @@ public class MenuScreen extends BaseScreen {
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         buttonExit.touchUp(touch, pointer, button);
         buttonPlay.touchUp(touch, pointer, button);
+        buttonLoad.touchUp(touch, pointer, button);
         return false;
     }
 
@@ -109,6 +118,7 @@ public class MenuScreen extends BaseScreen {
         }
         buttonExit.draw(batch);
         buttonPlay.draw(batch);
+        buttonLoad.draw(batch);
         logoMainMenu.draw(batch);
         hitExplodePool.drawActiveSprites(batch);
         batch.end();

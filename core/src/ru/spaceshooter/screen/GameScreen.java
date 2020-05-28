@@ -3,10 +3,13 @@ package ru.spaceshooter.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Base64Coder;
+import com.badlogic.gdx.utils.Json;
 
 import java.util.List;
 import ru.spaceshooter.base.BaseScreen;
@@ -22,16 +25,19 @@ import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.ButtonExit;
 import ru.spaceshooter.sprite.ButtonNewGame;
 import ru.spaceshooter.sprite.ButtonResume;
+import ru.spaceshooter.sprite.ButtonSave;
 import ru.spaceshooter.sprite.Enemy;
+import ru.spaceshooter.sprite.EngineMainShip;
 import ru.spaceshooter.sprite.ForceShield;
 import ru.spaceshooter.sprite.GameOver;
 import ru.spaceshooter.sprite.HpBar;
 import ru.spaceshooter.sprite.Bonus;
 import ru.spaceshooter.sprite.MainShip;
-import ru.spaceshooter.sprite.Pause;
+import ru.spaceshooter.sprite.PauseLogo;
 import ru.spaceshooter.sprite.Star;
 import ru.spaceshooter.utils.BonusEmitter;
 import ru.spaceshooter.utils.EnemyEmitter;
+import ru.spaceshooter.utils.GameData;
 
 public class GameScreen extends BaseScreen {
 
@@ -50,6 +56,7 @@ public class GameScreen extends BaseScreen {
     private Background background;
     private TextureAtlas atlas;
     private MainShip mainShip;
+    private EngineMainShip engineMainShip;
     private ForceShield forceShield;
     private Star[] stars;
     private BulletPool bulletPool;
@@ -63,9 +70,10 @@ public class GameScreen extends BaseScreen {
     private State state;
     private State previousState;
     private GameOver gameOver;
-    private Pause pause;
+    private PauseLogo pauseLogo;
     private ButtonExit buttonExit;
     private ButtonResume buttonResume;
+    private ButtonSave buttonSave;
     private ButtonNewGame buttonNewGame;
     private HpBar hpBar;
     private int frags;
@@ -76,10 +84,16 @@ public class GameScreen extends BaseScreen {
     private StringBuilder sbFrags;
     private StringBuilder sbHp;
     private StringBuilder sbLevel;
+    private Json json;
+    private FileHandle fileHandle;
+    private GameData gameData;
 
     @Override
     public void show() {
         super.show();
+        gameData = new GameData();
+        json = new Json();
+        fileHandle = Gdx.files.local("bin/GameData.json");
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
@@ -93,13 +107,15 @@ public class GameScreen extends BaseScreen {
         enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, hitExplodePool);
         bonusPool = new BonusPool(worldBounds);
         mainShip = new MainShip(atlas, bulletPool, explosionPool, hitExplodePool);
+        engineMainShip = new EngineMainShip(atlas);
         forceShield = new ForceShield(atlas);
         enemyEmitter = new EnemyEmitter(atlas, enemyPool);
         bonusEmitter = new BonusEmitter(atlas, bonusPool, mainShip);
         gameOver = new GameOver(atlas);
-        pause = new Pause(atlas);
+        pauseLogo = new PauseLogo(atlas);
         buttonExit = new ButtonExit(atlas);
         buttonResume = new ButtonResume(atlas, this);
+        buttonSave = new ButtonSave(atlas, this);
         buttonNewGame = new ButtonNewGame(atlas, this);
         hpBar = new HpBar(atlas);
         font = new Font("font/font.fnt", "font/font.png");
@@ -132,10 +148,12 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
+        engineMainShip.resize(worldBounds);
         enemyEmitter.resize(worldBounds);
         gameOver.resize(worldBounds);
-        pause.resize(worldBounds);
+        pauseLogo.resize(worldBounds);
         buttonResume.resize(worldBounds);
+        buttonSave.resize(worldBounds);
         buttonNewGame.resize(worldBounds);
         hpBar.resize(worldBounds, mainShip);
         forceShield.resize(worldBounds, mainShip);
@@ -201,9 +219,11 @@ public class GameScreen extends BaseScreen {
             mainShip.touchDown(touch, pointer, button);
         } else if (state == State.GAME_OVER) {
             buttonNewGame.touchDown(touch, pointer, button);
+            buttonExit.touchDown(touch, pointer, button);
         } else if (state == State.PAUSE) {
             buttonExit.touchDown(touch, pointer, button);
             buttonResume.touchDown(touch, pointer, button);
+            buttonSave.touchDown(touch, pointer, button);
         }
         return false;
     }
@@ -214,11 +234,41 @@ public class GameScreen extends BaseScreen {
             mainShip.touchUp(touch, pointer, button);
         } else if (state == State.GAME_OVER) {
             buttonNewGame.touchUp(touch, pointer, button);
+            buttonExit.touchUp(touch, pointer, button);
         } else if (state == State.PAUSE) {
             buttonExit.touchUp(touch, pointer, button);
             buttonResume.touchUp(touch, pointer, button);
+            buttonSave.touchUp(touch, pointer, button);
         }
         return false;
+    }
+
+    public void saveGame() {
+        gameData.saveGameData(frags, level, mainShip.getMaxHp(), mainShip.getHp(), mainShip.pos.x);
+        for (Star star : stars) {
+            gameData.saveStarV(star.getVY());
+        }
+        if (gameData != null) {
+            fileHandle.writeString(Base64Coder.encodeString(json.prettyPrint(gameData)),false);
+        }
+    }
+
+    public void loadGame() {
+        if (fileHandle.exists()) {
+            gameData = json.fromJson(GameData.class,
+                    Base64Coder.decodeString(fileHandle.readString()));
+            frags = gameData.getFrags();
+            level = gameData.getLevel();
+            enemyEmitter.setLevel(level);
+            mainShip.setMaxHp(gameData.getMaxHp());
+            mainShip.setHp(gameData.getHp());
+            mainShip.pos.x = gameData.getMainShipX();
+            for (Star star : stars) {
+                for (float vy : gameData.getStarV()) {
+                    star.setVY(vy);
+                }
+            }
+        }
     }
 
     public void startNewGame() {
@@ -248,15 +298,16 @@ public class GameScreen extends BaseScreen {
             bonusPool.updateActiveSprites(delta);
             hitExplodePool.updateActiveSprites(delta);
             mainShip.update(delta);
+            engineMainShip.update(delta);
             enemyEmitter.generate(delta);
             bonusEmitter.generate(delta);
             hpBar.update(delta);
             forceShield.update(delta);
             changeLevel();
         } else if (state == State.GAME_OVER) {
-            buttonNewGame.update(delta);
+            gameOver.update(delta);
         } else if (state == State.PAUSE) {
-            pause.update(delta);
+            pauseLogo.update(delta);
             buttonExit.update(delta);
             buttonResume.update(delta);
         }
@@ -272,19 +323,22 @@ public class GameScreen extends BaseScreen {
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
             bonusPool.drawActiveSprites(batch);
+            engineMainShip.draw(batch, mainShip);
             mainShip.draw(batch);
             hitExplodePool.drawActiveSprites(batch);
             if (mainShip.isShield()) {
                 forceShield.draw(batch);
             }
-            hpBar.draw(batch, mainShip.getLeft(), mainShip.getBottom() - 0.05f);
+            hpBar.draw(batch);
         } else if (state == State.GAME_OVER) {
             gameOver.draw(batch);
             buttonNewGame.draw(batch);
+            buttonExit.draw(batch);
         } else if (state == State.PAUSE) {
-            pause.draw(batch);
+            pauseLogo.draw(batch);
             buttonExit.draw(batch);
             buttonResume.draw(batch);
+            buttonSave.draw(batch);
         }
         explosionPool.drawActiveSprites(batch);
         printInfo();
@@ -374,7 +428,7 @@ public class GameScreen extends BaseScreen {
                 level += 1;
                 enemyEmitter.setLevel(level);
                 for (Star star : stars) {
-                    star.setV(level * STAR_SPEED_INCREASE);
+                    star.addVY(level * STAR_SPEED_INCREASE);
                 }
                 tempFrags = frags;
             }

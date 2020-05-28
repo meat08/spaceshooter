@@ -13,7 +13,7 @@ import ru.spaceshooter.pool.HitExplodePool;
 
 public class MainShip extends Ship {
 
-    private static final float SIZE = 0.15f;
+    private static final float SIZE = 0.1f;
     private static final float MARGIN = 0.05f;
     private static final int INVALID_POINTER = -1;
     private static final float BOOST_SHOOT_INTERVAL = 4f;
@@ -43,7 +43,7 @@ public class MainShip extends Ship {
         this.hitExplodePool = hitExplodePool;
         bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
-        bulletHeight = 0.03f;
+        bulletHeight = 0.025f;
         damage = 1;
         v0.set(0.4f, 0);
         leftPointer = INVALID_POINTER;

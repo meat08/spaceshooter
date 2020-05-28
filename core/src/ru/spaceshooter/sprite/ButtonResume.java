@@ -19,8 +19,8 @@ public class ButtonResume extends ScaledButton {
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(0.085f);
-        setBottom(worldBounds.getBottom() + MARGIN + getHeight() + 0.01f);
+        setHeightProportion(BUTTON_SIZE);
+        setBottom(worldBounds.getBottom() + getHeight()*2 + 0.07f);
     }
 
     @Override

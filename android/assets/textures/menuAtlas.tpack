@@ -13,9 +13,9 @@ btExit
   index: -1
 btPlay
   rotate: false
-  xy: 904, 132
-  size: 633, 114
-  orig: 633, 114
+  xy: 904, 134
+  size: 628, 112
+  orig: 628, 112
   offset: 0, 0
   index: -1
 hit
@@ -23,6 +23,13 @@ hit
   xy: 1539, 106
   size: 256, 256
   orig: 256, 256
+  offset: 0, 0
+  index: -1
+loadButton
+  rotate: false
+  xy: 904, 20
+  size: 628, 112
+  orig: 628, 112
   offset: 0, 0
   index: -1
 menu_logo_ship
@@ -34,7 +41,7 @@ menu_logo_ship
   index: -1
 star
   rotate: false
-  xy: 904, 120
+  xy: 904, 8
   size: 11, 10
   orig: 11, 10
   offset: 0, 0

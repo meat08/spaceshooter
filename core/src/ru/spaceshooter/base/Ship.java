@@ -89,6 +89,30 @@ public class Ship extends Sprite {
         boom();
     }
 
+    public int getHp() {
+        return hp;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public void addMaxHp(int hp) {
+        this.maxHp += hp;
+    }
+
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
@@ -113,22 +137,6 @@ public class Ship extends Sprite {
             hp = 0;
             destroy();
         }
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-
-    public int getMaxHp() {
-        return maxHp;
-    }
-
-    public void addMaxHp(int hp) {
-        this.maxHp += hp;
     }
 
     private void boom() {

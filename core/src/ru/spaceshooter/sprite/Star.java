@@ -44,8 +44,8 @@ public class Star extends Sprite {
         checkBounds();
     }
 
-    public void setV(float vy) {
-        if (this.v.y > -1f) {
+    public void addVY(float vy) {
+        if (this.v.y > -0.8f) {
             this.v.add(0f, -vy);
         }
     }
@@ -54,6 +54,14 @@ public class Star extends Sprite {
         float vx = Rnd.nextFloat(-0.005f, 0.005f);
         float vy = Rnd.nextFloat(-0.2f, -0.05f);
         v.set(vx, vy);
+    }
+
+    public float getVY() {
+        return v.y;
+    }
+
+    public void setVY(float vy) {
+        this.v.y = vy;
     }
 
     private void checkBounds() {
