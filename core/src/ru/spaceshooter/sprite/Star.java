@@ -11,7 +11,6 @@ public class Star extends Sprite {
 
     private Vector2 v;
     private Rect worldBounds;
-
     private float animateTimer;
     private float animateInterval;
 

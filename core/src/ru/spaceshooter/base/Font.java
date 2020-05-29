@@ -17,7 +17,7 @@ public class Font extends BitmapFont {
         getData().setScale(size / getCapHeight());
     }
 
-    public GlyphLayout draw(Batch batch, CharSequence str, float x, float y, int halign) {
-        return super.draw(batch, str, x, y,0f, halign, false);
+    public GlyphLayout draw(Batch batch, CharSequence str, float x, float y, int hAlign) {
+        return super.draw(batch, str, x, y,0f, hAlign, false);
     }
 }

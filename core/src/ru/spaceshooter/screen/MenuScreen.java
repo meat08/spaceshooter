@@ -39,17 +39,17 @@ public class MenuScreen extends BaseScreen {
     public void show() {
         super.show();
         bg = new Texture("textures/bg.png");
-        background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
-        buttonExit = new ButtonExit(atlas);
-        buttonPlay = new ButtonPlay(atlas, game);
-        buttonLoad = new ButtonLoad(atlas, game, fileHandle);
-        hitExplodePool = new HitExplodePool(atlas);
-        logoMainMenu = new LogoMainMenu(atlas, hitExplodePool);
+        background = new Background(bg);
         stars = new Star[256];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
+        hitExplodePool = new HitExplodePool(atlas);
+        logoMainMenu = new LogoMainMenu(atlas, hitExplodePool);
+        buttonExit = new ButtonExit(atlas);
+        buttonPlay = new ButtonPlay(atlas, game);
+        buttonLoad = new ButtonLoad(atlas, game, fileHandle);
         menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/mainScreen.mp3"));
         menuMusic.play();
         menuMusic.setVolume(0.5f);
@@ -113,10 +113,10 @@ public class MenuScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
+        logoMainMenu.draw(batch);
         buttonExit.draw(batch);
         buttonPlay.draw(batch);
         buttonLoad.draw(batch);
-        logoMainMenu.draw(batch);
         hitExplodePool.drawActiveSprites(batch);
         batch.end();
     }

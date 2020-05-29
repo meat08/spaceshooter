@@ -9,8 +9,6 @@ import ru.spaceshooter.math.Rect;
 
 public class EngineMainShip extends Sprite {
 
-    private static final float ANIMATE_INTERVAL = 0.017f;
-
     private float animateTimer;
 
     public EngineMainShip(TextureAtlas atlas) {

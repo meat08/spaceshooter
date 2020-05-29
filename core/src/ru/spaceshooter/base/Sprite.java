@@ -9,6 +9,8 @@ import ru.spaceshooter.utils.Regions;
 
 public class Sprite extends Rect {
 
+    protected static final float ANIMATE_INTERVAL = 0.017f;
+
     protected float angle;
     protected float scale = 1f;
     protected TextureRegion[] regions;
@@ -34,7 +36,6 @@ public class Sprite extends Rect {
     }
 
     public void update(float delta) {
-
     }
 
     public void draw(SpriteBatch batch) {

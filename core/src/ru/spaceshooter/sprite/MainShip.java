@@ -14,7 +14,7 @@ import ru.spaceshooter.pool.HitExplodePool;
 public class MainShip extends Ship {
 
     private static final float SIZE = 0.1f;
-    private static final float MARGIN = 0.05f;
+    private static final float MARGIN = 0.03f;
     private static final int INVALID_POINTER = -1;
     private static final float BOOST_SHOOT_INTERVAL = 4f;
     private static final float BOOST_SHOOT_FACTOR = 0.5f;

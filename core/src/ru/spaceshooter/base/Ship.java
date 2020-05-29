@@ -16,9 +16,7 @@ public class Ship extends Sprite {
 
     protected final Vector2 v0;
     protected final Vector2 v;
-
     protected Rect worldBounds;
-
     protected ExplosionPool explosionPool;
     protected BulletPool bulletPool;
     protected TextureRegion bulletRegion;
@@ -27,13 +25,10 @@ public class Ship extends Sprite {
     protected Vector2 bulletPos;
     protected float bulletHeight;
     protected int damage;
-
     protected float reloadInterval;
     protected float reloadTimer;
     protected boolean isShootMulti;
-
     protected Sound sound;
-
     protected int hp;
     protected int maxHp;
 
@@ -79,7 +74,6 @@ public class Ship extends Sprite {
                 shoot();
             }
             reloadTimer = 0f;
-
         }
     }
 

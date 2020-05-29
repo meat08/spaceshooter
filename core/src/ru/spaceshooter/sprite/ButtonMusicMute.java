@@ -18,7 +18,6 @@ public class ButtonMusicMute extends ScaledButton {
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(BUTTON_SIZE);
         setBottom(worldBounds.getBottom() + 0.01f);
         setRight(worldBounds.getRight() - 0.01f);
     }

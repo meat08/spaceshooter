@@ -19,6 +19,7 @@ import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.EnemyPool;
 import ru.spaceshooter.pool.ExplosionPool;
 import ru.spaceshooter.pool.HitExplodePool;
+import ru.spaceshooter.pool.NebulaPool;
 import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.ButtonExit;
@@ -29,15 +30,16 @@ import ru.spaceshooter.sprite.ButtonSave;
 import ru.spaceshooter.sprite.Enemy;
 import ru.spaceshooter.sprite.EngineMainShip;
 import ru.spaceshooter.sprite.ForceShield;
-import ru.spaceshooter.sprite.GameOver;
+import ru.spaceshooter.sprite.TitleGameOver;
 import ru.spaceshooter.sprite.HpBar;
 import ru.spaceshooter.sprite.Bonus;
 import ru.spaceshooter.sprite.MainShip;
-import ru.spaceshooter.sprite.PauseLogo;
+import ru.spaceshooter.sprite.TitlePause;
 import ru.spaceshooter.sprite.Star;
 import ru.spaceshooter.utils.BonusEmitter;
 import ru.spaceshooter.utils.EnemyEmitter;
 import ru.spaceshooter.utils.GameData;
+import ru.spaceshooter.utils.NebulaEmitter;
 
 public class GameScreen extends BaseScreen {
 
@@ -64,13 +66,15 @@ public class GameScreen extends BaseScreen {
     private ExplosionPool explosionPool;
     private HitExplodePool hitExplodePool;
     private BonusPool bonusPool;
+    private NebulaPool nebulaPool;
     private EnemyEmitter enemyEmitter;
     private BonusEmitter bonusEmitter;
+    private NebulaEmitter nebulaEmitter;
     private Music gameMusic;
     private State state;
     private State previousState;
-    private GameOver gameOver;
-    private PauseLogo pauseLogo;
+    private TitleGameOver titleGameOver;
+    private TitlePause titlePause;
     private ButtonExit buttonExit;
     private ButtonResume buttonResume;
     private ButtonSave buttonSave;
@@ -95,8 +99,10 @@ public class GameScreen extends BaseScreen {
         gameData = new GameData();
         json = new Json();
         bg = new Texture("textures/bg.png");
-        background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
+        font = new Font("font/font.fnt", "font/font.png");
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/gameScreen.mp3"));
+        background = new Background(bg);
         stars = new Star[128];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
@@ -106,24 +112,24 @@ public class GameScreen extends BaseScreen {
         hitExplodePool = new HitExplodePool(atlas);
         enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, hitExplodePool);
         bonusPool = new BonusPool(worldBounds);
+        nebulaPool = new NebulaPool(worldBounds);
+        enemyEmitter = new EnemyEmitter(atlas, enemyPool);
+        bonusEmitter = new BonusEmitter(atlas, bonusPool, mainShip);
+        nebulaEmitter = new NebulaEmitter(atlas, nebulaPool);
         mainShip = new MainShip(atlas, bulletPool, explosionPool, hitExplodePool);
         engineMainShip = new EngineMainShip(atlas);
         forceShield = new ForceShield(atlas);
-        enemyEmitter = new EnemyEmitter(atlas, enemyPool);
-        bonusEmitter = new BonusEmitter(atlas, bonusPool, mainShip);
-        gameOver = new GameOver(atlas);
-        pauseLogo = new PauseLogo(atlas);
+        titleGameOver = new TitleGameOver(atlas);
+        titlePause = new TitlePause(atlas);
         buttonExit = new ButtonExit(atlas);
         buttonResume = new ButtonResume(atlas, this);
         buttonSave = new ButtonSave(atlas, this);
         buttonNewGame = new ButtonNewGame(atlas, this);
         buttonMusicMute = new ButtonMusicMute(atlas, this);
         hpBar = new HpBar(atlas);
-        font = new Font("font/font.fnt", "font/font.png");
         sbFrags = new StringBuilder();
         sbHp = new StringBuilder();
         sbLevel = new StringBuilder();
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/gameScreen.mp3"));
         isMusicOn = true;
         gameMusic.play();
         gameMusic.setLooping(true);
@@ -151,16 +157,16 @@ public class GameScreen extends BaseScreen {
         }
         mainShip.resize(worldBounds);
         engineMainShip.resize(worldBounds);
+        forceShield.resize(worldBounds, mainShip);
         enemyEmitter.resize(worldBounds);
-        gameOver.resize(worldBounds);
-        pauseLogo.resize(worldBounds);
         buttonResume.resize(worldBounds);
         buttonSave.resize(worldBounds);
         buttonNewGame.resize(worldBounds);
         buttonMusicMute.resize(worldBounds);
         hpBar.resize(worldBounds, mainShip);
-        forceShield.resize(worldBounds, mainShip);
         buttonExit.resize(worldBounds);
+        titleGameOver.resize(worldBounds);
+        titlePause.resize(worldBounds);
         font.setSize(FONT_SIZE);
     }
 
@@ -172,6 +178,7 @@ public class GameScreen extends BaseScreen {
         enemyPool.dispose();
         explosionPool.dispose();
         bonusPool.dispose();
+        nebulaPool.dispose();
         mainShip.dispose();
         gameMusic.dispose();
         font.dispose();
@@ -267,6 +274,7 @@ public class GameScreen extends BaseScreen {
             frags = gameData.getFrags();
             level = gameData.getLevel();
             enemyEmitter.setLevel(level);
+            nebulaEmitter.setLevel(level);
             mainShip.setMaxHp(gameData.getMaxHp());
             mainShip.setHp(gameData.getHp());
             mainShip.pos.x = gameData.getMainShipX();
@@ -275,6 +283,7 @@ public class GameScreen extends BaseScreen {
                     star.setVY(vy);
                 }
             }
+            state = State.PAUSE;
         }
     }
 
@@ -282,11 +291,13 @@ public class GameScreen extends BaseScreen {
         frags = 0;
         level = 1;
         enemyEmitter.setLevel(level);
+        nebulaEmitter.setLevel(level);
         state = State.PLAYING;
         explosionPool.freeAllActive();
         enemyPool.freeAllActive();
         bulletPool.freeAllActive();
         bonusPool.freeAllActive();
+        nebulaPool.freeAllActive();
         hitExplodePool.freeAllActive();
         for (Star star : stars) {
             star.setVStart();
@@ -303,6 +314,8 @@ public class GameScreen extends BaseScreen {
     }
 
     private void update(float delta) {
+        nebulaPool.updateActiveSprites(delta);
+        nebulaEmitter.generate(delta);
         for (Star star : stars) {
             star.update(delta);
         }
@@ -320,9 +333,9 @@ public class GameScreen extends BaseScreen {
             forceShield.update(delta);
             changeLevel();
         } else if (state == State.GAME_OVER) {
-            gameOver.update(delta);
+            titleGameOver.update(delta);
         } else if (state == State.PAUSE) {
-            pauseLogo.update(delta);
+            titlePause.update(delta);
             buttonExit.update(delta);
             buttonResume.update(delta);
             buttonMusicMute.update(delta);
@@ -332,6 +345,7 @@ public class GameScreen extends BaseScreen {
     private void draw() {
         batch.begin();
         background.draw(batch);
+        nebulaPool.drawActiveSprites(batch);
         for (Star star : stars) {
             star.draw(batch);
         }
@@ -347,11 +361,11 @@ public class GameScreen extends BaseScreen {
             }
             hpBar.draw(batch);
         } else if (state == State.GAME_OVER) {
-            gameOver.draw(batch);
+            titleGameOver.draw(batch);
             buttonNewGame.draw(batch);
             buttonExit.draw(batch);
         } else if (state == State.PAUSE) {
-            pauseLogo.draw(batch);
+            titlePause.draw(batch);
             buttonExit.draw(batch);
             buttonResume.draw(batch);
             buttonSave.draw(batch);
@@ -368,6 +382,7 @@ public class GameScreen extends BaseScreen {
         explosionPool.freeAllDestroyed();
         bonusPool.freeAllDestroyed();
         hitExplodePool.freeAllDestroyed();
+        nebulaPool.freeAllDestroyed();
     }
 
     private void checkCollision () {
@@ -444,6 +459,7 @@ public class GameScreen extends BaseScreen {
             if (frags % FRAGS_TO_LEVEL_UP == 0 & tempFrags != frags) {
                 level += 1;
                 enemyEmitter.setLevel(level);
+                nebulaEmitter.setLevel(level);
                 for (Star star : stars) {
                     star.addVY(level * STAR_SPEED_INCREASE);
                 }

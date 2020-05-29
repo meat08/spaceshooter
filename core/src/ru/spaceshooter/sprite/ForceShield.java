@@ -8,8 +8,6 @@ import ru.spaceshooter.math.Rect;
 
 public class ForceShield extends Sprite {
 
-    private static final float ANIMATE_INTERVAL = 0.017f;
-
     private Ship ship;
     private float animateTimer;
 

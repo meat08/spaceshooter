@@ -9,8 +9,6 @@ public class ButtonSave extends ScaledButton {
 
     private final GameScreen gameScreen;
 
-    private static final float MARGIN = 0.05f;
-
     public ButtonSave(TextureAtlas atlas, GameScreen gameScreen) {
         super(atlas.findRegion("saveButton"));
         this.gameScreen = gameScreen;
@@ -19,8 +17,7 @@ public class ButtonSave extends ScaledButton {
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(BUTTON_SIZE);
-        setBottom(worldBounds.getBottom() + MARGIN + getHeight() + 0.01f);
+        setBottom(worldBounds.getBottom() + getHeight() + MARGIN + 0.01f);
     }
 
     @Override

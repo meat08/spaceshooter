@@ -11,8 +11,6 @@ public class ButtonPlay extends ScaledButton {
 
     private final Game game;
 
-    private static final float MARGIN = 0.05f;
-
     public ButtonPlay(TextureAtlas atlas, Game game) {
         super(atlas.findRegion("btPlay"));
         this.game = game;
@@ -21,8 +19,7 @@ public class ButtonPlay extends ScaledButton {
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(BUTTON_SIZE);
-        setBottom(worldBounds.getBottom() + getHeight()*2 + 0.07f);
+        setBottom(worldBounds.getBottom() + getHeight()*2 + MARGIN + 0.02f);
     }
 
     @Override

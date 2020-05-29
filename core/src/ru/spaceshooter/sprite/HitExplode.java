@@ -7,8 +7,6 @@ import ru.spaceshooter.math.Rnd;
 
 public class HitExplode extends Sprite {
 
-    private static final float ANIMATE_INTERVAL = 0.017f;
-
     private float animateTimer;
 
     public HitExplode(TextureAtlas atlas) {

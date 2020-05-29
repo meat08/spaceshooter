@@ -3,12 +3,14 @@ package ru.spaceshooter.base;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.utils.Regions;
 
 public abstract class ScaledButton extends Sprite {
 
     private static final float SCALE = 0.9f;
     protected static final float BUTTON_SIZE = 0.075f;
+    protected static final float MARGIN = 0.05f;
 
     private boolean pressed;
     private int pointer;
@@ -43,6 +45,12 @@ public abstract class ScaledButton extends Sprite {
         pressed = false;
         scale = 1f;
         return false;
+    }
+
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        setHeightProportion(BUTTON_SIZE);
     }
 
     public abstract void action();

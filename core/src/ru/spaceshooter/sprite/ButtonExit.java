@@ -8,8 +8,6 @@ import ru.spaceshooter.math.Rect;
 
 public class ButtonExit extends ScaledButton {
 
-    private static final float MARGIN = 0.05f;
-
     public ButtonExit(TextureAtlas atlas) {
         super(atlas.findRegion("btExit"));
     }
@@ -17,7 +15,6 @@ public class ButtonExit extends ScaledButton {
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(BUTTON_SIZE);
         setBottom(worldBounds.getBottom() + MARGIN);
     }
 

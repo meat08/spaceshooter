@@ -8,8 +8,6 @@ import ru.spaceshooter.base.Sprite;
 
 public class Explosion extends Sprite {
 
-    private static final float ANIMATE_INTERVAL = 0.017f;
-
     private float animateTimer;
     private Sound sound;
 
