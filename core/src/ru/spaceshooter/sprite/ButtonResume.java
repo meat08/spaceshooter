@@ -9,8 +9,6 @@ public class ButtonResume extends ScaledButton {
 
     private final GameScreen gameScreen;
 
-    private static final float MARGIN = 0.05f;
-
     public ButtonResume(TextureAtlas atlas, GameScreen gameScreen) {
         super(atlas.findRegion("resume"));
         this.gameScreen = gameScreen;

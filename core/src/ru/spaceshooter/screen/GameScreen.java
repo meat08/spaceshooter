@@ -3,7 +3,6 @@ package ru.spaceshooter.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -23,6 +22,7 @@ import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.ButtonExit;
+import ru.spaceshooter.sprite.ButtonMusicMute;
 import ru.spaceshooter.sprite.ButtonNewGame;
 import ru.spaceshooter.sprite.ButtonResume;
 import ru.spaceshooter.sprite.ButtonSave;
@@ -75,6 +75,7 @@ public class GameScreen extends BaseScreen {
     private ButtonResume buttonResume;
     private ButtonSave buttonSave;
     private ButtonNewGame buttonNewGame;
+    private ButtonMusicMute buttonMusicMute;
     private HpBar hpBar;
     private int frags;
     private int tempFrags;
@@ -85,19 +86,18 @@ public class GameScreen extends BaseScreen {
     private StringBuilder sbHp;
     private StringBuilder sbLevel;
     private Json json;
-    private FileHandle fileHandle;
     private GameData gameData;
+    private boolean isMusicOn;
 
     @Override
     public void show() {
         super.show();
         gameData = new GameData();
         json = new Json();
-        fileHandle = Gdx.files.local("bin/GameData.json");
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
-        stars = new Star[64];
+        stars = new Star[128];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
@@ -117,12 +117,14 @@ public class GameScreen extends BaseScreen {
         buttonResume = new ButtonResume(atlas, this);
         buttonSave = new ButtonSave(atlas, this);
         buttonNewGame = new ButtonNewGame(atlas, this);
+        buttonMusicMute = new ButtonMusicMute(atlas, this);
         hpBar = new HpBar(atlas);
         font = new Font("font/font.fnt", "font/font.png");
         sbFrags = new StringBuilder();
         sbHp = new StringBuilder();
         sbLevel = new StringBuilder();
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/gameScreen.mp3"));
+        isMusicOn = true;
         gameMusic.play();
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.3f);
@@ -155,6 +157,7 @@ public class GameScreen extends BaseScreen {
         buttonResume.resize(worldBounds);
         buttonSave.resize(worldBounds);
         buttonNewGame.resize(worldBounds);
+        buttonMusicMute.resize(worldBounds);
         hpBar.resize(worldBounds, mainShip);
         forceShield.resize(worldBounds, mainShip);
         buttonExit.resize(worldBounds);
@@ -187,7 +190,9 @@ public class GameScreen extends BaseScreen {
     public void resumeGame() {
         resume();
         state = previousState;
-        gameMusic.play();
+        if (isMusicOn) {
+            gameMusic.play();
+        }
     }
 
     @Override
@@ -224,6 +229,7 @@ public class GameScreen extends BaseScreen {
             buttonExit.touchDown(touch, pointer, button);
             buttonResume.touchDown(touch, pointer, button);
             buttonSave.touchDown(touch, pointer, button);
+            buttonMusicMute.touchDown(touch, pointer, button);
         }
         return false;
     }
@@ -239,6 +245,7 @@ public class GameScreen extends BaseScreen {
             buttonExit.touchUp(touch, pointer, button);
             buttonResume.touchUp(touch, pointer, button);
             buttonSave.touchUp(touch, pointer, button);
+            buttonMusicMute.touchUp(touch, pointer, button);
         }
         return false;
     }
@@ -287,6 +294,14 @@ public class GameScreen extends BaseScreen {
         mainShip.startNewGame();
     }
 
+    public void musicOnOff() {
+        isMusicOn = !isMusicOn;
+    }
+
+    public boolean isMusicOn() {
+        return isMusicOn;
+    }
+
     private void update(float delta) {
         for (Star star : stars) {
             star.update(delta);
@@ -310,6 +325,7 @@ public class GameScreen extends BaseScreen {
             pauseLogo.update(delta);
             buttonExit.update(delta);
             buttonResume.update(delta);
+            buttonMusicMute.update(delta);
         }
     }
 
@@ -339,6 +355,7 @@ public class GameScreen extends BaseScreen {
             buttonExit.draw(batch);
             buttonResume.draw(batch);
             buttonSave.draw(batch);
+            buttonMusicMute.draw(batch);
         }
         explosionPool.drawActiveSprites(batch);
         printInfo();
