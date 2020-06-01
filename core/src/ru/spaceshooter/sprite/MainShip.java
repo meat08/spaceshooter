@@ -10,6 +10,7 @@ import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
 import ru.spaceshooter.pool.HitExplodePool;
+import ru.spaceshooter.screen.GameScreen;
 
 public class MainShip extends Ship {
 
@@ -21,6 +22,7 @@ public class MainShip extends Ship {
     private static final float BOOST_SHIELD_INTERVAL = 5f;
     private static final float SENSE = 0.85f;
     private static final float DEFAULT_RELOAD_INTERVAL = 0.25f;
+    private static final int HP = 100;
 
     private int leftPointer;
     private int rightPointer;
@@ -36,11 +38,12 @@ public class MainShip extends Ship {
 
 
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, HitExplodePool hitExplodePool) {
-        super(atlas.findRegion("main_ship"), 1, 1, 1);
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, HitExplodePool hitExplodePool, GameScreen screen) {
+        super(atlas.findRegion("main_ship"), 1, 4, 4);
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
         this.hitExplodePool = hitExplodePool;
+        this.screen = screen;
         bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
         bulletHeight = 0.025f;
@@ -50,7 +53,8 @@ public class MainShip extends Ship {
         rightPointer = INVALID_POINTER;
         reloadInterval = DEFAULT_RELOAD_INTERVAL;
         reloadTimer = reloadInterval;
-        maxHp = 100;
+        shootType = 1;
+        maxHp = HP;
         hp = maxHp;
         sound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         accelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
@@ -70,7 +74,7 @@ public class MainShip extends Ship {
         if (isShield) {
             activateShield(delta);
         }
-        if (accelerometerAvailable) {
+        if (accelerometerAvailable & screen.isAccelerometerOn()) {
             float accelerometerX = Gdx.input.getAccelerometerX();
             if (accelerometerX < -SENSE) {
                 moveRight();
@@ -257,8 +261,9 @@ public class MainShip extends Ship {
     public void startNewGame() {
         flushDestroy();
         stop();
-        maxHp = 100;
+        maxHp = HP;
         hp = maxHp;
+        shootType = 1;
         reloadInterval = DEFAULT_RELOAD_INTERVAL;
         isTouched = false;
         isShield = false;
@@ -268,5 +273,22 @@ public class MainShip extends Ship {
         leftPointer = INVALID_POINTER;
         rightPointer = INVALID_POINTER;
         pos.x = 0f;
+    }
+
+    public void loadGame(int maxHp, int hp, float x) {
+        flushDestroy();
+        stop();
+        this.maxHp = maxHp;
+        this.hp = hp;
+        pos.x = x;
+        shootType = 1;
+        reloadInterval = DEFAULT_RELOAD_INTERVAL;
+        isTouched = false;
+        isShield = false;
+        isShootBoost = false;
+        pressedRight = false;
+        pressedLeft = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
     }
 }

@@ -8,6 +8,7 @@ import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
 import ru.spaceshooter.pool.HitExplodePool;
+import ru.spaceshooter.screen.GameScreen;
 import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.Explosion;
 import ru.spaceshooter.sprite.HitExplode;
@@ -23,6 +24,7 @@ public class Ship extends Sprite {
     protected HitExplodePool hitExplodePool;
     protected Vector2 bulletV;
     protected Vector2 bulletPos;
+    protected Vector2 bullet2Pos;
     protected float bulletHeight;
     protected int damage;
     protected float reloadInterval;
@@ -31,6 +33,11 @@ public class Ship extends Sprite {
     protected Sound sound;
     protected int hp;
     protected int maxHp;
+    protected int shootType;
+    protected GameScreen screen;
+    private boolean isDestroyBottom;
+    private float animateTimer;
+
 
     public Ship(TextureRegion region, int rows, int cols, int frames) {
         super(region, rows, cols, frames);
@@ -38,19 +45,23 @@ public class Ship extends Sprite {
         v = new Vector2();
         bulletV = new Vector2();
         bulletPos = new Vector2();
+        bullet2Pos = new Vector2();
         isShootMulti = false;
+        isDestroyBottom = false;
     }
 
-    public Ship(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound, HitExplodePool hitExplodePool) {
+    public Ship(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound, HitExplodePool hitExplodePool, GameScreen screen) {
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
         this.hitExplodePool = hitExplodePool;
         this.worldBounds = worldBounds;
         this.sound = sound;
+        this.screen = screen;
         v0 = new Vector2();
         v = new Vector2();
         bulletV = new Vector2();
         bulletPos = new Vector2();
+        bullet2Pos = new Vector2();
     }
 
     @Override
@@ -63,6 +74,13 @@ public class Ship extends Sprite {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
+        animateTimer += delta;
+        if (animateTimer >= ANIMATE_INTERVAL) {
+            animateTimer = 0f;
+            if (++frame == regions.length) {
+                frame = 0;
+            }
+        }
     }
 
     protected void autoShoot(float delta) {
@@ -71,7 +89,11 @@ public class Ship extends Sprite {
             if (isShootMulti) {
                 shootMulti();
             } else {
-                shoot();
+                if (shootType == 1) {
+                    shoot();
+                } else if (shootType == 2) {
+                    shootDual();
+                }
             }
             reloadTimer = 0f;
         }
@@ -94,23 +116,32 @@ public class Ship extends Sprite {
     public int getMaxHp() {
         return maxHp;
     }
+    public void setDestroyBottom(boolean destroyBottom) {
+        isDestroyBottom = destroyBottom;
+    }
 
     public void addMaxHp(int hp) {
         this.maxHp += hp;
     }
 
-    public void setMaxHp(int maxHp) {
-        this.maxHp = maxHp;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
+    private void pew() {
+        if (screen.isSoundOn()) {
+            sound.play(0.3f);
+        }
     }
 
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
-        sound.play(0.3f);
+        pew();
+    }
+
+    private void shootDual() {
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
+        Bullet bullet1 = bulletPool.obtain();
+        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage);
+        pew();
     }
 
     private void shootMulti() {
@@ -120,7 +151,7 @@ public class Ship extends Sprite {
         bullet1.set(this, bulletRegion, bulletPos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage);
         Bullet bullet2 = bulletPool.obtain();
         bullet2.set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage);
-        sound.play(0.3f);
+        pew();
     }
 
     public void damage(int damage) {
@@ -135,6 +166,10 @@ public class Ship extends Sprite {
 
     private void boom() {
         Explosion explosion = explosionPool.obtain();
-        explosion.set(getHeight(), pos);
+        if (isDestroyBottom) {
+            explosion.set(getHeight(), worldBounds.getHalfWidth(), pos);
+        } else {
+            explosion.set(getHeight(), pos);
+        }
     }
 }

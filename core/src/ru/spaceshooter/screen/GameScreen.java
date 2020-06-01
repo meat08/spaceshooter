@@ -22,13 +22,17 @@ import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.pool.NebulaPool;
 import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.Bullet;
-import ru.spaceshooter.sprite.ButtonExit;
-import ru.spaceshooter.sprite.ButtonMusicMute;
-import ru.spaceshooter.sprite.ButtonNewGame;
-import ru.spaceshooter.sprite.ButtonResume;
-import ru.spaceshooter.sprite.ButtonSave;
+import ru.spaceshooter.sprite.TitleConfig;
+import ru.spaceshooter.sprite.buttons.ButtonAccelerometerOnOff;
+import ru.spaceshooter.sprite.buttons.ButtonBack;
+import ru.spaceshooter.sprite.buttons.ButtonConfig;
+import ru.spaceshooter.sprite.buttons.ButtonExit;
+import ru.spaceshooter.sprite.buttons.ButtonLoad;
+import ru.spaceshooter.sprite.buttons.ButtonMusicOnOff;
+import ru.spaceshooter.sprite.buttons.ButtonNewGame;
+import ru.spaceshooter.sprite.buttons.ButtonResume;
+import ru.spaceshooter.sprite.buttons.ButtonSave;
 import ru.spaceshooter.sprite.Enemy;
-import ru.spaceshooter.sprite.EngineMainShip;
 import ru.spaceshooter.sprite.ForceShield;
 import ru.spaceshooter.sprite.TitleGameOver;
 import ru.spaceshooter.sprite.HpBar;
@@ -36,6 +40,7 @@ import ru.spaceshooter.sprite.Bonus;
 import ru.spaceshooter.sprite.MainShip;
 import ru.spaceshooter.sprite.TitlePause;
 import ru.spaceshooter.sprite.Star;
+import ru.spaceshooter.sprite.buttons.ButtonSoundOnOff;
 import ru.spaceshooter.utils.BonusEmitter;
 import ru.spaceshooter.utils.EnemyEmitter;
 import ru.spaceshooter.utils.GameData;
@@ -52,13 +57,12 @@ public class GameScreen extends BaseScreen {
     private static final String HP = "HP: ";
     private static final String LEVEL = "Уровень: ";
 
-    private enum State {PLAYING, GAME_OVER, PAUSE}
+    private enum State {PLAYING, GAME_OVER, PAUSE, CONFIG}
 
     private Texture bg;
     private Background background;
     private TextureAtlas atlas;
     private MainShip mainShip;
-    private EngineMainShip engineMainShip;
     private ForceShield forceShield;
     private Star[] stars;
     private BulletPool bulletPool;
@@ -75,11 +79,9 @@ public class GameScreen extends BaseScreen {
     private State previousState;
     private TitleGameOver titleGameOver;
     private TitlePause titlePause;
-    private ButtonExit buttonExit;
     private ButtonResume buttonResume;
     private ButtonSave buttonSave;
     private ButtonNewGame buttonNewGame;
-    private ButtonMusicMute buttonMusicMute;
     private HpBar hpBar;
     private int frags;
     private int tempFrags;
@@ -91,7 +93,6 @@ public class GameScreen extends BaseScreen {
     private StringBuilder sbLevel;
     private Json json;
     private GameData gameData;
-    private boolean isMusicOn;
 
     @Override
     public void show() {
@@ -108,32 +109,34 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        explosionPool = new ExplosionPool(atlas);
+        explosionPool = new ExplosionPool(atlas, this);
         hitExplodePool = new HitExplodePool(atlas);
-        enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, hitExplodePool);
+        enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, hitExplodePool, this);
+        mainShip = new MainShip(atlas, bulletPool, explosionPool, hitExplodePool, this);
         bonusPool = new BonusPool(worldBounds);
         nebulaPool = new NebulaPool(worldBounds);
         enemyEmitter = new EnemyEmitter(atlas, enemyPool);
         bonusEmitter = new BonusEmitter(atlas, bonusPool, mainShip);
         nebulaEmitter = new NebulaEmitter(atlas, nebulaPool);
-        mainShip = new MainShip(atlas, bulletPool, explosionPool, hitExplodePool);
-        engineMainShip = new EngineMainShip(atlas);
         forceShield = new ForceShield(atlas);
         titleGameOver = new TitleGameOver(atlas);
         titlePause = new TitlePause(atlas);
+        titleConfig = new TitleConfig(atlas);
         buttonExit = new ButtonExit(atlas);
         buttonResume = new ButtonResume(atlas, this);
         buttonSave = new ButtonSave(atlas, this);
         buttonNewGame = new ButtonNewGame(atlas, this);
-        buttonMusicMute = new ButtonMusicMute(atlas, this);
+        buttonLoad = new ButtonLoad(atlas, this, fileHandle);
+        buttonConfig = new ButtonConfig(atlas, this);
+        buttonBack = new ButtonBack(atlas, this);
+        buttonMusicOnOff = new ButtonMusicOnOff(atlas, this);
+        buttonSoundOnOff = new ButtonSoundOnOff(atlas, this);
+        buttonAccelerometerOnOff = new ButtonAccelerometerOnOff(atlas, this);
         hpBar = new HpBar(atlas);
         sbFrags = new StringBuilder();
         sbHp = new StringBuilder();
         sbLevel = new StringBuilder();
-        isMusicOn = true;
-        gameMusic.play();
-        gameMusic.setLooping(true);
-        gameMusic.setVolume(0.3f);
+        musicChange();
         state = State.PLAYING;
         previousState = state;
         level = 1;
@@ -156,17 +159,22 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
-        engineMainShip.resize(worldBounds);
         forceShield.resize(worldBounds, mainShip);
         enemyEmitter.resize(worldBounds);
         buttonResume.resize(worldBounds);
         buttonSave.resize(worldBounds);
         buttonNewGame.resize(worldBounds);
-        buttonMusicMute.resize(worldBounds);
+        buttonLoad.resize(worldBounds);
         hpBar.resize(worldBounds, mainShip);
         buttonExit.resize(worldBounds);
+        buttonConfig.resize(worldBounds);
+        buttonBack.resize(worldBounds);
+        buttonMusicOnOff.resize(worldBounds);
+        buttonSoundOnOff.resize(worldBounds);
+        buttonAccelerometerOnOff.resize(worldBounds);
         titleGameOver.resize(worldBounds);
         titlePause.resize(worldBounds);
+        titleConfig.resize(worldBounds);
         font.setSize(FONT_SIZE);
     }
 
@@ -213,6 +221,11 @@ public class GameScreen extends BaseScreen {
             if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.BACK) {
                 resumeGame();
             }
+        } else if (state == State.CONFIG) {
+            if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.BACK) {
+                exitConfig();
+                flushPreference();
+            }
         }
         return false;
     }
@@ -231,12 +244,18 @@ public class GameScreen extends BaseScreen {
             mainShip.touchDown(touch, pointer, button);
         } else if (state == State.GAME_OVER) {
             buttonNewGame.touchDown(touch, pointer, button);
+            buttonLoad.touchDown(touch, pointer, button);
             buttonExit.touchDown(touch, pointer, button);
         } else if (state == State.PAUSE) {
             buttonExit.touchDown(touch, pointer, button);
             buttonResume.touchDown(touch, pointer, button);
             buttonSave.touchDown(touch, pointer, button);
-            buttonMusicMute.touchDown(touch, pointer, button);
+            buttonConfig.touchDown(touch, pointer, button);
+        } else if (state == State.CONFIG) {
+            buttonBack.touchDown(touch, pointer, button);
+            buttonMusicOnOff.touchDown(touch, pointer, button);
+            buttonSoundOnOff.touchDown(touch, pointer, button);
+            buttonAccelerometerOnOff.touchDown(touch, pointer, button);
         }
         return false;
     }
@@ -247,14 +266,38 @@ public class GameScreen extends BaseScreen {
             mainShip.touchUp(touch, pointer, button);
         } else if (state == State.GAME_OVER) {
             buttonNewGame.touchUp(touch, pointer, button);
+            buttonLoad.touchUp(touch, pointer, button);
             buttonExit.touchUp(touch, pointer, button);
         } else if (state == State.PAUSE) {
             buttonExit.touchUp(touch, pointer, button);
             buttonResume.touchUp(touch, pointer, button);
             buttonSave.touchUp(touch, pointer, button);
-            buttonMusicMute.touchUp(touch, pointer, button);
+            buttonConfig.touchUp(touch, pointer, button);
+        } else if (state == State.CONFIG) {
+            buttonBack.touchUp(touch, pointer, button);
+            buttonMusicOnOff.touchUp(touch, pointer, button);
+            buttonSoundOnOff.touchUp(touch, pointer, button);
+            buttonAccelerometerOnOff.touchUp(touch, pointer, button);
         }
         return false;
+    }
+
+    public void enterConfig() {
+        state = State.CONFIG;
+    }
+
+    public void exitConfig() {
+        state = State.PAUSE;
+    }
+
+    public void musicChange() {
+        if (isMusicOn) {
+            gameMusic.play();
+            gameMusic.setVolume(0.3f);
+            gameMusic.setLooping(true);
+        } else {
+            gameMusic.stop();
+        }
     }
 
     public void saveGame() {
@@ -275,9 +318,8 @@ public class GameScreen extends BaseScreen {
             level = gameData.getLevel();
             enemyEmitter.setLevel(level);
             nebulaEmitter.setLevel(level);
-            mainShip.setMaxHp(gameData.getMaxHp());
-            mainShip.setHp(gameData.getHp());
-            mainShip.pos.x = gameData.getMainShipX();
+            mainShip.loadGame(gameData.getMaxHp(), gameData.getMaxHp(), gameData.getMainShipX());
+            freeActivePools();
             for (Star star : stars) {
                 for (float vy : gameData.getStarV()) {
                     star.setVY(vy);
@@ -293,24 +335,20 @@ public class GameScreen extends BaseScreen {
         enemyEmitter.setLevel(level);
         nebulaEmitter.setLevel(level);
         state = State.PLAYING;
-        explosionPool.freeAllActive();
-        enemyPool.freeAllActive();
-        bulletPool.freeAllActive();
-        bonusPool.freeAllActive();
-        nebulaPool.freeAllActive();
-        hitExplodePool.freeAllActive();
+        freeActivePools();
         for (Star star : stars) {
             star.setVStart();
         }
         mainShip.startNewGame();
     }
 
-    public void musicOnOff() {
-        isMusicOn = !isMusicOn;
-    }
-
-    public boolean isMusicOn() {
-        return isMusicOn;
+    private void freeActivePools() {
+        explosionPool.freeAllActive();
+        enemyPool.freeAllActive();
+        bulletPool.freeAllActive();
+        bonusPool.freeAllActive();
+        nebulaPool.freeAllActive();
+        hitExplodePool.freeAllActive();
     }
 
     private void update(float delta) {
@@ -326,7 +364,6 @@ public class GameScreen extends BaseScreen {
             bonusPool.updateActiveSprites(delta);
             hitExplodePool.updateActiveSprites(delta);
             mainShip.update(delta);
-            engineMainShip.update(delta);
             enemyEmitter.generate(delta);
             bonusEmitter.generate(delta);
             hpBar.update(delta);
@@ -338,7 +375,11 @@ public class GameScreen extends BaseScreen {
             titlePause.update(delta);
             buttonExit.update(delta);
             buttonResume.update(delta);
-            buttonMusicMute.update(delta);
+        } else if (state == State.CONFIG) {
+            titleConfig.update(delta);
+            buttonMusicOnOff.update(delta);
+            buttonSoundOnOff.update(delta);
+            buttonAccelerometerOnOff.update(delta);
         }
     }
 
@@ -353,7 +394,6 @@ public class GameScreen extends BaseScreen {
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
             bonusPool.drawActiveSprites(batch);
-            engineMainShip.draw(batch, mainShip);
             mainShip.draw(batch);
             hitExplodePool.drawActiveSprites(batch);
             if (mainShip.isShield()) {
@@ -363,13 +403,20 @@ public class GameScreen extends BaseScreen {
         } else if (state == State.GAME_OVER) {
             titleGameOver.draw(batch);
             buttonNewGame.draw(batch);
+            buttonLoad.draw(batch);
             buttonExit.draw(batch);
         } else if (state == State.PAUSE) {
             titlePause.draw(batch);
             buttonExit.draw(batch);
             buttonResume.draw(batch);
             buttonSave.draw(batch);
-            buttonMusicMute.draw(batch);
+            buttonConfig.draw(batch);
+        } else if (state == State.CONFIG) {
+            titleConfig.draw(batch);
+            buttonBack.draw(batch);
+            buttonMusicOnOff.draw(batch);
+            buttonSoundOnOff.draw(batch);
+            buttonAccelerometerOnOff.draw(batch);
         }
         explosionPool.drawActiveSprites(batch);
         printInfo();
@@ -394,6 +441,15 @@ public class GameScreen extends BaseScreen {
         final List<Bonus> bonuses = bonusPool.getActiveObjects();
         for (Enemy enemy : enemies) {
             if (enemy.isDestroyed()) {
+                continue;
+            }
+            if (enemy.getBottom() <= worldBounds.getBottom()) {
+                enemy.setDestroyBottom(true);
+                enemy.destroy();
+                if (mainShip.pos.dst(enemy.pos) < worldBounds.getHalfWidth()) {
+                    mainShip.damage(enemy.getDamage());
+                }
+                enemy.setDestroyBottom(false);
                 continue;
             }
             float minDist = enemy.getHalfWidth() + mainShip.getHalfWidth();

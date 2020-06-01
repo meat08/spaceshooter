@@ -2,6 +2,7 @@ package ru.spaceshooter.base;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,13 +13,33 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.math.MatrixUtils;
 import ru.spaceshooter.math.Rect;
+import ru.spaceshooter.sprite.TitleConfig;
+import ru.spaceshooter.sprite.buttons.ButtonAccelerometerOnOff;
+import ru.spaceshooter.sprite.buttons.ButtonBack;
+import ru.spaceshooter.sprite.buttons.ButtonConfig;
+import ru.spaceshooter.sprite.buttons.ButtonExit;
+import ru.spaceshooter.sprite.buttons.ButtonLoad;
+import ru.spaceshooter.sprite.buttons.ButtonMusicOnOff;
+import ru.spaceshooter.sprite.buttons.ButtonSoundOnOff;
 
 public class BaseScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
     protected FileHandle fileHandle;
-    private Rect screenBounds;
+    protected Preferences preferences;
     protected Rect worldBounds;
+    protected boolean isMusicOn;
+    protected boolean isSoundOn;
+    protected boolean isAccelerometerOn;
+    protected ButtonExit buttonExit;
+    protected ButtonLoad buttonLoad;
+    protected ButtonConfig buttonConfig;
+    protected ButtonBack buttonBack;
+    protected ButtonMusicOnOff buttonMusicOnOff;
+    protected ButtonSoundOnOff buttonSoundOnOff;
+    protected ButtonAccelerometerOnOff buttonAccelerometerOnOff;
+    protected TitleConfig titleConfig;
+    private Rect screenBounds;
     private Rect glBounds;
     private Matrix4 worldToGl;
     private Matrix3 screenToWorld;
@@ -35,6 +56,10 @@ public class BaseScreen implements Screen, InputProcessor {
         screenToWorld = new Matrix3();
         touch = new Vector2();
         fileHandle = Gdx.files.local("bin/GameData.json");
+        preferences = Gdx.app.getPreferences("GamePreference");
+        isMusicOn = preferences.getBoolean("isMusicOn", true);
+        isAccelerometerOn = preferences.getBoolean("isAccelOn", false);
+        isSoundOn = preferences.getBoolean("isSoundOn", true);
     }
 
     @Override
@@ -55,6 +80,10 @@ public class BaseScreen implements Screen, InputProcessor {
         MatrixUtils.calcTransitionMatrix(screenToWorld, screenBounds, worldBounds);
         batch.setProjectionMatrix(worldToGl);
         resize(worldBounds);
+    }
+
+    public void flushPreference() {
+        preferences.flush();
     }
 
     public void resize(Rect worldBounds) {
@@ -134,5 +163,32 @@ public class BaseScreen implements Screen, InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public boolean isMusicOn() {
+        return isMusicOn;
+    }
+
+    public void setMusicOn() {
+        isMusicOn = !isMusicOn;
+        preferences.putBoolean("isMusicOn", isMusicOn);
+    }
+
+    public boolean isSoundOn() {
+        return isSoundOn;
+    }
+
+    public void setSoundOn() {
+        isSoundOn = !isSoundOn;
+        preferences.putBoolean("isSoundOn", isSoundOn);
+    }
+
+    public boolean isAccelerometerOn() {
+        return isAccelerometerOn;
+    }
+
+    public void setAccelerometerOn() {
+        isAccelerometerOn = !isAccelerometerOn;
+        preferences.putBoolean("isAccelOn", isAccelerometerOn);
     }
 }

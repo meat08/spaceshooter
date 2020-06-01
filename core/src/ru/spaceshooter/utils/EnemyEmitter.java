@@ -14,26 +14,32 @@ public class EnemyEmitter {
     private static final float GENERATE_INTERVAL = 4.05f;
     private static final float BOOST_GENERATE_INTERVAL = 0.05f;
 
-    private static final float ENEMY_SMALL_HEIGHT = 0.05f;
+    private static final float ENEMY_SMALL_HEIGHT = 0.08f;
     private static final int ENEMY_SMALL_HP = 3;
-    private static final float ENEMY_SMALL_BULLET_HEIGHT = 0.01f;
+    private static final float ENEMY_SMALL_BULLET_HEIGHT = 0.015f;
     private static final float ENEMY_SMALL_BULLET_VY = -0.3f;
     private static final int ENEMY_SMALL_BULLET_DAMAGE = 1;
     private static final float ENEMY_SMALL_RELOAD_INTERVAL = 1f;
+    private static final int ENEMY_SMALL_SHOOT_TYPE = 1;
+    private static final int ENEMY_SMALL_TYPE = 1;
 
-    private static final float ENEMY_MEDIUM_HEIGHT = 0.1f;
+    private static final float ENEMY_MEDIUM_HEIGHT = 0.12f;
     private static final int ENEMY_MEDIUM_HP = 8;
-    private static final float ENEMY_MEDIUM_BULLET_HEIGHT = 0.02f;
+    private static final float ENEMY_MEDIUM_BULLET_HEIGHT = 0.025f;
     private static final float ENEMY_MEDIUM_BULLET_VY = -0.25f;
     private static final int ENEMY_MEDIUM_BULLET_DAMAGE = 5;
     private static final float ENEMY_MEDIUM_RELOAD_INTERVAL = 2f;
+    private static final int ENEMY_MEDIUM_SHOOT_TYPE = 1;
+    private static final int ENEMY_MEDIUM_TYPE = 1;
 
     private static final float ENEMY_BIG_HEIGHT = 0.15f;
     private static final int ENEMY_BIG_HP = 15;
-    private static final float ENEMY_BIG_BULLET_HEIGHT = 0.03f;
+    private static final float ENEMY_BIG_BULLET_HEIGHT = 0.035f;
     private static final float ENEMY_BIG_BULLET_VY = -0.3f;
     private static final int ENEMY_BIG_BULLET_DAMAGE = 10;
     private static final float ENEMY_BIG_RELOAD_INTERVAL = 2.5f;
+    private static final int ENEMY_BIG_SHOOT_TYPE = 2;
+    private static final int ENEMY_BIG_TYPE = 2;
 
     private Rect worldBounds;
     private float generateTimer;
@@ -52,12 +58,12 @@ public class EnemyEmitter {
 
     public EnemyEmitter(TextureAtlas atlas, EnemyPool enemyPool) {
         TextureRegion enemy0 = atlas.findRegion("enemy0");
-        this.enemySmallRegions = Regions.split(enemy0, 1, 1, 1);
+        this.enemySmallRegions = Regions.split(enemy0, 1, 4, 4);
         TextureRegion enemy1 = atlas.findRegion("enemy1");
-        this.enemyMediumRegions = Regions.split(enemy1, 1, 2, 2);
+        this.enemyMediumRegions = Regions.split(enemy1, 1, 4, 4);
         TextureRegion enemy2 = atlas.findRegion("enemy2");
-        this.enemyBigRegions = Regions.split(enemy2, 1, 2, 2);
-        this.enemySmallV = new Vector2(0, -0.2f);
+        this.enemyBigRegions = Regions.split(enemy2, 1, 4, 4);
+        this.enemySmallV = new Vector2(0, -0.15f);
         this.enemyMediumV = new Vector2(0, -0.03f);
         this.enemyBigV = new Vector2(0, -0.005f);
         this.bulletRegion = atlas.findRegion("bulletEnemy");
@@ -89,7 +95,9 @@ public class EnemyEmitter {
                         level > 1 ? ENEMY_SMALL_BULLET_DAMAGE * (level/2) : ENEMY_SMALL_BULLET_DAMAGE,
                         ENEMY_SMALL_RELOAD_INTERVAL,
                         ENEMY_SMALL_HP,
-                        ENEMY_SMALL_HEIGHT
+                        ENEMY_SMALL_HEIGHT,
+                        ENEMY_SMALL_SHOOT_TYPE,
+                        ENEMY_SMALL_TYPE
                 );
             } else if (type < 0.8f) {
                 enemy.set(
@@ -101,7 +109,9 @@ public class EnemyEmitter {
                         level > 1 ? ENEMY_MEDIUM_BULLET_DAMAGE * (level/2) : ENEMY_MEDIUM_BULLET_DAMAGE,
                         ENEMY_MEDIUM_RELOAD_INTERVAL,
                         ENEMY_MEDIUM_HP,
-                        ENEMY_MEDIUM_HEIGHT
+                        ENEMY_MEDIUM_HEIGHT,
+                        ENEMY_MEDIUM_SHOOT_TYPE,
+                        ENEMY_MEDIUM_TYPE
                 );
             } else {
                 enemy.set(
@@ -113,15 +123,13 @@ public class EnemyEmitter {
                         level > 1 ? ENEMY_BIG_BULLET_DAMAGE * (level/2) : ENEMY_BIG_BULLET_DAMAGE,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         ENEMY_BIG_HP,
-                        ENEMY_BIG_HEIGHT
+                        ENEMY_BIG_HEIGHT,
+                        ENEMY_BIG_SHOOT_TYPE,
+                        ENEMY_BIG_TYPE
                 );
             }
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
             enemy.setBottom(worldBounds.getTop());
         }
-    }
-
-    public int getLevel() {
-        return level;
     }
 }

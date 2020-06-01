@@ -1,54 +1,96 @@
 
 menuAtlas.png
-size: 2079,364
+size: 3964,391
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
 btExit
   rotate: false
-  xy: 904, 248
+  xy: 3066, 275
   size: 633, 114
   orig: 633, 114
   offset: 0, 0
   index: -1
 btPlay
   rotate: false
-  xy: 904, 134
+  xy: 3066, 161
   size: 628, 112
   orig: 628, 112
   offset: 0, 0
   index: -1
+btnAccelOnOff
+  rotate: false
+  xy: 904, 6
+  size: 628, 224
+  orig: 628, 224
+  offset: 0, 0
+  index: -1
+btnMusicOnOff
+  rotate: false
+  xy: 1806, 165
+  size: 628, 224
+  orig: 628, 224
+  offset: 0, 0
+  index: -1
+btnSoundOnOff
+  rotate: false
+  xy: 2436, 165
+  size: 628, 224
+  orig: 628, 224
+  offset: 0, 0
+  index: -1
+buttonBack
+  rotate: false
+  xy: 2794, 47
+  size: 628, 112
+  orig: 628, 112
+  offset: 0, 0
+  index: -1
+buttonConf
+  rotate: false
+  xy: 1534, 51
+  size: 628, 112
+  orig: 628, 112
+  offset: 0, 0
+  index: -1
+confLogo
+  rotate: false
+  xy: 904, 232
+  size: 900, 157
+  orig: 900, 157
+  offset: 0, 0
+  index: -1
 hit
   rotate: false
-  xy: 1821, 106
+  xy: 3706, 133
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 loadButton
   rotate: false
-  xy: 904, 20
+  xy: 2164, 51
   size: 628, 112
   orig: 628, 112
   offset: 0, 0
   index: -1
 menu_logo_ship
   rotate: false
-  xy: 2, 2
+  xy: 2, 29
   size: 900, 360
   orig: 900, 360
   offset: 0, 0
   index: -1
 musicOnOff
   rotate: false
-  xy: 1539, 205
+  xy: 3424, 2
   size: 280, 157
   orig: 280, 157
   offset: 0, 0
   index: -1
 star
   rotate: false
-  xy: 904, 8
+  xy: 2, 17
   size: 11, 10
   orig: 11, 10
   offset: 0, 0
