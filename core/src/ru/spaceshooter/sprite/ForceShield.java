@@ -12,7 +12,7 @@ public class ForceShield extends Sprite {
     private float animateTimer;
 
     public ForceShield(TextureAtlas atlas) {
-        super(atlas.findRegion("bonus2"), 2, 16, 30);
+        super(atlas.findRegion("shield"), 2, 16, 30);
     }
 
     public void resize(Rect worldBounds, Ship ship) {

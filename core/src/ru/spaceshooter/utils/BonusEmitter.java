@@ -19,9 +19,9 @@ public class BonusEmitter {
     private float generateTimer;
 
     public BonusEmitter (TextureAtlas atlas, BonusPool bonusPool, Ship ship) {
-        this.hpBonusRegion = Regions.split(atlas.findRegion("bonus0"),2, 15, 28);
-        this.bulletBonusRegion = Regions.split(atlas.findRegion("bonus1"),4, 15, 60);
-        this.shieldBonusRegion = Regions.split(atlas.findRegion("bonus2"),2, 16, 30);
+        this.hpBonusRegion = Regions.split(atlas.findRegion("bonusHeal"),1, 6, 6);
+        this.bulletBonusRegion = Regions.split(atlas.findRegion("bonusGuns"),1, 6, 6);
+        this.shieldBonusRegion = Regions.split(atlas.findRegion("bonusShield"),1, 6, 6);
         this.bonusPool = bonusPool;
         this.ship = ship;
     }

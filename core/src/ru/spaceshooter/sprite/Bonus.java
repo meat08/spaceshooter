@@ -9,8 +9,8 @@ import ru.spaceshooter.math.Rnd;
 
 public class Bonus extends Sprite {
 
-    private static final float ANIMATE_INTERVAL = 0.017f;
-    private static final float SIZE = 0.05f;
+    private static final float ANIMATE_INTERVAL = 0.04f;
+    private static final float SIZE = 0.055f;
     private static final float SPEED = -0.15f;
 
     private float animateTimer;
