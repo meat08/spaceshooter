@@ -9,16 +9,18 @@ import ru.spaceshooter.screen.MenuScreen;
 
 public class ButtonConfig extends ScaledButton {
 
+    private static final String BUTTON_TEXT = "Настройки";
+
     private MenuScreen menuScreen;
     private GameScreen gameScreen;
 
     public ButtonConfig(TextureAtlas atlas, MenuScreen menuScreen) {
-        super(atlas.findRegion("buttonConf"));
+        super(atlas, BUTTON_TEXT);
         this.menuScreen = menuScreen;
     }
 
     public ButtonConfig(TextureAtlas atlas, GameScreen gameScreen) {
-        super(atlas.findRegion("buttonConf"));
+        super(atlas, BUTTON_TEXT);
         this.gameScreen = gameScreen;
     }
 

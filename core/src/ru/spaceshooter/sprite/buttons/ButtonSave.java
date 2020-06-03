@@ -7,10 +7,12 @@ import ru.spaceshooter.screen.GameScreen;
 
 public class ButtonSave extends ScaledButton {
 
+    private static final String BUTTON_TEXT = "Сохранить";
+
     private final GameScreen gameScreen;
 
     public ButtonSave(TextureAtlas atlas, GameScreen gameScreen) {
-        super(atlas.findRegion("saveButton"));
+        super(atlas, BUTTON_TEXT);
         this.gameScreen = gameScreen;
     }
 

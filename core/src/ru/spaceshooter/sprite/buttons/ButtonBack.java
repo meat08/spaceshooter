@@ -1,5 +1,4 @@
 package ru.spaceshooter.sprite.buttons;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import ru.spaceshooter.base.ScaledButton;
@@ -9,16 +8,18 @@ import ru.spaceshooter.screen.MenuScreen;
 
 public class ButtonBack extends ScaledButton {
 
+    private static final String BUTTON_TEXT = "Назад";
+
     private GameScreen gameScreen;
     private MenuScreen menuScreen;
 
     public ButtonBack(TextureAtlas atlas, GameScreen gameScreen) {
-        super(atlas.findRegion("buttonBack"));
+        super(atlas, BUTTON_TEXT);
         this.gameScreen = gameScreen;
     }
 
     public ButtonBack(TextureAtlas atlas, MenuScreen menuScreen) {
-        super(atlas.findRegion("buttonBack"));
+        super(atlas, BUTTON_TEXT);
         this.menuScreen = menuScreen;
     }
 

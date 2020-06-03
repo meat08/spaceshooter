@@ -99,7 +99,16 @@ public class MenuScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         menuMusic.dispose();
+        buttonDispose();
         super.dispose();
+    }
+
+    private void buttonDispose() {
+        buttonBack.dispose();
+        buttonConfig.dispose();
+        buttonPlay.dispose();
+        buttonExit.dispose();
+        buttonLoad.dispose();
     }
 
     @Override

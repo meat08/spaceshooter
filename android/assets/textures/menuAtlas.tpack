@@ -1,103 +1,117 @@
 
 menuAtlas.png
-size: 1544,1009
+size: 1544,1024
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
 btExit
   rotate: false
-  xy: 2, 372
+  xy: 894, 230
   size: 633, 114
   orig: 633, 114
   offset: 0, 0
   index: -1
 btPlay
   rotate: false
-  xy: 895, 217
+  xy: 2, 131
   size: 628, 112
   orig: 628, 112
   offset: 0, 0
   index: -1
 btnAccelOnOff
   rotate: false
-  xy: 904, 783
+  xy: 904, 798
   size: 628, 224
   orig: 628, 224
   offset: 0, 0
   index: -1
 btnMusicOnOff
   rotate: false
-  xy: 904, 557
+  xy: 904, 572
   size: 628, 224
   orig: 628, 224
   offset: 0, 0
   index: -1
 btnSoundOnOff
   rotate: false
-  xy: 904, 331
+  xy: 904, 346
   size: 628, 224
   orig: 628, 224
   offset: 0, 0
   index: -1
-button
-  rotate: false
-  xy: 2, 116
-  size: 628, 112
-  orig: 628, 112
-  offset: 0, 0
-  index: -1
 buttonBack
   rotate: false
-  xy: 632, 103
+  xy: 632, 2
   size: 628, 112
   orig: 628, 112
   offset: 0, 0
   index: -1
 buttonConf
   rotate: false
-  xy: 2, 258
+  xy: 2, 17
+  size: 628, 112
+  orig: 628, 112
+  offset: 0, 0
+  index: -1
+buttonDown
+  rotate: false
+  xy: 2, 386
+  size: 632, 115
+  orig: 632, 115
+  offset: 0, 0
+  index: -1
+buttonUp
+  rotate: false
+  xy: 2, 272
+  size: 628, 112
+  orig: 628, 112
+  offset: 0, 0
+  index: -1
+button
+  rotate: false
+  xy: 2, 272
   size: 628, 112
   orig: 628, 112
   offset: 0, 0
   index: -1
 confLogo
   rotate: false
-  xy: 2, 488
+  xy: 2, 503
   size: 900, 157
   orig: 900, 157
   offset: 0, 0
   index: -1
 hit
   rotate: false
-  xy: 637, 230
+  xy: 636, 245
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 loadButton
   rotate: false
-  xy: 2, 2
+  xy: 632, 116
   size: 628, 112
   orig: 628, 112
   offset: 0, 0
   index: -1
 menu_logo_ship
   rotate: false
-  xy: 2, 647
+  xy: 2, 662
   size: 900, 360
   orig: 900, 360
   offset: 0, 0
   index: -1
 musicOnOff
   rotate: false
-  xy: 1262, 58
+  xy: 1262, 71
   size: 280, 157
   orig: 280, 157
   offset: 0, 0
   index: -1
 star
   rotate: false
-  xy: 1525, 319
+  xy: 1529, 334
   size: 11, 10
   orig: 11, 10
   offset: 0, 0

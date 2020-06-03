@@ -7,9 +7,10 @@ import ru.spaceshooter.base.ScaledButton;
 import ru.spaceshooter.math.Rect;
 
 public class ButtonExit extends ScaledButton {
+    private static final String BUTTON_TEXT = "Выход";
 
     public ButtonExit(TextureAtlas atlas) {
-        super(atlas.findRegion("btExit"));
+        super(atlas, BUTTON_TEXT);
     }
 
     @Override

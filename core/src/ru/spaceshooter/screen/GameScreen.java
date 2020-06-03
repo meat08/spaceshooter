@@ -190,7 +190,18 @@ public class GameScreen extends BaseScreen {
         mainShip.dispose();
         gameMusic.dispose();
         font.dispose();
+        buttonDispose();
         super.dispose();
+    }
+
+    private void buttonDispose() {
+        buttonBack.dispose();
+        buttonConfig.dispose();
+        buttonExit.dispose();
+        buttonLoad.dispose();
+        buttonNewGame.dispose();
+        buttonResume.dispose();
+        buttonSave.dispose();
     }
 
     @Override

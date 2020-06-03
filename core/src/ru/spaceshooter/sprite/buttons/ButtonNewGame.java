@@ -8,10 +8,12 @@ import ru.spaceshooter.screen.GameScreen;
 
 public class ButtonNewGame extends ScaledButton {
 
+    private static final String BUTTON_TEXT = "Новая игра";
+
     private GameScreen gameScreen;
 
     public ButtonNewGame(TextureAtlas atlas, GameScreen gameScreen) {
-        super(atlas.findRegion("button_new_game"));
+        super(atlas, BUTTON_TEXT);
         this.gameScreen = gameScreen;
     }
 

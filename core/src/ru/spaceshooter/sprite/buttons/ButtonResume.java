@@ -7,10 +7,12 @@ import ru.spaceshooter.screen.GameScreen;
 
 public class ButtonResume extends ScaledButton {
 
+    private static final String BUTTON_TEXT = "Продолжить";
+
     private final GameScreen gameScreen;
 
     public ButtonResume(TextureAtlas atlas, GameScreen gameScreen) {
-        super(atlas.findRegion("resume"));
+        super(atlas, BUTTON_TEXT);
         this.gameScreen = gameScreen;
     }
 

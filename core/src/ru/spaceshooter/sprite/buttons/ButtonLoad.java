@@ -9,18 +9,20 @@ import ru.spaceshooter.screen.GameScreen;
 
 public class ButtonLoad extends ScaledButton {
 
+    private static final String BUTTON_TEXT = "Загрузить";
+
     private Game game;
     private GameScreen gameScreen;
     private final FileHandle fileHandle;
 
     public ButtonLoad(TextureAtlas atlas, Game game, FileHandle fileHandle) {
-        super(atlas.findRegion("loadButton"));
+        super(atlas, BUTTON_TEXT);
         this.game = game;
         this.fileHandle = fileHandle;
     }
 
     public ButtonLoad(TextureAtlas atlas, GameScreen gameScreen, FileHandle fileHandle) {
-        super(atlas.findRegion("loadButton"));
+        super(atlas, BUTTON_TEXT);
         this.gameScreen = gameScreen;
         this.fileHandle = fileHandle;
     }
