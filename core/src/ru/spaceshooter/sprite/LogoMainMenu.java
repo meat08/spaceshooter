@@ -21,7 +21,7 @@ public class LogoMainMenu extends Sprite {
     @Override
     public void resize(Rect worldBounds) {
         setHeightProportion(0.25f);
-        setTop(worldBounds.getTop() - MARGIN);
+        setTop(worldBounds.getTop() - 0.3f);
         setLeft(worldBounds.getLeft() + MARGIN);
         setRight(worldBounds.getRight());
     }

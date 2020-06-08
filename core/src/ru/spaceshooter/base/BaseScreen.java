@@ -1,6 +1,7 @@
 package ru.spaceshooter.base;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
@@ -13,14 +14,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.math.MatrixUtils;
 import ru.spaceshooter.math.Rect;
-import ru.spaceshooter.sprite.TitleConfig;
-import ru.spaceshooter.sprite.buttons.ButtonAccelerometerOnOff;
-import ru.spaceshooter.sprite.buttons.ButtonBack;
-import ru.spaceshooter.sprite.buttons.ButtonConfig;
-import ru.spaceshooter.sprite.buttons.ButtonExit;
-import ru.spaceshooter.sprite.buttons.ButtonLoad;
-import ru.spaceshooter.sprite.buttons.ButtonMusicOnOff;
-import ru.spaceshooter.sprite.buttons.ButtonSoundOnOff;
 
 public class BaseScreen implements Screen, InputProcessor {
 
@@ -31,14 +24,8 @@ public class BaseScreen implements Screen, InputProcessor {
     protected boolean isMusicOn;
     protected boolean isSoundOn;
     protected boolean isAccelerometerOn;
-    protected ButtonExit buttonExit;
-    protected ButtonLoad buttonLoad;
-    protected ButtonConfig buttonConfig;
-    protected ButtonBack buttonBack;
-    protected ButtonMusicOnOff buttonMusicOnOff;
-    protected ButtonSoundOnOff buttonSoundOnOff;
-    protected ButtonAccelerometerOnOff buttonAccelerometerOnOff;
-    protected TitleConfig titleConfig;
+    protected InputMultiplexer multiplexer;
+    protected State state;
     private Rect screenBounds;
     private Rect glBounds;
     private Matrix4 worldToGl;
@@ -47,7 +34,8 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(this);
+        multiplexer = new InputMultiplexer(this);
+        Gdx.input.setInputProcessor(multiplexer);
         batch = new SpriteBatch();
         screenBounds = new Rect();
         worldBounds = new Rect();
@@ -126,7 +114,7 @@ public class BaseScreen implements Screen, InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchDown(touch, pointer, button);
-        return false;
+        return true;
     }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
@@ -137,7 +125,7 @@ public class BaseScreen implements Screen, InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchUp(touch, pointer, button);
-        return false;
+        return true;
     }
 
     public boolean touchUp(Vector2 touch, int pointer, int button) {
@@ -148,7 +136,7 @@ public class BaseScreen implements Screen, InputProcessor {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchDragged(touch, pointer);
-        return false;
+        return true;
     }
 
     public boolean touchDragged(Vector2 touch, int pointer) {
@@ -163,6 +151,14 @@ public class BaseScreen implements Screen, InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     public boolean isMusicOn() {
