@@ -24,6 +24,9 @@ public class BaseScreen implements Screen, InputProcessor {
     protected boolean isMusicOn;
     protected boolean isSoundOn;
     protected boolean isAccelerometerOn;
+    protected float volumeMusic;
+    protected float volumeSound;
+    protected float senseAccel;
     protected InputMultiplexer multiplexer;
     protected State state;
     private Rect screenBounds;
@@ -48,6 +51,9 @@ public class BaseScreen implements Screen, InputProcessor {
         isMusicOn = preferences.getBoolean("isMusicOn", true);
         isAccelerometerOn = preferences.getBoolean("isAccelOn", false);
         isSoundOn = preferences.getBoolean("isSoundOn", true);
+        volumeMusic = preferences.getFloat("volumeMusic", 0.5f);
+        volumeSound = preferences.getFloat("volumeSound", 0.5f);
+        senseAccel = preferences.getFloat("senseAccel", 0.85f);
     }
 
     @Override
@@ -186,5 +192,32 @@ public class BaseScreen implements Screen, InputProcessor {
     public void setAccelerometerOn() {
         isAccelerometerOn = !isAccelerometerOn;
         preferences.putBoolean("isAccelOn", isAccelerometerOn);
+    }
+
+    public float getVolumeMusic() {
+        return volumeMusic;
+    }
+
+    public void setVolumeMusic(float volumeMusic) {
+        this.volumeMusic = volumeMusic;
+        preferences.putFloat("volumeMusic", volumeMusic);
+    }
+
+    public float getVolumeSound() {
+        return volumeSound;
+    }
+
+    public void setVolumeSound(float volumeSound) {
+        this.volumeSound = volumeSound;
+        preferences.putFloat("volumeSound", volumeSound);
+    }
+
+    public float getSenseAccel() {
+        return senseAccel;
+    }
+
+    public void setSenseAccel(float senseAccel) {
+        this.senseAccel = senseAccel;
+        preferences.putFloat("senseAccel", senseAccel);
     }
 }

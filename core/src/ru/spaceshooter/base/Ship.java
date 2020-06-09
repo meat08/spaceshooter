@@ -126,7 +126,7 @@ public class Ship extends Sprite {
 
     private void pew() {
         if (screen.isSoundOn()) {
-            sound.play(0.3f);
+            sound.play(screen.getVolumeSound());
         }
     }
 

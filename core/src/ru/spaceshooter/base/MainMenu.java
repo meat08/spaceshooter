@@ -87,13 +87,12 @@ public class MainMenu {
         btnExit = new TextButton("Выход", skin, "round");
         tableConf = new Table();
         btnMusic = new Button(skin, "music");
-        sliderMusic = new Slider(0f, 1f, 0.05f, false, skin);
+        sliderMusic = new Slider(0.1f, 1f, 0.05f, false, skin);
         btnSound = new Button(skin, "sound");
-        sliderSound = new Slider(0f, 1f, 0.05f, false, skin);
+        sliderSound = new Slider(0.1f, 1f, 0.05f, false, skin);
         btnSound = new Button(skin, "sound");
-        sliderSound = new Slider(0f, 1f, 0.05f, false, skin);
+        sliderAccel = new Slider(0.5f, 1.5f, 0.05f, false, skin);
         btnAccel = new Button(skin, "accel");
-        sliderAccel = new Slider(0f, 1f, 0.05f, false, skin);
         btnBack = new TextButton("Назад", skin, "round");
         btnResume = new TextButton("Продолжить", skin, "round");
         btnSave = new TextButton("Сохранить игру", skin, "round");
@@ -131,9 +130,7 @@ public class MainMenu {
         tableButtons.add(btnExit).width(widthRoot).height(heightRoot).row();
         tableRoot.add(tableButtons).row();
 
-        tableConf.defaults().padBottom(10.0f);
-        sliderMusic.setValue(0.5f);
-        sliderSound.setValue(0.5f);
+        tableConf.defaults().padBottom(20.0f);
         Table tmpTableMusic = new Table();
         tmpTableMusic.add(btnMusic).size(confButtonSize).pad(12f);
         tmpTableMusic.add(sliderMusic).width(sliderWidth);
@@ -200,7 +197,7 @@ public class MainMenu {
         sliderMusic.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println(sliderMusic.getValue());
+                setMusicVolume(sliderMusic.getValue());
             }
         });
         btnMusic.addListener( new ClickListener() {
@@ -212,7 +209,7 @@ public class MainMenu {
         sliderSound.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println(sliderSound.getValue());
+                setSoundVolume(sliderSound.getValue());
             }
         });
         btnSound.addListener( new ClickListener() {
@@ -224,7 +221,7 @@ public class MainMenu {
         sliderAccel.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println(sliderSound.getValue());
+                setSenseAccel(sliderAccel.getValue());
             }
         });
         btnAccel.addListener( new ClickListener() {
@@ -267,10 +264,18 @@ public class MainMenu {
     private void musicOnOff() {
         if (gameScreen != null) {
             gameScreen.setMusicOn();
-            gameScreen.musicChange();
+            gameScreen.musicOnOff();
         } else if (menuScreen != null) {
             menuScreen.setMusicOn();
-            menuScreen.musicChange();
+            menuScreen.musicOnOff();
+        }
+    }
+
+    private void setMusicVolume(float volume) {
+        if (gameScreen != null) {
+            gameScreen.setVolumeMusic(volume);
+        } else if (menuScreen != null) {
+            menuScreen.setVolumeMusic(volume);
         }
     }
 
@@ -282,11 +287,27 @@ public class MainMenu {
         }
     }
 
+    private void setSoundVolume(float volume) {
+        if (gameScreen != null) {
+            gameScreen.setVolumeSound(volume);
+        } else if (menuScreen != null) {
+            menuScreen.setVolumeSound(volume);
+        }
+    }
+
     private void accelOnOff() {
         if (gameScreen != null) {
             gameScreen.setAccelerometerOn();
         } else if (menuScreen != null) {
             menuScreen.setAccelerometerOn();
+        }
+    }
+
+    private void setSenseAccel(float sense) {
+        if (gameScreen != null) {
+            gameScreen.setSenseAccel(sense);
+        } else if (menuScreen != null) {
+            menuScreen.setSenseAccel(sense);
         }
     }
 
@@ -335,6 +356,10 @@ public class MainMenu {
         tableRoot.setSize(stage.getWidth(), stage.getHeight());
         tableRoot.setFillParent(true);
         setPercentSize();
+        sliderAccel.getStyle().knob.setMinHeight(40f);
+        sliderAccel.getStyle().knob.setMinWidth(40f);
+        sliderAccel.getStyle().background.setMinHeight(30f);
+        sliderAccel.getStyle().knobBefore.setMinHeight(28f);
     }
 
     public void update() {
@@ -342,10 +367,16 @@ public class MainMenu {
             btnMusic.setChecked(gameScreen.isMusicOn());
             btnSound.setChecked(gameScreen.isSoundOn());
             btnAccel.setChecked(gameScreen.isAccelerometerOn());
+            sliderMusic.setValue(gameScreen.getVolumeMusic());
+            sliderSound.setValue(gameScreen.getVolumeSound());
+            sliderAccel.setValue(gameScreen.getSenseAccel());
         } else if (menuScreen != null) {
             btnMusic.setChecked(menuScreen.isMusicOn());
             btnSound.setChecked(menuScreen.isSoundOn());
             btnAccel.setChecked(menuScreen.isAccelerometerOn());
+            sliderMusic.setValue(menuScreen.getVolumeMusic());
+            sliderSound.setValue(menuScreen.getVolumeSound());
+            sliderAccel.setValue(menuScreen.getSenseAccel());
         }
     }
 

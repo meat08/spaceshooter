@@ -105,7 +105,7 @@ public class GameScreen extends BaseScreen {
         sbFrags = new StringBuilder();
         sbHp = new StringBuilder();
         sbLevel = new StringBuilder();
-        musicChange();
+        musicOnOff();
         state = State.PLAYING;
         previousState = state;
         level = 1;
@@ -213,23 +213,30 @@ public class GameScreen extends BaseScreen {
         return false;
     }
 
-    public void enterConfig() {
-        state = State.CONFIG;
-    }
-
     public void exitConfig() {
         state = State.PAUSE;
         mainMenu.hideConf();
     }
 
-    public void musicChange() {
+    public void musicOnOff() {
         if (isMusicOn) {
             gameMusic.play();
-            gameMusic.setVolume(0.3f);
             gameMusic.setLooping(true);
         } else {
             gameMusic.stop();
         }
+    }
+
+    @Override
+    public void setVolumeMusic(float volumeMusic) {
+        super.setVolumeMusic(volumeMusic);
+        gameMusic.setVolume(volumeMusic);
+    }
+
+    @Override
+    public void setSenseAccel(float senseAccel) {
+        super.setSenseAccel(senseAccel);
+        mainShip.setSense(senseAccel);
     }
 
     public void saveGame() {

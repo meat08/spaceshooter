@@ -46,7 +46,7 @@ public class MenuScreen extends BaseScreen {
         hitExplodePool = new HitExplodePool(atlas);
         logoMainMenu = new LogoMainMenu(atlas, hitExplodePool);
         menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/mainScreen.mp3"));
-        musicChange();
+        musicOnOff();
         mainMenu = new MainMenu(multiplexer, game, this, fileHandle);
     }
 
@@ -92,14 +92,19 @@ public class MenuScreen extends BaseScreen {
         mainMenu.hideConf();
     }
 
-    public void musicChange() {
+    public void musicOnOff() {
         if (isMusicOn) {
             menuMusic.play();
-            menuMusic.setVolume(0.5f);
             menuMusic.setLooping(true);
         } else {
             menuMusic.stop();
         }
+    }
+
+    @Override
+    public void setVolumeMusic(float volumeMusic) {
+        super.setVolumeMusic(volumeMusic);
+        menuMusic.setVolume(volumeMusic);
     }
 
     private void update(float delta) {

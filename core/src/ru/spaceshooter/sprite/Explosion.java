@@ -21,7 +21,7 @@ public class Explosion extends Sprite {
 
     private void pew() {
         if (screen.isSoundOn()) {
-            sound.play(0.7f);
+            sound.play(screen.getVolumeSound());
         }
     }
 

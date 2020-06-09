@@ -20,10 +20,10 @@ public class MainShip extends Ship {
     private static final float BOOST_SHOOT_INTERVAL = 4f;
     private static final float BOOST_SHOOT_FACTOR = 0.5f;
     private static final float BOOST_SHIELD_INTERVAL = 5f;
-    private static final float SENSE = 0.85f;
     private static final float DEFAULT_RELOAD_INTERVAL = 0.25f;
     private static final int HP = 100;
 
+    private float sense = 0.85f;
     private int leftPointer;
     private int rightPointer;
     private float boostTimer;
@@ -61,6 +61,7 @@ public class MainShip extends Ship {
         isTouched = false;
         isShield = false;
         isShootBoost = false;
+        sense = screen.getSenseAccel();
     }
 
     @Override
@@ -76,9 +77,9 @@ public class MainShip extends Ship {
         }
         if (accelerometerAvailable & screen.isAccelerometerOn()) {
             float accelerometerX = Gdx.input.getAccelerometerX();
-            if (accelerometerX < -SENSE) {
+            if (accelerometerX < -sense) {
                 moveRight();
-            } else if (accelerometerX > SENSE) {
+            } else if (accelerometerX > sense) {
                 moveLeft();
             } else {
                 if(!isTouched) {
@@ -198,6 +199,10 @@ public class MainShip extends Ship {
         return false;
     }
 
+    public void setSense(float sense) {
+        this.sense = sense;
+    }
+
     public boolean isBulletCollision(Bullet bullet) {
         return !(bullet.getRight() < getLeft()
                 || bullet.getLeft() > getRight()
@@ -268,6 +273,7 @@ public class MainShip extends Ship {
         isTouched = false;
         isShield = false;
         isShootBoost = false;
+        isShootMulti = false;
         pressedRight = false;
         pressedLeft = false;
         leftPointer = INVALID_POINTER;
