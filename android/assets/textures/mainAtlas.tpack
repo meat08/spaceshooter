@@ -1,250 +1,145 @@
 
 mainAtlas.png
-size: 3123,2049
+size: 4047,1234
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
 bonusGuns
   rotate: false
-  xy: 704, 2
+  xy: 2202, 678
   size: 600, 101
   orig: 600, 101
   offset: 0, 0
   index: -1
 bonusHeal
   rotate: false
-  xy: 837, 331
+  xy: 2008, 59
   size: 600, 101
   orig: 600, 101
   offset: 0, 0
   index: -1
 bonusShield
   rotate: false
-  xy: 837, 434
+  xy: 1406, 59
   size: 600, 101
   orig: 600, 101
   offset: 0, 0
   index: -1
-btExit
-  rotate: false
-  xy: 1439, 274
-  size: 633, 114
-  orig: 633, 114
-  offset: 0, 0
-  index: -1
-btnAccelOnOff
-  rotate: false
-  xy: 1439, 504
-  size: 628, 224
-  orig: 628, 224
-  offset: 0, 0
-  index: -1
-btnMusicOnOff
-  rotate: false
-  xy: 704, 105
-  size: 628, 224
-  orig: 628, 224
-  offset: 0, 0
-  index: -1
-btnSoundOnOff
-  rotate: false
-  xy: 1334, 48
-  size: 628, 224
-  orig: 628, 224
-  offset: 0, 0
-  index: -1
 bulletEnemy
   rotate: false
-  xy: 1334, 295
+  xy: 1630, 657
   size: 30, 34
   orig: 30, 34
   offset: 0, 0
   index: -1
 bulletMainShip
   rotate: false
-  xy: 2091, 1001
+  xy: 1600, 639
   size: 28, 52
   orig: 28, 52
   offset: 0, 0
   index: -1
-button
-  rotate: false
-  xy: 2069, 523
-  size: 628, 112
-  orig: 628, 112
-  offset: 0, 0
-  index: -1
-buttonBack
-  rotate: false
-  xy: 2074, 295
-  size: 628, 112
-  orig: 628, 112
-  offset: 0, 0
-  index: -1
-buttonConf
-  rotate: false
-  xy: 2074, 181
-  size: 628, 112
-  orig: 628, 112
-  offset: 0, 0
-  index: -1
-button_new_game
-  rotate: false
-  xy: 2091, 637
-  size: 628, 112
-  orig: 628, 112
-  offset: 0, 0
-  index: -1
-confLogo
-  rotate: false
-  xy: 2091, 751
-  size: 900, 157
-  orig: 900, 157
-  offset: 0, 0
-  index: -1
 enemy0
   rotate: false
-  xy: 2704, 337
+  xy: 2804, 820
   size: 400, 190
   orig: 400, 190
   offset: 0, 0
   index: -1
 enemy0_type1
   rotate: false
-  xy: 2721, 529
+  xy: 2804, 1012
   size: 400, 220
   orig: 400, 220
   offset: 0, 0
   index: -1
 enemy1
   rotate: false
-  xy: 2202, 1596
+  xy: 1604, 162
   size: 650, 451
   orig: 650, 451
   offset: 0, 0
   index: -1
 enemy1_type1
   rotate: false
-  xy: 1439, 730
+  xy: 3212, 50
   size: 650, 323
   orig: 650, 323
   offset: 0, 0
   index: -1
 enemy2
   rotate: false
-  xy: 2, 25
+  xy: 704, 69
   size: 700, 327
   orig: 700, 327
   offset: 0, 0
   index: -1
 enemy2_type1
   rotate: false
-  xy: 2206, 1226
+  xy: 2, 28
   size: 700, 368
   orig: 700, 368
   offset: 0, 0
   index: -1
-engine_main_ship
-  rotate: false
-  xy: 1439, 1111
-  size: 163, 100
-  orig: 163, 100
-  offset: 0, 0
-  index: -1
 explosion
   rotate: false
-  xy: 2, 354
+  xy: 3212, 375
   size: 833, 857
   orig: 833, 857
   offset: 0, 0
   index: 0
 hit
   rotate: false
-  xy: 2854, 1791
+  xy: 2256, 420
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 hp_bar
   rotate: false
-  xy: 704, 342
+  xy: 1600, 627
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
-loadButton
-  rotate: false
-  xy: 2069, 409
-  size: 628, 112
-  orig: 628, 112
-  offset: 0, 0
-  index: -1
 main_ship
   rotate: false
-  xy: 2, 1423
+  xy: 2, 608
   size: 1596, 624
   orig: 1596, 624
   offset: 0, 0
   index: -1
-message_game_over
-  rotate: false
-  xy: 2206, 1061
-  size: 900, 163
-  orig: 900, 163
-  offset: 0, 0
-  index: -1
 nebula0
   rotate: false
-  xy: 1604, 1055
+  xy: 2202, 781
   size: 600, 451
   orig: 600, 451
   offset: 0, 0
   index: -1
 nebula1
   rotate: false
-  xy: 1600, 1508
+  xy: 1600, 693
   size: 600, 539
   orig: 600, 539
   offset: 0, 0
   index: -1
 nebula2
   rotate: false
-  xy: 837, 537
+  xy: 2610, 2
   size: 600, 674
   orig: 600, 674
   offset: 0, 0
   index: -1
-pause
-  rotate: false
-  xy: 2206, 910
-  size: 900, 149
-  orig: 900, 149
-  offset: 0, 0
-  index: -1
-resume
-  rotate: false
-  xy: 1964, 69
-  size: 625, 110
-  orig: 625, 110
-  offset: 0, 0
-  index: -1
-saveButton
-  rotate: false
-  xy: 1439, 390
-  size: 628, 112
-  orig: 628, 112
-  offset: 0, 0
-  index: -1
 shield
   rotate: false
-  xy: 2, 1213
+  xy: 2, 398
   size: 1600, 208
   orig: 1600, 208
   offset: 0, 0
   index: -1
 star
   rotate: false
-  xy: 2, 13
+  xy: 1600, 615
   size: 11, 10
   orig: 11, 10
   offset: 0, 0
