@@ -23,7 +23,7 @@ public class MainShip extends Ship {
     private static final float DEFAULT_RELOAD_INTERVAL = 0.25f;
     private static final int HP = 100;
 
-    private float sense = 0.85f;
+    private float sense;
     private int leftPointer;
     private int rightPointer;
     private float boostTimer;
