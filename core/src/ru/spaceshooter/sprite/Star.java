@@ -44,7 +44,6 @@ public class Star extends Sprite {
     }
 
     public void addVY(float vy) {
-        System.out.println(v.y);
         if (this.v.y > -0.65f) {
             this.v.add(0f, -vy);
         }

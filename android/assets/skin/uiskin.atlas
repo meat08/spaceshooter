@@ -33,7 +33,7 @@ android-vertical-scrollbar
   index: -1
 android-vertical-scrollbar-knob
   rotate: false
-  xy: 40, 104
+  xy: 554, 652
   size: 4, 10
   split: 1, 1, 1, 1
   pad: 0, 0, 1, 1
@@ -260,7 +260,7 @@ music-off
   index: -1
 panel1
   rotate: false
-  xy: 1, 71
+  xy: 515, 619
   size: 37, 43
   split: 16, 14, 13, 12
   pad: 9, 7, 10, 9
@@ -361,7 +361,7 @@ slider-bar
   index: -1
 slider-bar-fill
   rotate: false
-  xy: 515, 644
+  xy: 1, 50
   size: 19, 18
   split: 4, 2, 9, 8
   pad: 4, 2, 8, 8
@@ -483,7 +483,7 @@ tree-plus
   index: -1
 vertical-scrollbar
   rotate: false
-  xy: 1, 48
+  xy: 515, 596
   size: 16, 21
   split: 7, 7, 10, 10
   pad: 0, 0, 0, 0
@@ -524,16 +524,23 @@ window
   orig: 60, 74
   offset: 0, 0
   index: -1
+accel
+  rotate: false
+  xy: 515, 664
+  size: 44, 44
+  orig: 44, 44
+  offset: 0, 0
+  index: -1
 accelDown
   rotate: false
-  xy: 1, 116
+  xy: 1, 70
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 accelUp
   rotate: false
-  xy: 515, 664
+  xy: 1, 116
   size: 44, 44
   orig: 44, 44
   offset: 0, 0

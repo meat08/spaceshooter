@@ -25,6 +25,8 @@ public class Ship extends Sprite {
     protected Vector2 bulletV;
     protected Vector2 bulletPos;
     protected Vector2 bullet2Pos;
+    protected Vector2 bullet3Pos;
+    protected Vector2 bullet4Pos;
     protected float bulletHeight;
     protected int damage;
     protected float reloadInterval;
@@ -34,6 +36,7 @@ public class Ship extends Sprite {
     protected int hp;
     protected int maxHp;
     protected int shootType;
+    protected int shipType;
     protected GameScreen screen;
     private boolean isDestroyBottom;
     private float animateTimer;
@@ -62,6 +65,8 @@ public class Ship extends Sprite {
         bulletV = new Vector2();
         bulletPos = new Vector2();
         bullet2Pos = new Vector2();
+        bullet3Pos = new Vector2();
+        bullet4Pos = new Vector2();
     }
 
     @Override
@@ -93,6 +98,10 @@ public class Ship extends Sprite {
                     shoot();
                 } else if (shootType == 2) {
                     shootDual();
+                } else if (shootType == 3) {
+                    shootSpinDual();
+                } else if (shootType == 4) {
+                    shootQuad();
                 }
             }
             reloadTimer = 0f;
@@ -132,25 +141,45 @@ public class Ship extends Sprite {
 
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
+        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
+        pew();
+    }
+
+    private void shootSpinDual() {
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, true);
+        Bullet bullet1 = bulletPool.obtain();
+        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, true);
         pew();
     }
 
     private void shootDual() {
         Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
+        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
         Bullet bullet1 = bulletPool.obtain();
-        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage);
+        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        pew();
+    }
+
+    private void shootQuad() {
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
+        Bullet bullet1 = bulletPool.obtain();
+        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        Bullet bullet2 = bulletPool.obtain();
+        bullet2.set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        Bullet bullet3 = bulletPool.obtain();
+        bullet3.set(this, bulletRegion, bullet4Pos, bulletV, bulletHeight, worldBounds, damage, false);
         pew();
     }
 
     private void shootMulti() {
         Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
+        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
         Bullet bullet1 = bulletPool.obtain();
-        bullet1.set(this, bulletRegion, bulletPos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage);
+        bullet1.set(this, bulletRegion, bulletPos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
         Bullet bullet2 = bulletPool.obtain();
-        bullet2.set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage);
+        bullet2.set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
         pew();
     }
 

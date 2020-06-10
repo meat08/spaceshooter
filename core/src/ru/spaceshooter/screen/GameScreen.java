@@ -15,12 +15,14 @@ import ru.spaceshooter.base.BaseScreen;
 import ru.spaceshooter.base.Font;
 import ru.spaceshooter.base.State;
 import ru.spaceshooter.math.Rect;
+import ru.spaceshooter.pool.AsteroidPool;
 import ru.spaceshooter.pool.BonusPool;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.EnemyPool;
 import ru.spaceshooter.pool.ExplosionPool;
 import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.pool.NebulaPool;
+import ru.spaceshooter.sprite.Asteroid;
 import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.Enemy;
@@ -30,6 +32,7 @@ import ru.spaceshooter.sprite.Bonus;
 import ru.spaceshooter.sprite.MainShip;
 import ru.spaceshooter.sprite.Star;
 import ru.spaceshooter.base.MainMenu;
+import ru.spaceshooter.utils.AsteroidEmitter;
 import ru.spaceshooter.utils.BonusEmitter;
 import ru.spaceshooter.utils.EnemyEmitter;
 import ru.spaceshooter.utils.GameData;
@@ -58,9 +61,11 @@ public class GameScreen extends BaseScreen {
     private HitExplodePool hitExplodePool;
     private BonusPool bonusPool;
     private NebulaPool nebulaPool;
+    private AsteroidPool asteroidPool;
     private EnemyEmitter enemyEmitter;
     private BonusEmitter bonusEmitter;
     private NebulaEmitter nebulaEmitter;
+    private AsteroidEmitter asteroidEmitter;
     private Music gameMusic;
     private State previousState;
     private HpBar hpBar;
@@ -97,9 +102,11 @@ public class GameScreen extends BaseScreen {
         mainShip = new MainShip(atlas, bulletPool, explosionPool, hitExplodePool, this);
         bonusPool = new BonusPool(worldBounds);
         nebulaPool = new NebulaPool(worldBounds);
+        asteroidPool = new AsteroidPool(worldBounds);
         enemyEmitter = new EnemyEmitter(atlas, enemyPool);
         bonusEmitter = new BonusEmitter(atlas, bonusPool, mainShip);
         nebulaEmitter = new NebulaEmitter(atlas, nebulaPool);
+        asteroidEmitter = new AsteroidEmitter(atlas, asteroidPool);
         forceShield = new ForceShield(atlas);
         hpBar = new HpBar(atlas);
         sbFrags = new StringBuilder();
@@ -145,6 +152,7 @@ public class GameScreen extends BaseScreen {
         explosionPool.dispose();
         bonusPool.dispose();
         nebulaPool.dispose();
+        asteroidPool.dispose();
         mainShip.dispose();
         gameMusic.dispose();
         font.dispose();
@@ -288,6 +296,7 @@ public class GameScreen extends BaseScreen {
         bonusPool.freeAllActive();
         nebulaPool.freeAllActive();
         hitExplodePool.freeAllActive();
+        asteroidPool.freeAllActive();
     }
 
     private void update(float delta) {
@@ -302,9 +311,11 @@ public class GameScreen extends BaseScreen {
             enemyPool.updateActiveSprites(delta);
             bonusPool.updateActiveSprites(delta);
             hitExplodePool.updateActiveSprites(delta);
+            asteroidPool.updateActiveSprites(delta);
             mainShip.update(delta);
             enemyEmitter.generate(delta);
             bonusEmitter.generate(delta);
+            asteroidEmitter.generate(delta);
             hpBar.update(delta);
             forceShield.update(delta);
             changeLevel();
@@ -328,6 +339,7 @@ public class GameScreen extends BaseScreen {
             if (mainShip.isShield()) {
                 forceShield.draw(batch);
             }
+            asteroidPool.drawActiveSprites(batch);
             hpBar.draw(batch);
         }
         explosionPool.drawActiveSprites(batch);
@@ -345,6 +357,7 @@ public class GameScreen extends BaseScreen {
         bonusPool.freeAllDestroyed();
         hitExplodePool.freeAllDestroyed();
         nebulaPool.freeAllDestroyed();
+        asteroidPool.freeAllDestroyed();
     }
 
     private void checkCollision () {
@@ -354,6 +367,7 @@ public class GameScreen extends BaseScreen {
         final List<Enemy> enemies = enemyPool.getActiveObjects();
         final List<Bullet> bullets = bulletPool.getActiveObjects();
         final List<Bonus> bonuses = bonusPool.getActiveObjects();
+        final List<Asteroid> asteroids = asteroidPool.getActiveObjects();
         for (Enemy enemy : enemies) {
             if (enemy.isDestroyed()) {
                 continue;
@@ -419,6 +433,28 @@ public class GameScreen extends BaseScreen {
                     }
                 }
             }
+        }
+        for (Asteroid asteroid : asteroids) {
+            for (Bullet bullet : bullets) {
+                if (bullet.isDestroyed()) {
+                    continue;
+                }
+                if (asteroid.isBulletCollision(bullet)) {
+                    bullet.destroy();
+                }
+            }
+            float minDistAsteroid = asteroid.getHalfWidth() + mainShip.getHalfWidth();
+            if (mainShip.pos.dst(asteroid.pos) < minDistAsteroid) {
+                mainShip.damage(asteroid.getDamage(mainShip.getHp()));
+                asteroid.pos.y += mainShip.getWidth();
+                float direction = (float) Math.random();
+                if (direction < 0.4f) {
+                    asteroid.changeV(-0.1f);
+                } else {
+                    asteroid.changeV(0.1f);
+                }
+            }
+
         }
         if (mainShip.isDestroyed()) {
             state = State.GAME_OVER;

@@ -12,15 +12,20 @@ public class Bullet extends Sprite {
     private Vector2 v;
     private int damage;
     private Sprite owner;
+    private boolean isSpin;
 
     public Bullet() {
         regions = new TextureRegion[1];
         v = new Vector2();
+        isSpin = false;
     }
 
     @Override
     public void update(float delta) {
         pos.mulAdd(v, delta);
+        if (isSpin) {
+            angle += 15f;
+        }
         if (isOutside(worldBounds)) {
             destroy();
         }
@@ -33,7 +38,8 @@ public class Bullet extends Sprite {
             Vector2 v0,
             float height,
             Rect worldBounds,
-            int damage
+            int damage,
+            boolean isSpin
     ) {
         this.owner = owner;
         this.regions[0] = region;
@@ -42,6 +48,8 @@ public class Bullet extends Sprite {
         setHeightProportion(height);
         this.worldBounds = worldBounds;
         this.damage = damage;
+        this.isSpin = isSpin;
+        this.angle = 0f;
     }
 
     public int getDamage() {

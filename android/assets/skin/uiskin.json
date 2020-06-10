@@ -101,7 +101,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	}
 	accel: {
 		up: accelUp
-		down: accelDown
+		down: accel
 		checked: accelDown
 	}
 }

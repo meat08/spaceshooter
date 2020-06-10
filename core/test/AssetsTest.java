@@ -37,12 +37,33 @@ public class AssetsTest {
     }
 
     @Parameterized.Parameters
-    public static Collection inputParameters() {
+    public static Collection<?> inputParameters() {
         return Arrays.asList(new Object[][] {
-                {"textures/mainAtlas.tpack", "main_ship", null},
+                {"textures/mainAtlas.tpack", "bonusGuns", null},
+                {"textures/mainAtlas.tpack", "bonusHeal", null},
                 {"textures/mainAtlas.tpack", "bonusShield", null},
-                {"textures/mainAtlas.tpack", "BFG", NullPointerException.class},
+                {"textures/mainAtlas.tpack", "bulletEnemy", null},
+                {"textures/mainAtlas.tpack", "bulletEnemy_type1", null},
+                {"textures/mainAtlas.tpack", "bulletEnemy_type2", null},
+                {"textures/mainAtlas.tpack", "bulletMainShip", null},
+                {"textures/mainAtlas.tpack", "enemy0", null},
+                {"textures/mainAtlas.tpack", "enemy0_type1", null},
+                {"textures/mainAtlas.tpack", "enemy1", null},
+                {"textures/mainAtlas.tpack", "enemy1_type1", null},
+                {"textures/mainAtlas.tpack", "enemy2", null},
+                {"textures/mainAtlas.tpack", "enemy2_type1", null},
+                {"textures/mainAtlas.tpack", "explosion", null},
+                {"textures/mainAtlas.tpack", "hit", null},
+                {"textures/mainAtlas.tpack", "hp_bar", null},
+                {"textures/mainAtlas.tpack", "main_ship", null},
+                {"textures/mainAtlas.tpack", "nebula0", null},
+                {"textures/mainAtlas.tpack", "nebula1", null},
+                {"textures/mainAtlas.tpack", "nebula2", null},
+                {"textures/mainAtlas.tpack", "shield", null},
+                {"textures/mainAtlas.tpack", "star", null},
+                {"textures/menuAtlas.tpack", "hit", null},
                 {"textures/menuAtlas.tpack", "menu_logo_ship", null},
+                {"textures/menuAtlas.tpack", "star", null},
                 {"textures/menuAtlas.tpack", "null", NullPointerException.class}
         });
     }
@@ -71,12 +92,12 @@ public class AssetsTest {
     }
 
     @Test
-    public void loadAtlas() {
+    public void assetsAtlasExist() {
         new TextureAtlas(atlas);
     }
 
     @Test
-    public void findSpriteName() {
+    public void textureInAtlasExist() {
         if (expectedException != null) {
             thrown.expect(expectedException);
         }
@@ -84,7 +105,7 @@ public class AssetsTest {
     }
 
     @Test
-    public void drawSprite() {
+    public void drawTexture() {
         if (expectedException != null) {
             thrown.expect(expectedException);
         }

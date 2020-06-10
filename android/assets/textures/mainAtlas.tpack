@@ -1,145 +1,173 @@
 
 mainAtlas.png
-size: 4047,1234
+size: 3739,1410
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
+asteroid
+  rotate: false
+  xy: 3202, 908
+  size: 510, 500
+  orig: 510, 500
+  offset: 0, 0
+  index: -1
 bonusGuns
   rotate: false
-  xy: 2202, 678
+  xy: 1306, 135
   size: 600, 101
   orig: 600, 101
   offset: 0, 0
   index: -1
 bonusHeal
   rotate: false
-  xy: 2008, 59
+  xy: 1306, 238
   size: 600, 101
   orig: 600, 101
   offset: 0, 0
   index: -1
 bonusShield
   rotate: false
-  xy: 1406, 59
+  xy: 2, 5
   size: 600, 101
   orig: 600, 101
   offset: 0, 0
   index: -1
 bulletEnemy
   rotate: false
-  xy: 1630, 657
+  xy: 1514, 748
   size: 30, 34
   orig: 30, 34
   offset: 0, 0
   index: -1
+bulletEnemy_type1
+  rotate: false
+  xy: 3037, 1165
+  size: 60, 33
+  orig: 60, 33
+  offset: 0, 0
+  index: -1
+bulletEnemy_type2
+  rotate: false
+  xy: 3714, 1340
+  size: 20, 68
+  orig: 20, 68
+  offset: 0, 0
+  index: -1
 bulletMainShip
   rotate: false
-  xy: 1600, 639
+  xy: 3688, 484
   size: 28, 52
   orig: 28, 52
   offset: 0, 0
   index: -1
 enemy0
   rotate: false
-  xy: 2804, 820
+  xy: 2310, 14
   size: 400, 190
   orig: 400, 190
   offset: 0, 0
   index: -1
 enemy0_type1
   rotate: false
-  xy: 2804, 1012
+  xy: 1908, 119
   size: 400, 220
   orig: 400, 220
   offset: 0, 0
   index: -1
 enemy1
   rotate: false
-  xy: 1604, 162
+  xy: 604, 331
   size: 650, 451
   orig: 650, 451
   offset: 0, 0
   index: -1
 enemy1_type1
   rotate: false
-  xy: 3212, 50
-  size: 650, 323
-  orig: 650, 323
+  xy: 3037, 213
+  size: 649, 323
+  orig: 649, 323
+  offset: 0, 0
+  index: -1
+enemy1_type2
+  rotate: false
+  xy: 3037, 71
+  size: 680, 140
+  orig: 680, 140
   offset: 0, 0
   index: -1
 enemy2
   rotate: false
-  xy: 704, 69
+  xy: 604, 2
   size: 700, 327
   orig: 700, 327
   offset: 0, 0
   index: -1
 enemy2_type1
   rotate: false
-  xy: 2, 28
+  xy: 3037, 538
   size: 700, 368
   orig: 700, 368
   offset: 0, 0
   index: -1
 explosion
   rotate: false
-  xy: 3212, 375
+  xy: 1600, 341
   size: 833, 857
   orig: 833, 857
   offset: 0, 0
   index: 0
 hit
   rotate: false
-  xy: 2256, 420
+  xy: 1256, 526
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 hp_bar
   rotate: false
-  xy: 1600, 627
+  xy: 1256, 514
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
 main_ship
   rotate: false
-  xy: 2, 608
+  xy: 2, 784
   size: 1596, 624
   orig: 1596, 624
   offset: 0, 0
   index: -1
 nebula0
   rotate: false
-  xy: 2202, 781
+  xy: 2435, 206
   size: 600, 451
   orig: 600, 451
   offset: 0, 0
   index: -1
 nebula1
   rotate: false
-  xy: 1600, 693
+  xy: 2435, 659
   size: 600, 539
   orig: 600, 539
   offset: 0, 0
   index: -1
 nebula2
   rotate: false
-  xy: 2610, 2
+  xy: 2, 108
   size: 600, 674
   orig: 600, 674
   offset: 0, 0
   index: -1
 shield
   rotate: false
-  xy: 2, 398
+  xy: 1600, 1200
   size: 1600, 208
   orig: 1600, 208
   offset: 0, 0
   index: -1
 star
   rotate: false
-  xy: 1600, 615
+  xy: 1306, 123
   size: 11, 10
   orig: 11, 10
   offset: 0, 0

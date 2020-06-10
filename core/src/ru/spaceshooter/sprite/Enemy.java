@@ -14,7 +14,6 @@ import ru.spaceshooter.screen.GameScreen;
 public class Enemy extends Ship {
 
     private static final float V_Y = -0.3f;
-    private int enemyType;
 
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound, HitExplodePool hitExplodePool, GameScreen screen) {
         super(bulletPool, explosionPool, worldBounds, sound, hitExplodePool, screen);
@@ -25,7 +24,12 @@ public class Enemy extends Ship {
         super.update(delta);
         if (getTop() < worldBounds.getTop()) {
             v.set(v0);
-            if (enemyType == 2) {
+            if (shipType == 3) {
+                bulletPos.set(pos.x - getHalfHeight(), pos.y - getHalfHeight()/2);
+                bullet2Pos.set(pos.x - getHalfHeight()/2, pos.y - getHalfHeight()/2);
+                bullet3Pos.set(pos.x + getHalfHeight()/2, pos.y - getHalfHeight()/2);
+                bullet4Pos.set(pos.x + getHalfHeight(), pos.y - getHalfHeight()/2);
+            } else if (shipType == 2) {
                 bulletPos.set(pos.x - getHalfWidth()/2, pos.y - getHalfHeight()/2);
                 bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y - getHalfHeight()/2);
             } else {
@@ -46,7 +50,7 @@ public class Enemy extends Ship {
             int hp,
             float height,
             int shootType,
-            int enemyType
+            int shipType
     ) {
         this.regions = regions;
         this.v0.set(v0);
@@ -60,7 +64,7 @@ public class Enemy extends Ship {
         setHeightProportion(height);
         this.v.set(0, V_Y);
         this.shootType = shootType;
-        this.enemyType = enemyType;
+        this.shipType = shipType;
     }
 
     public boolean isBulletCollision(Bullet bullet) {
