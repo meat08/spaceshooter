@@ -7,7 +7,7 @@ import ru.spaceshooter.pool.AsteroidPool;
 
 public class AsteroidEmitter {
 
-    private static final float GENERATE_INTERVAL = 10f;
+    private static final float GENERATE_INTERVAL = 30f;
 
     private final TextureRegion[] asteroidRegion;
 

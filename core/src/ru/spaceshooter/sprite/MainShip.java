@@ -112,6 +112,7 @@ public class MainShip extends Ship {
     public void damage(int damage) {
         if (!isShield) {
             super.damage(damage);
+            Gdx.input.vibrate(100);
         }
     }
 

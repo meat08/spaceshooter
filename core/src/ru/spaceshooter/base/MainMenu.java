@@ -116,6 +116,9 @@ public class MainMenu {
             tableButtons.add(btnNewGame).width(widthRoot).height(heightRoot).row();
             btnLoad.getLabel().setFontScale(getButtonScale(btnLoad));
             tableButtons.add(btnLoad).width(widthRoot).height(heightRoot).row();
+            sliderMusic.setValue(menuScreen.getVolumeMusic());
+            sliderSound.setValue(menuScreen.getVolumeSound());
+            sliderAccel.setValue(menuScreen.getSenseAccel());
         } else if (gameScreen != null) {
             labelPause.setFontScale(getLabelScale(labelPause));
             tableButtons.add(labelPause).padBottom(2f).row();
@@ -123,6 +126,9 @@ public class MainMenu {
             tableButtons.add(btnResume).width(widthRoot).height(heightRoot).row();
             btnSave.getLabel().setFontScale(getButtonScale(btnSave));
             tableButtons.add(btnSave).width(widthRoot).height(heightRoot).row();
+            sliderMusic.setValue(gameScreen.getVolumeMusic());
+            sliderSound.setValue(gameScreen.getVolumeSound());
+            sliderAccel.setValue(gameScreen.getSenseAccel());
         }
         btnConf.getLabel().setFontScale(getButtonScale(btnConf));
         btnExit.getLabel().setFontScale(getButtonScale(btnExit));
@@ -277,6 +283,7 @@ public class MainMenu {
         } else if (menuScreen != null) {
             menuScreen.setVolumeMusic(volume);
         }
+        sliderMusic.setValue(volume);
     }
 
     private void soundOnOff() {
@@ -293,6 +300,7 @@ public class MainMenu {
         } else if (menuScreen != null) {
             menuScreen.setVolumeSound(volume);
         }
+        sliderSound.setValue(volume);
     }
 
     private void accelOnOff() {
@@ -309,6 +317,7 @@ public class MainMenu {
         } else if (menuScreen != null) {
             menuScreen.setSenseAccel(sense);
         }
+        sliderAccel.setValue(sense);
     }
 
     private void showConf() {
@@ -367,16 +376,10 @@ public class MainMenu {
             btnMusic.setChecked(gameScreen.isMusicOn());
             btnSound.setChecked(gameScreen.isSoundOn());
             btnAccel.setChecked(gameScreen.isAccelerometerOn());
-            sliderMusic.setValue(gameScreen.getVolumeMusic());
-            sliderSound.setValue(gameScreen.getVolumeSound());
-            sliderAccel.setValue(gameScreen.getSenseAccel());
         } else if (menuScreen != null) {
             btnMusic.setChecked(menuScreen.isMusicOn());
             btnSound.setChecked(menuScreen.isSoundOn());
             btnAccel.setChecked(menuScreen.isAccelerometerOn());
-            sliderMusic.setValue(menuScreen.getVolumeMusic());
-            sliderSound.setValue(menuScreen.getVolumeSound());
-            sliderAccel.setValue(menuScreen.getSenseAccel());
         }
     }
 
