@@ -22,12 +22,14 @@ public class MainShip extends Ship {
     private static final float BOOST_SHIELD_INTERVAL = 5f;
     private static final float DEFAULT_RELOAD_INTERVAL = 0.25f;
     private static final int HP = 100;
+    private static final int LIVES = 3;
 
     private float sense;
     private int leftPointer;
     private int rightPointer;
     private float boostTimer;
     private float shieldTimer;
+    private int lives;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -56,6 +58,7 @@ public class MainShip extends Ship {
         shootType = 1;
         maxHp = HP;
         hp = maxHp;
+        lives = LIVES;
         sound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         accelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
         isTouched = false;
@@ -68,7 +71,9 @@ public class MainShip extends Ship {
     public void update(float delta) {
         super.update(delta);
         bulletPos.set(pos.x, pos.y + getHalfHeight());
-        autoShoot(delta);
+        if (screen.isNotNuked()) {
+            autoShoot(delta);
+        }
         if (isShootBoost) {
             boostShoot(delta);
         }
@@ -200,6 +205,22 @@ public class MainShip extends Ship {
         return false;
     }
 
+    @Override
+    public void destroy() {
+        if (lives == 0) {
+            super.destroy();
+        } else {
+            lives--;
+            hp = maxHp;
+            isShield = true;
+            screen.nuke();
+        }
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
     public void setSense(float sense) {
         this.sense = sense;
     }
@@ -270,6 +291,7 @@ public class MainShip extends Ship {
         maxHp = HP;
         hp = maxHp;
         shootType = 1;
+        lives = LIVES;
         reloadInterval = DEFAULT_RELOAD_INTERVAL;
         isTouched = false;
         isShield = false;
@@ -282,11 +304,12 @@ public class MainShip extends Ship {
         pos.x = 0f;
     }
 
-    public void loadGame(int maxHp, int hp, float x) {
+    public void loadGame(int maxHp, int hp, float x, int lives) {
         flushDestroy();
         stop();
         this.maxHp = maxHp;
         this.hp = hp;
+        this.lives = lives;
         pos.x = x;
         shootType = 1;
         reloadInterval = DEFAULT_RELOAD_INTERVAL;

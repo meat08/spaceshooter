@@ -35,7 +35,9 @@ public class Enemy extends Ship {
             } else {
                 bulletPos.set(pos.x, pos.y - getHalfHeight());
             }
-            autoShoot(delta);
+            if (screen.isNotNuked()) {
+                autoShoot(delta);
+            }
         }
     }
 

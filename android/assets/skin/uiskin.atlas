@@ -4,6 +4,27 @@ size: 2048,2048
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+accel
+  rotate: false
+  xy: 1, 227
+  size: 283, 290
+  orig: 283, 290
+  offset: 0, 0
+  index: -1
+accelDown
+  rotate: false
+  xy: 515, 955
+  size: 283, 290
+  orig: 283, 290
+  offset: 0, 0
+  index: -1
+accelUp
+  rotate: false
+  xy: 1023, 1255
+  size: 283, 290
+  orig: 283, 290
+  offset: 0, 0
+  index: -1
 android-horizontal-scrollbar
   rotate: false
   xy: 1023, 1249
@@ -522,26 +543,5 @@ window
   split: 30, 29, 42, 31
   pad: 19, 19, 33, 23
   orig: 60, 74
-  offset: 0, 0
-  index: -1
-accel
-  rotate: false
-  xy: 1, 227
-  size: 283, 290
-  orig: 283, 290
-  offset: 0, 0
-  index: -1
-accelDown
-  rotate: false
-  xy: 515, 955
-  size: 283, 290
-  orig: 283, 290
-  offset: 0, 0
-  index: -1
-accelUp
-  rotate: false
-  xy: 1023, 1255
-  size: 283, 290
-  orig: 283, 290
   offset: 0, 0
   index: -1

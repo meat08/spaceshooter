@@ -27,6 +27,7 @@ public class BaseScreen implements Screen, InputProcessor {
     protected float volumeMusic;
     protected float volumeSound;
     protected float senseAccel;
+    protected float difficultyFactor;
     protected InputMultiplexer multiplexer;
     protected State state;
     private Rect screenBounds;
@@ -54,6 +55,7 @@ public class BaseScreen implements Screen, InputProcessor {
         volumeMusic = preferences.getFloat("volumeMusic", 0.5f);
         volumeSound = preferences.getFloat("volumeSound", 0.5f);
         senseAccel = preferences.getFloat("senseAccel", 0.85f);
+        difficultyFactor = preferences.getFloat("difficultyFactor", 1f);
     }
 
     @Override
@@ -219,5 +221,14 @@ public class BaseScreen implements Screen, InputProcessor {
     public void setSenseAccel(float senseAccel) {
         this.senseAccel = senseAccel;
         preferences.putFloat("senseAccel", senseAccel);
+    }
+
+    public void setDifficultyFactor(float diff) {
+        this.difficultyFactor = diff;
+        preferences.putFloat("difficultyFactor", difficultyFactor);
+    }
+
+    public float getDifficultyFactor() {
+        return difficultyFactor;
     }
 }

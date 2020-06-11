@@ -49,6 +49,9 @@ public class MainMenu {
     private Slider sliderAccel;
     private TextButton btnResume;
     private TextButton btnSave;
+    private TextButton btnEasy;
+    private TextButton btnNormal;
+    private TextButton btnHard;
 
     private Value widthRoot;
     private Value heightRoot;
@@ -96,6 +99,9 @@ public class MainMenu {
         btnBack = new TextButton("Назад", skin, "round");
         btnResume = new TextButton("Продолжить", skin, "round");
         btnSave = new TextButton("Сохранить игру", skin, "round");
+        btnEasy = new TextButton("Легко", skin, "toggle-rus");
+        btnNormal = new TextButton("Нормально", skin, "toggle-rus");
+        btnHard = new TextButton("Сложно", skin, "toggle-rus");
     }
 
     private void show() {
@@ -137,6 +143,14 @@ public class MainMenu {
         tableRoot.add(tableButtons).row();
 
         tableConf.defaults().padBottom(20.0f);
+        Table tmpTableDiff = new Table();
+        tmpTableDiff.defaults().pad(2);
+        btnEasy.getLabel().setFontScale(getButtonScale(btnEasy));
+        btnNormal.getLabel().setFontScale(getButtonScale(btnNormal));
+        btnHard.getLabel().setFontScale(getButtonScale(btnHard));
+        tmpTableDiff.add(btnEasy);
+        tmpTableDiff.add(btnNormal);
+        tmpTableDiff.add(btnHard);
         Table tmpTableMusic = new Table();
         tmpTableMusic.add(btnMusic).size(confButtonSize).pad(12f);
         tmpTableMusic.add(sliderMusic).width(sliderWidth);
@@ -146,6 +160,7 @@ public class MainMenu {
         Table tmpTableAccel = new Table();
         tmpTableAccel.add(btnAccel).size(confButtonSize).pad(12f);
         tmpTableAccel.add(sliderAccel).width(sliderWidth);
+        tableConf.add(tmpTableDiff).height(heightRoot).row();
         tableConf.add(tmpTableMusic).height(heightRoot).row();
         tableConf.add(tmpTableSound).height(heightRoot).row();
         tableConf.add(tmpTableAccel).height(heightRoot).row();
@@ -236,6 +251,27 @@ public class MainMenu {
                 accelOnOff();
             }
         });
+        btnEasy.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setDifficultyFactor(0.5f);
+                checkEasy();
+            }
+        });
+        btnNormal.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setDifficultyFactor(1f);
+                checkNormal();
+            }
+        });
+        btnHard.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setDifficultyFactor(1.5f);
+                checkHard();
+            }
+        });
     }
 
     private float getLabelScale(Label label) {
@@ -320,6 +356,32 @@ public class MainMenu {
         sliderAccel.setValue(sense);
     }
 
+    private void checkHard() {
+        btnHard.setChecked(true);
+        btnEasy.setChecked(false);
+        btnNormal.setChecked(false);
+    }
+
+    private void checkNormal() {
+        btnNormal.setChecked(true);
+        btnEasy.setChecked(false);
+        btnHard.setChecked(false);
+    }
+
+    private void checkEasy() {
+        btnEasy.setChecked(true);
+        btnNormal.setChecked(false);
+        btnHard.setChecked(false);
+    }
+
+    private void setDifficultyFactor(float diff) {
+        if (gameScreen != null) {
+            gameScreen.setDifficultyFactor(diff);
+        } else if (menuScreen != null) {
+            menuScreen.setDifficultyFactor(diff);
+        }
+    }
+
     private void showConf() {
         tableButtons.remove();
         tableRoot.add(tableConf).row();
@@ -373,13 +435,22 @@ public class MainMenu {
 
     public void update() {
         if (gameScreen != null) {
-            btnMusic.setChecked(gameScreen.isMusicOn());
-            btnSound.setChecked(gameScreen.isSoundOn());
-            btnAccel.setChecked(gameScreen.isAccelerometerOn());
+            changeCheckButton(gameScreen);
         } else if (menuScreen != null) {
-            btnMusic.setChecked(menuScreen.isMusicOn());
-            btnSound.setChecked(menuScreen.isSoundOn());
-            btnAccel.setChecked(menuScreen.isAccelerometerOn());
+            changeCheckButton(menuScreen);
+        }
+    }
+
+    private void changeCheckButton(BaseScreen screen) {
+        btnMusic.setChecked(screen.isMusicOn());
+        btnSound.setChecked(screen.isSoundOn());
+        btnAccel.setChecked(screen.isAccelerometerOn());
+        if (screen.getDifficultyFactor() == 0.5f) {
+            checkEasy();
+        } else if (screen.getDifficultyFactor() == 1f) {
+            checkNormal();
+        } else {
+            checkHard();
         }
     }
 

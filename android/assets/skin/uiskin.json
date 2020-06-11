@@ -247,6 +247,12 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		up: btnUp
 		down: btnDown
 	}
+	toggle-rus: {
+		font: font-main
+		up: toggle-button-off
+		down: toggle-button-down
+		checked: toggle-button
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: {

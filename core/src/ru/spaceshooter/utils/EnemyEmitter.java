@@ -19,7 +19,7 @@ public class EnemyEmitter {
     private static final float ENEMY_SMALL_SPEED = -0.15f;
     private static final float ENEMY_SMALL_BULLET_HEIGHT = 0.015f;
     private static final float ENEMY_SMALL_BULLET_VY = -0.3f;
-    private static final int ENEMY_SMALL_BULLET_DAMAGE = 1;
+    private static final int ENEMY_SMALL_BULLET_DAMAGE = 2;
     private static final float ENEMY_SMALL_RELOAD_INTERVAL = 1f;
     private static final int ENEMY_SMALL_SHOOT_TYPE = 1;
     private static final int ENEMY_SMALL_SHIP_TYPE = 1;
@@ -29,7 +29,7 @@ public class EnemyEmitter {
     private static final float ENEMY_SMALL_V1_SPEED = -0.15f;
     private static final float ENEMY_SMALL_V1_BULLET_HEIGHT = 0.025f;
     private static final float ENEMY_SMALL_V1_BULLET_VY = -0.3f;
-    private static final int ENEMY_SMALL_V1_BULLET_DAMAGE = 2;
+    private static final int ENEMY_SMALL_V1_BULLET_DAMAGE = 3;
     private static final float ENEMY_SMALL_V1_RELOAD_INTERVAL = 1f;
     private static final int ENEMY_SMALL_V1_SHOOT_TYPE = 1;
     private static final int ENEMY_SMALL_V1_SHIP_TYPE = 1;
@@ -108,6 +108,7 @@ public class EnemyEmitter {
     private final TextureRegion bulletRegionSpine;
     private final EnemyPool enemyPool;
     private int level;
+    private float diffFactor;
 
     public EnemyEmitter(TextureAtlas atlas, EnemyPool enemyPool) {
         TextureRegion enemy0 = atlas.findRegion("enemy0");
@@ -139,6 +140,7 @@ public class EnemyEmitter {
 
         this.enemyPool = enemyPool;
         level = 1;
+        diffFactor = 1f;
     }
 
     public void resize(Rect worldBounds) {
@@ -147,6 +149,10 @@ public class EnemyEmitter {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public void setDiffFactor(float diff) {
+        this.diffFactor = diff;
     }
 
     public void generate(float delta) {
@@ -164,9 +170,9 @@ public class EnemyEmitter {
                             bulletRegionMoon,
                             ENEMY_SMALL_V1_BULLET_HEIGHT,
                             ENEMY_SMALL_V1_BULLET_VY,
-                            ENEMY_SMALL_V1_BULLET_DAMAGE * (level / 2),
+                            transform(ENEMY_SMALL_V1_BULLET_DAMAGE),
                             ENEMY_SMALL_V1_RELOAD_INTERVAL,
-                            ENEMY_SMALL_V1_HP,
+                            transform(ENEMY_SMALL_V1_HP),
                             ENEMY_SMALL_V1_HEIGHT,
                             ENEMY_SMALL_V1_SHOOT_TYPE,
                             ENEMY_SMALL_V1_SHIP_TYPE
@@ -178,9 +184,9 @@ public class EnemyEmitter {
                             bulletRegion,
                             ENEMY_SMALL_BULLET_HEIGHT,
                             ENEMY_SMALL_BULLET_VY,
-                            level > 1 ? ENEMY_SMALL_BULLET_DAMAGE * (level/2) : ENEMY_SMALL_BULLET_DAMAGE,
+                            transform(ENEMY_SMALL_BULLET_DAMAGE),
                             ENEMY_SMALL_RELOAD_INTERVAL,
-                            ENEMY_SMALL_HP,
+                            transform(ENEMY_SMALL_HP),
                             ENEMY_SMALL_HEIGHT,
                             ENEMY_SMALL_SHOOT_TYPE,
                             ENEMY_SMALL_SHIP_TYPE
@@ -195,9 +201,9 @@ public class EnemyEmitter {
                             bulletRegionMoon,
                             ENEMY_MEDIUM_V1_BULLET_HEIGHT,
                             ENEMY_MEDIUM_V1_BULLET_VY,
-                            ENEMY_MEDIUM_V1_BULLET_DAMAGE * (level / 2),
+                            transform(ENEMY_MEDIUM_V1_BULLET_DAMAGE),
                             ENEMY_MEDIUM_V1_RELOAD_INTERVAL,
-                            ENEMY_MEDIUM_V1_HP,
+                            transform(ENEMY_MEDIUM_V1_HP),
                             ENEMY_MEDIUM_V1_HEIGHT,
                             ENEMY_MEDIUM_V1_SHOOT_TYPE,
                             ENEMY_MEDIUM_V1_SHIP_TYPE
@@ -209,9 +215,9 @@ public class EnemyEmitter {
                             bulletRegion,
                             ENEMY_MEDIUM_V2_BULLET_HEIGHT,
                             ENEMY_MEDIUM_V2_BULLET_VY,
-                            ENEMY_MEDIUM_V2_BULLET_DAMAGE * (level / 2),
+                            transform(ENEMY_MEDIUM_V2_BULLET_DAMAGE),
                             ENEMY_MEDIUM_V2_RELOAD_INTERVAL,
-                            ENEMY_MEDIUM_V2_HP,
+                            transform(ENEMY_MEDIUM_V2_HP),
                             ENEMY_MEDIUM_V2_HEIGHT,
                             ENEMY_MEDIUM_V2_SHOOT_TYPE,
                             ENEMY_MEDIUM_V2_SHIP_TYPE
@@ -223,9 +229,9 @@ public class EnemyEmitter {
                             bulletRegion,
                             ENEMY_MEDIUM_BULLET_HEIGHT,
                             ENEMY_MEDIUM_BULLET_VY,
-                            level > 1 ? ENEMY_MEDIUM_BULLET_DAMAGE * (level/2) : ENEMY_MEDIUM_BULLET_DAMAGE,
+                            transform(ENEMY_MEDIUM_BULLET_DAMAGE),
                             ENEMY_MEDIUM_RELOAD_INTERVAL,
-                            ENEMY_MEDIUM_HP,
+                            transform(ENEMY_MEDIUM_HP),
                             ENEMY_MEDIUM_HEIGHT,
                             ENEMY_MEDIUM_SHOOT_TYPE,
                             ENEMY_MEDIUM_SHIP_TYPE
@@ -240,9 +246,9 @@ public class EnemyEmitter {
                             bulletRegionSpine,
                             ENEMY_BIG_V1_BULLET_HEIGHT,
                             ENEMY_BIG_V1_BULLET_VY,
-                            ENEMY_BIG_V1_BULLET_DAMAGE * (level / 2),
+                            transform(ENEMY_BIG_V1_BULLET_DAMAGE),
                             ENEMY_BIG_V1_RELOAD_INTERVAL,
-                            ENEMY_BIG_V1_HP,
+                            transform(ENEMY_BIG_V1_HP),
                             ENEMY_BIG_V1_HEIGHT,
                             ENEMY_BIG_V1_SHOOT_TYPE,
                             ENEMY_BIG_V1_SHIP_TYPE
@@ -254,9 +260,9 @@ public class EnemyEmitter {
                             bulletRegion,
                             ENEMY_BIG_BULLET_HEIGHT,
                             ENEMY_BIG_BULLET_VY,
-                            level > 1 ? ENEMY_BIG_BULLET_DAMAGE * (level/2) : ENEMY_BIG_BULLET_DAMAGE,
+                            transform(ENEMY_BIG_BULLET_DAMAGE),
                             ENEMY_BIG_RELOAD_INTERVAL,
-                            ENEMY_BIG_HP,
+                            transform(ENEMY_BIG_HP),
                             ENEMY_BIG_HEIGHT,
                             ENEMY_BIG_SHOOT_TYPE,
                             ENEMY_BIG_SHIP_TYPE
@@ -266,5 +272,9 @@ public class EnemyEmitter {
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
             enemy.setBottom(worldBounds.getTop());
         }
+    }
+
+    private int transform(int value) {
+        return (int)(value * diffFactor) > 0 ? (int)(value * diffFactor) : value;
     }
 }

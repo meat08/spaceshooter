@@ -1,5 +1,6 @@
 package ru.spaceshooter.base;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -39,14 +40,18 @@ public class Sprite extends Rect {
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(
-                regions[frame],
-                getLeft(), getBottom(),
-                halfWidth, halfHeight,
-                getWidth(), getHeight(),
-                scale, scale,
-                angle
-        );
+        try {
+            batch.draw(
+                    regions[frame],
+                    getLeft(), getBottom(),
+                    halfWidth, halfHeight,
+                    getWidth(), getHeight(),
+                    scale, scale,
+                    angle
+            );
+        } catch (Exception e) {
+            Gdx.app.log("FATAL", "Draw error", e);
+        }
     }
 
     public void resize(Rect worldBounds) {

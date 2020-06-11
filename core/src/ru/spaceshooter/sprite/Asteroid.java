@@ -6,20 +6,24 @@ import com.badlogic.gdx.math.Vector2;
 import ru.spaceshooter.base.Sprite;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.math.Rnd;
+import ru.spaceshooter.pool.ExplosionAsteroidPool;
 
 public class Asteroid extends Sprite {
 
     private static final float ANIMATE_INTERVAL = 0.04f;
     private static final float SIZE_MIN = 0.035f;
     private static final float SIZE_MAX = 0.085f;
-    private static final float SPEED = -0.12f;
+    private static final float SPEED = -0.1f;
 
     private float animateTimer;
     private Rect worldBounds;
+    private ExplosionAsteroidPool explosionAsteroidPool;
     private Vector2 v;
+    private int hp;
 
-    public Asteroid(Rect worldBounds) {
+    public Asteroid(Rect worldBounds, ExplosionAsteroidPool explosionAsteroidPool) {
         this.worldBounds = worldBounds;
+        this.explosionAsteroidPool = explosionAsteroidPool;
         this.v = new Vector2();
     }
 
@@ -39,14 +43,29 @@ public class Asteroid extends Sprite {
         }
     }
 
+    public void damage(int damage) {
+        hp -= damage;
+        if (hp <= 0) {
+            hp = 0;
+            destroy();
+        }
+    }
+
     @Override
     public void destroy() {
         super.destroy();
+        boom();
         frame = 0;
+    }
+
+    private void boom() {
+        ExplosionAsteroid explosionAsteroid = explosionAsteroidPool.obtain();
+        explosionAsteroid.set(getHeight(), pos);
     }
 
     public void set(TextureRegion[] regions) {
         this.regions = regions;
+        this.hp = 20;
         v.set(0f, SPEED);
         float size = Rnd.nextFloat(SIZE_MIN, SIZE_MAX);
         setHeightProportion(size);
@@ -66,7 +85,4 @@ public class Asteroid extends Sprite {
         return (int) (hp * 0.1f);
     }
 
-    public void changeV(float VX) {
-        v.add(VX, 0f);
-    }
 }
