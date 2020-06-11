@@ -113,6 +113,7 @@ public class MainMenu {
 
     private void newGame() {
         tableButtons.clear();
+        tableConf.clear();
         tableRoot.clear();
         tableButtons.defaults().padBottom(2.0f);
         if (menuScreen != null) {
@@ -181,8 +182,10 @@ public class MainMenu {
         });
         btnLoad.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
-                newGame();
-                loadGame();
+                if (fileHandle.exists()) {
+                    newGame();
+                    loadGame();
+                }
             }
         });
         btnConf.addListener(new ClickListener() {
