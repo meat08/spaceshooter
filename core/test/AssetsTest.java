@@ -39,6 +39,8 @@ public class AssetsTest {
     @Parameterized.Parameters
     public static Collection<?> inputParameters() {
         return Arrays.asList(new Object[][] {
+                {"textures/mainAtlas.tpack", "asteroid", null},
+                {"textures/mainAtlas.tpack", "big_explosion", null},
                 {"textures/mainAtlas.tpack", "bonusGuns", null},
                 {"textures/mainAtlas.tpack", "bonusHeal", null},
                 {"textures/mainAtlas.tpack", "bonusShield", null},
@@ -59,6 +61,7 @@ public class AssetsTest {
                 {"textures/mainAtlas.tpack", "nebula0", null},
                 {"textures/mainAtlas.tpack", "nebula1", null},
                 {"textures/mainAtlas.tpack", "nebula2", null},
+                {"textures/mainAtlas.tpack", "rock_explosion", null},
                 {"textures/mainAtlas.tpack", "shield", null},
                 {"textures/mainAtlas.tpack", "star", null},
                 {"textures/menuAtlas.tpack", "hit", null},

@@ -129,16 +129,20 @@ public class MainShip extends Ship {
             }
             leftPointer = pointer;
             isTouched = true;
-            moveLeft();
+            if (rightPointer == INVALID_POINTER) {
+                moveLeft();
+            }
         } else {
             if (rightPointer != INVALID_POINTER) {
                 return false;
             }
             rightPointer = pointer;
             isTouched = true;
-            moveRight();
+            if (leftPointer == INVALID_POINTER) {
+                moveRight();
+            }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -160,7 +164,7 @@ public class MainShip extends Ship {
                 stop();
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -169,12 +173,16 @@ public class MainShip extends Ship {
             case Input.Keys.A:
             case Input.Keys.LEFT:
                 pressedLeft = true;
-                moveLeft();
+                if (!pressedRight) {
+                    moveLeft();
+                }
                 break;
             case Input.Keys.D:
             case Input.Keys.RIGHT:
                 pressedRight = true;
-                moveRight();
+                if (!pressedLeft) {
+                    moveRight();
+                }
                 break;
         }
         return false;
