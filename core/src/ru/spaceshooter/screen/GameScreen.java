@@ -361,9 +361,9 @@ public class GameScreen extends BaseScreen {
             hpBar.update(delta);
             forceShield.update(delta);
             changeLevel();
-            mainMenu.setGamePause(false);
+            mainMenu.setMenuVisible(false);
         } else {
-            mainMenu.setGamePause(true);
+            mainMenu.setMenuVisible(true);
         }
         mainMenu.update();
     }

@@ -59,8 +59,6 @@ public class MainMenu {
     private Value confButtonSize;
     private Value sliderWidth;
 
-    private boolean isGamePause;
-
     public MainMenu(InputMultiplexer multiplexer, Game game, MenuScreen menuScreen, FileHandle fileHandle) {
         this.game = game;
         this.menuScreen = menuScreen;
@@ -107,7 +105,6 @@ public class MainMenu {
     }
 
     private void show() {
-        isGamePause = false;
         setPercentSize();
         stage.addActor(tableRoot);
         newGame();
@@ -193,10 +190,8 @@ public class MainMenu {
         });
         btnConf.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
-                if (isGamePause) {
-                    showConf();
-                    setConfState();
-                }
+                showConf();
+                setConfState();
             }
         });
         btnBack.addListener(new ClickListener() {
@@ -206,21 +201,21 @@ public class MainMenu {
         });
         btnResume.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
-                if (gameScreen != null & isGamePause) {
+                if (gameScreen != null) {
                     gameScreen.resumeGame();
                 }
             }
         });
         btnSave.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
-                if (gameScreen != null & isGamePause) {
+                if (gameScreen != null) {
                     gameScreen.saveGame();
                 }
             }
         });
         btnExit.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
-                if (gameScreen != null & isGamePause) {
+                if (gameScreen != null) {
                     Gdx.app.exit();
                 } else if (menuScreen != null) {
                     Gdx.app.exit();
@@ -422,8 +417,8 @@ public class MainMenu {
         tableRoot.add(tableButtons).row();
     }
 
-    public void setGamePause(boolean gamePause) {
-        isGamePause = gamePause;
+    public void setMenuVisible(boolean isVisible) {
+        tableRoot.setVisible(isVisible);
     }
 
     public void gameOver() {
