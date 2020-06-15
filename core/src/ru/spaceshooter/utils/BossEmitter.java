@@ -12,23 +12,23 @@ import ru.spaceshooter.sprite.Boss;
 public class BossEmitter {
 
     private static final float BOSS_ONE_HEIGHT = 0.25f;
-    private static final int BOSS_ONE_HP = 100;
+    private static final int BOSS_ONE_HP = 80;
     private static final float BOSS_ONE_SPEED = -0.12f;
     private static final float BOSS_ONE_BULLET_HEIGHT = 0.03f;
     private static final float BOSS_ONE_BULLET_VY = -0.45f;
     private static final int BOSS_ONE_BULLET_DAMAGE = 10;
-    private static final float BOSS_ONE_RELOAD_INTERVAL = 0.6f;
+    private static final float BOSS_ONE_RELOAD_INTERVAL = 0.75f;
     private static final int BOSS_ONE_SHOOT_TYPE = 7;
     private static final int BOSS_ONE_SHIP_TYPE = 4;
     private static final int BOSS_ONE_TYPE = 0;
 
     private static final float BOSS_TWO_HEIGHT = 0.25f;
-    private static final int BOSS_TWO_HP = 120;
+    private static final int BOSS_TWO_HP = 100;
     private static final float BOSS_TWO_SPEED = -0.15f;
     private static final float BOSS_TWO_BULLET_HEIGHT = 0.03f;
     private static final float BOSS_TWO_BULLET_VY = -0.45f;
     private static final int BOSS_TWO_BULLET_DAMAGE = 10;
-    private static final float BOSS_TWO_RELOAD_INTERVAL = 0.8f;
+    private static final float BOSS_TWO_RELOAD_INTERVAL = 0.95f;
     private static final int BOSS_TWO_SHOOT_TYPE = 6;
     private static final int BOSS_TWO_SHIP_TYPE = 3;
     private static final int BOSS_TWO_TYPE = 1;
@@ -45,6 +45,8 @@ public class BossEmitter {
     private final TextureRegion bulletRegionMoon;
     private final BossPool bossPool;
 
+    private float diffFactor;
+
     public BossEmitter(TextureAtlas atlas, BossPool bossPool) {
         TextureRegion boss0 = atlas.findRegion("boss0");
         this.bossOneRegion = Regions.split(boss0, 1, 4, 4);
@@ -58,10 +60,16 @@ public class BossEmitter {
         this.bulletRegionMoon = atlas.findRegion("bulletEnemy_type1");
 
         this.bossPool = bossPool;
+
+        diffFactor = 1f;
     }
 
     public void resize(Rect worldBounds) {
         this.worldBounds = worldBounds;
+    }
+
+    public void setDiffFactor(float diff) {
+        this.diffFactor = diff;
     }
 
     public void generate(int type) {
@@ -75,9 +83,9 @@ public class BossEmitter {
                         bulletRegion,
                         BOSS_ONE_BULLET_HEIGHT,
                         BOSS_ONE_BULLET_VY,
-                        BOSS_ONE_BULLET_DAMAGE,
+                        transform(BOSS_ONE_BULLET_DAMAGE),
                         BOSS_ONE_RELOAD_INTERVAL,
-                        BOSS_ONE_HP,
+                        transform(BOSS_ONE_HP),
                         BOSS_ONE_HEIGHT,
                         BOSS_ONE_SHOOT_TYPE,
                         BOSS_ONE_SHIP_TYPE,
@@ -93,9 +101,9 @@ public class BossEmitter {
                         bulletRegionMoon,
                         BOSS_TWO_BULLET_HEIGHT,
                         BOSS_TWO_BULLET_VY,
-                        BOSS_TWO_BULLET_DAMAGE,
+                        transform(BOSS_TWO_BULLET_DAMAGE),
                         BOSS_TWO_RELOAD_INTERVAL,
-                        BOSS_TWO_HP,
+                        transform(BOSS_TWO_HP),
                         BOSS_TWO_HEIGHT,
                         BOSS_TWO_SHOOT_TYPE,
                         BOSS_TWO_SHIP_TYPE,
@@ -106,6 +114,10 @@ public class BossEmitter {
         }
         boss.pos.x = Rnd.nextFloat(worldBounds.getLeft() + boss.getHalfWidth(), worldBounds.getRight() - boss.getHalfWidth());
         boss.setBottom(worldBounds.getTop());
+    }
+
+    private int transform(int value) {
+        return (int)(value * diffFactor) > 0 ? (int)(value * diffFactor) : value;
     }
 
 }

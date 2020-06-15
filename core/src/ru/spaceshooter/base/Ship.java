@@ -94,7 +94,11 @@ public class Ship extends Sprite {
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
             if (isShootMulti) {
-                shootMulti();
+                if (shootType > 1) {
+                    shootMultiDual();
+                } else {
+                    shootMulti();
+                }
             } else {
                 if (shootType == 1) {
                     shoot();
@@ -220,6 +224,23 @@ public class Ship extends Sprite {
         bullet1.set(this, bulletRegion, bulletPos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
         Bullet bullet2 = bulletPool.obtain();
         bullet2.set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        pew();
+    }
+
+    private void shootMultiDual() {
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
+        Bullet bullet1 = bulletPool.obtain();
+        bullet1.set(this, bulletRegion, bulletPos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        Bullet bullet2 = bulletPool.obtain();
+        bullet2.set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        Bullet bullet3 = bulletPool.obtain();
+        bullet3.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        Bullet bullet4 = bulletPool.obtain();
+        bullet4.set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        Bullet bullet5 = bulletPool.obtain();
+        bullet5.set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
+
         pew();
     }
 

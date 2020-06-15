@@ -48,6 +48,7 @@ public class GameScreen extends BaseScreen {
     private static final float TEXT_MARGIN = 0.01f;
     private static final float FONT_SIZE = 0.02f;
     private static final int FRAGS_TO_LEVEL_UP = 20;
+    private static final int FRAGS_TO_LIVE_ADD = 200;
     private static final int LEVEL_TO_INCREASE_HP = 3;
     private static final float STAR_SPEED_INCREASE = 0.007f;
     private static final String FRAGS = "Убито: ";
@@ -119,6 +120,7 @@ public class GameScreen extends BaseScreen {
         enemyEmitter = new EnemyEmitter(atlas, enemyPool);
         bossEmitter = new BossEmitter(atlas, bossPool);
         enemyEmitter.setDiffFactor(difficultyFactor);
+        bossEmitter.setDiffFactor(difficultyFactor);
         bonusEmitter = new BonusEmitter(atlas, bonusPool, mainShip);
         nebulaEmitter = new NebulaEmitter(atlas, nebulaPool);
         asteroidEmitter = new AsteroidEmitter(atlas, asteroidPool);
@@ -272,6 +274,7 @@ public class GameScreen extends BaseScreen {
     public void setDifficultyFactor(float diff) {
         super.setDifficultyFactor(diff);
         enemyEmitter.setDiffFactor(diff);
+        bossEmitter.setDiffFactor(diff);
     }
 
     public void saveGame() {
@@ -301,6 +304,7 @@ public class GameScreen extends BaseScreen {
             enemyEmitter.setLevel(level);
             nebulaEmitter.setLevel(level);
             enemyEmitter.setDiffFactor(difficultyFactor);
+            bossEmitter.setDiffFactor(difficultyFactor);
             mainShip.loadGame(
                     gameData.getMaxHp(),
                     gameData.getHp(),
@@ -326,6 +330,7 @@ public class GameScreen extends BaseScreen {
         enemyEmitter.setLevel(level);
         nebulaEmitter.setLevel(level);
         enemyEmitter.setDiffFactor(difficultyFactor);
+        bossEmitter.setDiffFactor(difficultyFactor);
         state = State.PLAYING;
         freeActivePools();
         for (Star star : stars) {
@@ -336,12 +341,8 @@ public class GameScreen extends BaseScreen {
 
     public void nuke() {
         explosionNuke.generate();
-        final List<Enemy> enemies = enemyPool.getActiveObjects();
-        for (Enemy enemy : enemies) {
-            if (!enemy.isDestroyed()) {
-                enemy.destroy();
-            }
-        }
+        mainShip.setShield();
+        destroyAllEnemies();
         final List<Asteroid> asteroids = asteroidPool.getActiveObjects();
         for (Asteroid asteroid : asteroids) {
             if (!asteroid.isDestroyed()) {
@@ -356,6 +357,15 @@ public class GameScreen extends BaseScreen {
 
     public boolean isNotNuked() {
         return !isNuked;
+    }
+
+    private void destroyAllEnemies() {
+        final List<Enemy> enemies = enemyPool.getActiveObjects();
+        for (Enemy enemy : enemies) {
+            if (!enemy.isDestroyed()) {
+                enemy.destroy();
+            }
+        }
     }
 
     private void freeActivePools() {
@@ -394,7 +404,7 @@ public class GameScreen extends BaseScreen {
             bonusEmitter.generate(delta);
             hpBar.update(delta);
             forceShield.update(delta);
-            changeLevel();
+            calculateFrags();
             mainMenu.setMenuVisible(false);
         } else {
             mainMenu.setMenuVisible(true);
@@ -499,9 +509,8 @@ public class GameScreen extends BaseScreen {
                     boss.damage(bullet.getDamage());
                     bullet.destroy();
                     if (boss.isDestroyed()) {
-                        nuke();
-                        levelUp();
                         mainShip.upgradeShip(atlas, boss.getBossType());
+                        frags += 1;
                         isBoss = false;
                     }
                 }
@@ -571,13 +580,15 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    private void changeLevel() {
+    private void calculateFrags() {
         if (frags > 0) {
             if (frags % FRAGS_TO_LEVEL_UP == 0 & tempFrags != frags) {
                 levelUp();
-                tempFrags = frags;
                 generateBoss();
+            } else if (frags % FRAGS_TO_LIVE_ADD == 0 & tempFrags != frags) {
+                mainShip.addOneLive();
             }
+            tempFrags = frags;
             if (level % LEVEL_TO_INCREASE_HP == 0 & prevLevel != level ) {
                 mainShip.addMaxHp((int)(10 / difficultyFactor));
                 mainShip.addHp(mainShip.getMaxHp() - mainShip.getHp());
@@ -598,11 +609,13 @@ public class GameScreen extends BaseScreen {
     private void generateBoss() {
         switch (level) {
             case 5: {
+                destroyAllEnemies();
                 bossEmitter.generate(1);
                 isBoss = true;
                 break;
             }
             case 10: {
+                destroyAllEnemies();
                 bossEmitter.generate(2);
                 isBoss = true;
                 break;

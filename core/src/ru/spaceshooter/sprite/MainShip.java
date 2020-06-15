@@ -80,8 +80,8 @@ public class MainShip extends Ship {
             bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y + getHalfHeight());
         } else if (shootType == 5) {
             bulletPos.set(pos.x - getHalfWidth()/2, pos.y + getHalfHeight());
-            bullet2Pos.set(pos.x, pos.y + getHalfHeight()/2);
-            bullet3Pos.set(pos.x + getHalfWidth()/2, pos.y + getHalfHeight());
+            bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y + getHalfHeight());
+            bullet3Pos.set(pos.x, pos.y + getHalfHeight()/2);
         }
         if (screen.isNotNuked()) {
             autoShoot(delta);
@@ -231,7 +231,6 @@ public class MainShip extends Ship {
             super.destroy();
         } else {
             hp = maxHp;
-            isShield = true;
             screen.nuke();
         }
     }
@@ -272,6 +271,10 @@ public class MainShip extends Ship {
         } else {
             this.hp += hp;
         }
+    }
+
+    public void addOneLive() {
+        this.lives += 1;
     }
 
     public void shootSpeedBoost() {
