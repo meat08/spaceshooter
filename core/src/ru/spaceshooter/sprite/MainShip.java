@@ -215,10 +215,9 @@ public class MainShip extends Ship {
 
     @Override
     public void destroy() {
-        if (lives == 0) {
+        if (--lives == 0) {
             super.destroy();
         } else {
-            lives--;
             hp = maxHp;
             isShield = true;
             screen.nuke();

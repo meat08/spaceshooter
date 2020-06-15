@@ -316,6 +316,12 @@ public class GameScreen extends BaseScreen {
                 enemy.destroy();
             }
         }
+        final List<Asteroid> asteroids = asteroidPool.getActiveObjects();
+        for (Asteroid asteroid : asteroids) {
+            if (!asteroid.isDestroyed()) {
+                asteroid.destroy();
+            }
+        }
     }
 
     public void setNuked(boolean nuked) {
