@@ -9,16 +9,18 @@ public class GameData {
     private int maxHp;
     private int hp;
     private int lives;
+    private int upgradeCount;
     private float mainShipX;
     private List<Float> starV;
 
-    public void saveGameData(int frags, int level, int maxHp, int hp, float mainShipX, int lives) {
+    public void saveGameData(int frags, int level, int maxHp, int hp, float mainShipX, int lives, int upgradeCount) {
         this.frags = frags;
         this.level = level;
         this.maxHp = maxHp;
         this.hp = hp;
         this.mainShipX = mainShipX;
         this.lives = lives;
+        this.upgradeCount = upgradeCount;
         starV = new ArrayList<>();
     }
 
@@ -48,6 +50,10 @@ public class GameData {
 
     public int getLives() {
         return lives;
+    }
+
+    public int getUpgradeCount() {
+        return upgradeCount;
     }
 
     public List<Float> getStarV() {

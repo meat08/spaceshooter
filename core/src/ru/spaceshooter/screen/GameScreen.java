@@ -17,6 +17,7 @@ import ru.spaceshooter.base.State;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.AsteroidPool;
 import ru.spaceshooter.pool.BonusPool;
+import ru.spaceshooter.pool.BossPool;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.EnemyPool;
 import ru.spaceshooter.pool.ExplosionAsteroidPool;
@@ -25,6 +26,7 @@ import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.pool.NebulaPool;
 import ru.spaceshooter.sprite.Asteroid;
 import ru.spaceshooter.sprite.Background;
+import ru.spaceshooter.sprite.Boss;
 import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.Enemy;
 import ru.spaceshooter.sprite.ExplosionNuke;
@@ -36,6 +38,7 @@ import ru.spaceshooter.sprite.Star;
 import ru.spaceshooter.base.MainMenu;
 import ru.spaceshooter.utils.AsteroidEmitter;
 import ru.spaceshooter.utils.BonusEmitter;
+import ru.spaceshooter.utils.BossEmitter;
 import ru.spaceshooter.utils.EnemyEmitter;
 import ru.spaceshooter.utils.GameData;
 import ru.spaceshooter.utils.NebulaEmitter;
@@ -64,11 +67,13 @@ public class GameScreen extends BaseScreen {
     private BonusPool bonusPool;
     private NebulaPool nebulaPool;
     private AsteroidPool asteroidPool;
+    private BossPool bossPool;
     private ExplosionAsteroidPool explosionAsteroidPool;
     private EnemyEmitter enemyEmitter;
     private BonusEmitter bonusEmitter;
     private NebulaEmitter nebulaEmitter;
     private AsteroidEmitter asteroidEmitter;
+    private BossEmitter bossEmitter;
     private ExplosionNuke explosionNuke;
     private Music gameMusic;
     private State previousState;
@@ -85,6 +90,7 @@ public class GameScreen extends BaseScreen {
     private GameData gameData;
     private MainMenu mainMenu;
     private boolean isNuked;
+    private boolean isBoss;
 
     @Override
     public void show() {
@@ -105,11 +111,13 @@ public class GameScreen extends BaseScreen {
         explosionAsteroidPool = new ExplosionAsteroidPool(atlas);
         hitExplodePool = new HitExplodePool(atlas);
         enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, hitExplodePool, this);
+        bossPool = new BossPool(bulletPool, explosionPool, worldBounds, hitExplodePool, this);
         mainShip = new MainShip(atlas, bulletPool, explosionPool, hitExplodePool, this);
         bonusPool = new BonusPool(worldBounds);
         nebulaPool = new NebulaPool(worldBounds);
         asteroidPool = new AsteroidPool(worldBounds, explosionAsteroidPool);
         enemyEmitter = new EnemyEmitter(atlas, enemyPool);
+        bossEmitter = new BossEmitter(atlas, bossPool);
         enemyEmitter.setDiffFactor(difficultyFactor);
         bonusEmitter = new BonusEmitter(atlas, bonusPool, mainShip);
         nebulaEmitter = new NebulaEmitter(atlas, nebulaPool);
@@ -125,6 +133,7 @@ public class GameScreen extends BaseScreen {
         previousState = state;
         level = 1;
         isNuked = false;
+        isBoss = false;
         mainMenu = new MainMenu(multiplexer, this, fileHandle);
     }
 
@@ -147,6 +156,7 @@ public class GameScreen extends BaseScreen {
         mainShip.resize(worldBounds);
         forceShield.resize(worldBounds, mainShip);
         enemyEmitter.resize(worldBounds);
+        bossEmitter.resize(worldBounds);
         hpBar.resize(worldBounds, mainShip);
         font.setSize(FONT_SIZE);
         mainMenu.resize();
@@ -158,6 +168,7 @@ public class GameScreen extends BaseScreen {
         atlas.dispose();
         bulletPool.dispose();
         enemyPool.dispose();
+        bossPool.dispose();
         explosionPool.dispose();
         bonusPool.dispose();
         nebulaPool.dispose();
@@ -264,7 +275,15 @@ public class GameScreen extends BaseScreen {
     }
 
     public void saveGame() {
-        gameData.saveGameData(frags, level, mainShip.getMaxHp(), mainShip.getHp(), mainShip.pos.x, mainShip.getLives());
+        gameData.saveGameData(
+                frags,
+                level,
+                mainShip.getMaxHp(),
+                mainShip.getHp(),
+                mainShip.pos.x,
+                mainShip.getLives(),
+                mainShip.getUpgradeCount()
+        );
         for (Star star : stars) {
             gameData.saveStarV(star.getVY());
         }
@@ -282,7 +301,14 @@ public class GameScreen extends BaseScreen {
             enemyEmitter.setLevel(level);
             nebulaEmitter.setLevel(level);
             enemyEmitter.setDiffFactor(difficultyFactor);
-            mainShip.loadGame(gameData.getMaxHp(), gameData.getHp(), gameData.getMainShipX(), gameData.getLives());
+            mainShip.loadGame(
+                    gameData.getMaxHp(),
+                    gameData.getHp(),
+                    gameData.getMainShipX(),
+                    gameData.getLives(),
+                    gameData.getUpgradeCount(),
+                    atlas
+            );
             freeActivePools();
             for (Star star : stars) {
                 for (float vy : gameData.getStarV()) {
@@ -341,6 +367,7 @@ public class GameScreen extends BaseScreen {
         hitExplodePool.freeAllActive();
         asteroidPool.freeAllActive();
         explosionAsteroidPool.freeAllActive();
+        bossPool.freeAllActive();
     }
 
     private void update(float delta) {
@@ -354,16 +381,17 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
-            bonusPool.updateActiveSprites(delta);
-            hitExplodePool.updateActiveSprites(delta);
             asteroidPool.updateActiveSprites(delta);
+            bonusPool.updateActiveSprites(delta);
+            bossPool.updateActiveSprites(delta);
+            hitExplodePool.updateActiveSprites(delta);
             explosionAsteroidPool.updateActiveSprites(delta);
             mainShip.update(delta);
-            if (!isNuked) {
+            if (!isNuked & !isBoss) {
                 enemyEmitter.generate(delta);
-                bonusEmitter.generate(delta);
                 asteroidEmitter.generate(delta);
             }
+            bonusEmitter.generate(delta);
             hpBar.update(delta);
             forceShield.update(delta);
             changeLevel();
@@ -384,6 +412,7 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
+            bossPool.drawActiveSprites(batch);
             bonusPool.drawActiveSprites(batch);
             if (!isNuked) {
                 mainShip.draw(batch);
@@ -416,6 +445,7 @@ public class GameScreen extends BaseScreen {
         nebulaPool.freeAllDestroyed();
         asteroidPool.freeAllDestroyed();
         explosionAsteroidPool.freeAllDestroyed();
+        bossPool.freeAllDestroyed();
     }
 
     private void checkCollision () {
@@ -426,6 +456,7 @@ public class GameScreen extends BaseScreen {
         final List<Bullet> bullets = bulletPool.getActiveObjects();
         final List<Bonus> bonuses = bonusPool.getActiveObjects();
         final List<Asteroid> asteroids = asteroidPool.getActiveObjects();
+        final List<Boss> bosses = bossPool.getActiveObjects();
         for (Enemy enemy : enemies) {
             if (enemy.isDestroyed()) {
                 continue;
@@ -454,6 +485,23 @@ public class GameScreen extends BaseScreen {
                     bullet.destroy();
                     if (enemy.isDestroyed()) {
                         frags += 1;
+                    }
+                }
+            }
+        }
+        for (Boss boss : bosses) {
+            for (Bullet bullet : bullets) {
+                if (bullet.getOwner() != mainShip ||  bullet.isDestroyed()) {
+                    continue;
+                }
+                if (boss.isBulletCollision(bullet)) {
+                    boss.damage(bullet.getDamage());
+                    bullet.destroy();
+                    if (boss.isDestroyed()) {
+                        nuke();
+                        levelUp();
+                        mainShip.upgradeShip(atlas, boss.getBossType());
+                        isBoss = false;
                     }
                 }
             }
@@ -489,6 +537,11 @@ public class GameScreen extends BaseScreen {
                         mainShip.setShield();
                         break;
                     }
+                    case 4: {
+                        bonus.destroy();
+                        nuke();
+                        break;
+                    }
                 }
             }
         }
@@ -520,18 +573,32 @@ public class GameScreen extends BaseScreen {
     private void changeLevel() {
         if (frags > 0) {
             if (frags % FRAGS_TO_LEVEL_UP == 0 & tempFrags != frags) {
-                level += 1;
-                enemyEmitter.setLevel(level);
-                nebulaEmitter.setLevel(level);
-                for (Star star : stars) {
-                    star.addVY(level * STAR_SPEED_INCREASE);
-                }
+                levelUp();
                 tempFrags = frags;
+                generateBoss();
             }
             if (level % LEVEL_TO_INCREASE_HP == 0 & prevLevel != level ) {
                 mainShip.addMaxHp((int)(10 / difficultyFactor));
                 mainShip.addHp(mainShip.getMaxHp() - mainShip.getHp());
                 prevLevel = level;
+            }
+        }
+    }
+
+    private void levelUp() {
+        level += 1;
+        enemyEmitter.setLevel(level);
+        nebulaEmitter.setLevel(level);
+        for (Star star : stars) {
+            star.addVY(level * STAR_SPEED_INCREASE);
+        }
+    }
+
+    private void generateBoss() {
+        switch (level) {
+            case 5: {
+                bossEmitter.generate(1);
+                isBoss = true;
             }
         }
     }
