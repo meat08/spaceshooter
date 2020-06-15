@@ -22,7 +22,6 @@ public class BossEmitter {
     private static final int BOSS_ONE_SHIP_TYPE = 3;
     private static final int BOSS_ONE_TYPE = 0;
 
-
     private Rect worldBounds;
 
     private final TextureRegion[] bossOneRegion;
@@ -33,8 +32,6 @@ public class BossEmitter {
     private final TextureRegion bulletRegionMoon;
     private final TextureRegion bulletRegionSpine;
     private final BossPool bossPool;
-    private int level;
-    private float diffFactor;
 
     public BossEmitter(TextureAtlas atlas, BossPool bossPool) {
         TextureRegion boss0 = atlas.findRegion("boss0");
@@ -47,15 +44,10 @@ public class BossEmitter {
         this.bulletRegionSpine = atlas.findRegion("bulletEnemy_type2");
 
         this.bossPool = bossPool;
-        level = 1;
     }
 
     public void resize(Rect worldBounds) {
         this.worldBounds = worldBounds;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public void generate(int type) {

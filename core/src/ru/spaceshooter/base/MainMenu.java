@@ -421,6 +421,10 @@ public class MainMenu {
         tableRoot.setVisible(isVisible);
     }
 
+    public void setSaveButtonVisible(boolean visible) {
+        btnSave.setVisible(visible);
+    }
+
     public void gameOver() {
         tableButtons.clear();
         labelGameOver.setFontScale(getLabelScale(labelGameOver));

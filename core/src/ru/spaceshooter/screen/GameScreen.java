@@ -398,6 +398,7 @@ public class GameScreen extends BaseScreen {
             mainMenu.setMenuVisible(false);
         } else {
             mainMenu.setMenuVisible(true);
+            mainMenu.setSaveButtonVisible(!isBoss);
         }
         mainMenu.update();
     }
