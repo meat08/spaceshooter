@@ -600,6 +600,12 @@ public class GameScreen extends BaseScreen {
             case 5: {
                 bossEmitter.generate(1);
                 isBoss = true;
+                break;
+            }
+            case 10: {
+                bossEmitter.generate(2);
+                isBoss = true;
+                break;
             }
         }
     }

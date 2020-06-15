@@ -30,7 +30,11 @@ public class Boss extends Ship {
     }
 
     private void shoot(float delta) {
-        if (shipType == 3) {
+        if (shipType == 4) {
+            bulletPos.set(pos.x - getHalfWidth()/2, pos.y - getHalfHeight()/2);
+            bullet2Pos.set(pos.x, pos.y - getHalfHeight());
+            bullet3Pos.set(pos.x + getHalfWidth()/2, pos.y - getHalfHeight()/2);
+        } else if (shipType == 3) {
             bulletPos.set(pos.x - getHalfHeight()/2, pos.y - getHalfHeight()/2);
             bullet2Pos.set(pos.x - 0.02f, pos.y - getHalfHeight()/2);
             bullet3Pos.set(pos.x + 0.02f, pos.y - getHalfHeight()/2);

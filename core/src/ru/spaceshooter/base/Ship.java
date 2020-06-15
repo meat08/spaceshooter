@@ -108,6 +108,8 @@ public class Ship extends Sprite {
                     shootTriple();
                 } else if (shootType == 6) {
                     shootBoss0();
+                } else if (shootType == 7) {
+                    shootBoss1();
                 }
             }
             reloadTimer = 0f;
@@ -198,6 +200,16 @@ public class Ship extends Sprite {
         bullet2.set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
         Bullet bullet3 = bulletPool.obtain();
         bullet3.set(this, bulletRegion1, bullet4Pos, bulletV.cpy().add(0.06f, 0f), bulletHeight, worldBounds, damage, false);
+        pew();
+    }
+
+    private void shootBoss1() {
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, bulletRegion1, bulletPos, bulletV.cpy().add(-0.07f, 0f), bulletHeight, worldBounds, damage, true);
+        Bullet bullet1 = bulletPool.obtain();
+        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        Bullet bullet2 = bulletPool.obtain();
+        bullet2.set(this, bulletRegion1, bullet3Pos, bulletV.cpy().add(0.07f, 0f), bulletHeight, worldBounds, damage, true);
         pew();
     }
 
