@@ -28,4 +28,4 @@ Ilya Mafov <i.mafov@gmail.com>
 
 ## Лицензия
 
-GNU GPLv3 подробней в файле [LICENSE](LICENSE.md)
+GNU GPLv3 подробней в файле [LICENSE](LICENSE)
