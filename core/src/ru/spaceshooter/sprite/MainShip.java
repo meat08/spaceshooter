@@ -251,12 +251,16 @@ public class MainShip extends Ship {
     }
 
     public void upgradeShip(TextureAtlas atlas, int upgradeCount) {
-        this.regions = Regions.split(atlas.findRegion("main_ship_guns"), 1, 4, 4);
-        this.upgradeCount = upgradeCount;
-        if (upgradeCount == 1) {
-            this.shootType = 2;
-        } else if (upgradeCount == 2) {
-            this.shootType = 5;
+        if (upgradeCount > 0) {
+            this.regions = Regions.split(atlas.findRegion("main_ship_guns"), 1, 4, 4);
+            this.upgradeCount = upgradeCount;
+            if (upgradeCount == 1) {
+                this.shootType = 2;
+            } else if (upgradeCount == 2) {
+                this.shootType = 5;
+            }
+        } else {
+            maxHp += 50;
         }
     }
 

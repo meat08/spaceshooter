@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import ru.spaceshooter.screen.GameScreen;
@@ -49,6 +50,8 @@ public class MainMenu {
     private Label labelMain;
     private Label labelPause;
     private Label labelGameOver;
+    private Label labelReady;
+    private Label labelDone;
     private Table tableButtons;
     private TextButton btnNewGame;
     private TextButton btnConf;
@@ -97,6 +100,9 @@ public class MainMenu {
         labelMain = new Label("Space shooter", skin, "titleBig");
         labelPause = new Label("ПАУЗА", skin, "title-plain-big");
         labelGameOver = new Label("ИГРА ОКОНЧЕНА", skin, "title-plain-big");
+        labelReady = new Label("ПРИГОТОВЬТЕСЬ!", skin, "title-plain-big");
+        labelDone = new Label("ПРОТИВНИК УНИЧТОЖЕН!\nВАШ КОРАБЛЬ УЛУЧШЕН", skin, "title-plain-big");
+        labelDone.setColor(Color.GREEN);
         labelGameOver.setColor(Color.RED);
         tableButtons = new Table();
         btnNewGame = new TextButton("Новая игра", skin, "round");
@@ -142,6 +148,8 @@ public class MainMenu {
             sliderSound.setValue(menuScreen.getVolumeSound());
             sliderAccel.setValue(menuScreen.getSenseAccel());
         } else if (gameScreen != null) {
+            labelReady.setFontScale(getLabelScale(labelReady));
+            labelDone.setFontScale(getLabelScale(labelDone));
             labelPause.setFontScale(getLabelScale(labelPause));
             tableButtons.add(labelPause).padBottom(2f).row();
             btnResume.getLabel().setFontScale(getButtonScale(btnResume));
@@ -182,6 +190,10 @@ public class MainMenu {
         tableConf.add(tmpTableAccel).height(heightRoot).row();
         btnBack.getLabel().setFontScale(getButtonScale(btnBack));
         tableConf.add(btnBack).width(widthRoot).height(heightRoot).row();
+        stage.addActor(labelReady);
+        stage.addActor(labelDone);
+        labelReady.setVisible(false);
+        labelDone.setVisible(false);
     }
 
     private void buttonListener() {
@@ -440,6 +452,14 @@ public class MainMenu {
         btnSave.setVisible(visible);
     }
 
+    public void setLabelReadyVisible(boolean visible) {
+        labelReady.setVisible(visible);
+    }
+
+    public void setLabelDoneVisible(boolean visible) {
+        labelDone.setVisible(visible);
+    }
+
     public void gameOver() {
         tableButtons.clear();
         labelGameOver.setFontScale(getLabelScale(labelGameOver));
@@ -461,6 +481,10 @@ public class MainMenu {
         sliderAccel.getStyle().knob.setMinWidth(40f);
         sliderAccel.getStyle().background.setMinHeight(30f);
         sliderAccel.getStyle().knobBefore.setMinHeight(28f);
+        labelReady.setAlignment(Align.center);
+        labelReady.setFillParent(true);
+        labelDone.setAlignment(Align.center);
+        labelDone.setFillParent(true);
     }
 
     public void update() {

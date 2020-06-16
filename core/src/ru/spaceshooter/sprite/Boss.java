@@ -29,7 +29,10 @@ import ru.spaceshooter.screen.GameScreen;
 public class Boss extends Ship {
 
     private static final float V_Y = -0.3f;
+    private static final float SPAWN_WAIT = 10f;
     private int bossType;
+    private float spawnTimer;
+    private boolean isSpawn;
 
     public Boss(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound, HitExplodePool hitExplodePool, GameScreen screen) {
         super(bulletPool, explosionPool, worldBounds, sound, hitExplodePool, screen);
@@ -38,6 +41,16 @@ public class Boss extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
+        if (isSpawn) {
+            screen.setLabelReadyVisible(true);
+            spawnTimer += delta;
+            if (spawnTimer > SPAWN_WAIT) {
+                v.set(0, V_Y);
+                spawnTimer = 0f;
+                isSpawn = false;
+                screen.setLabelReadyVisible(false);
+            }
+        }
         if (getTop() < worldBounds.getTop()) {
             move();
             shoot(delta);
@@ -102,10 +115,10 @@ public class Boss extends Ship {
         this.reloadTimer = reloadInterval;
         this.hp = hp;
         setHeightProportion(height);
-        this.v.set(0, V_Y);
         this.shootType = shootType;
         this.shipType = shipType;
         this.bossType = bossType;
+        isSpawn = true;
     }
 
     public boolean isBulletCollision(Bullet bullet) {

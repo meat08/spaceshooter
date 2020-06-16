@@ -69,6 +69,7 @@ public class GameScreen extends BaseScreen {
     private static final String FRAGS = "Убито: ";
     private static final String LIVES = "Жизни: ";
     private static final String LEVEL = "Уровень: ";
+    private static final float WAIT_INTERVAL = 8f;
 
     private Texture bg;
     private Background background;
@@ -92,6 +93,7 @@ public class GameScreen extends BaseScreen {
     private BossEmitter bossEmitter;
     private ExplosionNuke explosionNuke;
     private Music gameMusic;
+    private Music bossMusic;
     private State previousState;
     private HpBar hpBar;
     private int frags;
@@ -107,6 +109,8 @@ public class GameScreen extends BaseScreen {
     private MainMenu mainMenu;
     private boolean isNuked;
     private boolean isBoss;
+    private boolean isBossDestroy;
+    private float waitTimer;
 
     @Override
     public void show() {
@@ -117,6 +121,7 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
         font = new Font("font/font.fnt", "font/font.png");
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/gameScreen.mp3"));
+        bossMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/bossMusic.mp3"));
         background = new Background(bg);
         stars = new Star[128];
         for (int i = 0; i < stars.length; i++) {
@@ -151,6 +156,7 @@ public class GameScreen extends BaseScreen {
         level = 1;
         isNuked = false;
         isBoss = false;
+        isBossDestroy = false;
         mainMenu = new MainMenu(multiplexer, this, fileHandle);
     }
 
@@ -192,6 +198,7 @@ public class GameScreen extends BaseScreen {
         asteroidPool.dispose();
         mainShip.dispose();
         gameMusic.dispose();
+        bossMusic.dispose();
         font.dispose();
         mainMenu.dispose();
         explosionNuke.dispose();
@@ -203,7 +210,11 @@ public class GameScreen extends BaseScreen {
         if (state != State.PAUSE) {
             previousState = state;
             state = State.PAUSE;
-            gameMusic.pause();
+            if (isBoss) {
+                bossMusic.pause();
+            } else {
+                gameMusic.pause();
+            }
         }
     }
 
@@ -211,7 +222,11 @@ public class GameScreen extends BaseScreen {
         resume();
         state = previousState;
         if (isMusicOn) {
-            gameMusic.play();
+            if (isBoss) {
+                bossMusic.play();
+            } else {
+                gameMusic.play();
+            }
         }
     }
 
@@ -266,10 +281,21 @@ public class GameScreen extends BaseScreen {
 
     public void musicOnOff() {
         if (isMusicOn) {
-            gameMusic.play();
-            gameMusic.setLooping(true);
+            if (!isBoss) {
+                bossMusic.stop();
+                gameMusic.play();
+                gameMusic.setLooping(true);
+            } else {
+                gameMusic.stop();
+                bossMusic.play();
+                bossMusic.setLooping(true);
+            }
         } else {
-            gameMusic.stop();
+            if (!isBoss) {
+                gameMusic.stop();
+            } else {
+                bossMusic.stop();
+            }
         }
     }
 
@@ -277,6 +303,7 @@ public class GameScreen extends BaseScreen {
     public void setVolumeMusic(float volumeMusic) {
         super.setVolumeMusic(volumeMusic);
         gameMusic.setVolume(volumeMusic);
+        bossMusic.setVolume(volumeMusic);
     }
 
     @Override
@@ -357,13 +384,7 @@ public class GameScreen extends BaseScreen {
     public void nuke() {
         explosionNuke.generate();
         mainShip.setShield();
-        destroyAllEnemies();
-        final List<Asteroid> asteroids = asteroidPool.getActiveObjects();
-        for (Asteroid asteroid : asteroids) {
-            if (!asteroid.isDestroyed()) {
-                asteroid.destroy();
-            }
-        }
+        destroyAllScreenObjects();
     }
 
     public void setNuked(boolean nuked) {
@@ -374,11 +395,27 @@ public class GameScreen extends BaseScreen {
         return !isNuked;
     }
 
-    private void destroyAllEnemies() {
+    public void setLabelReadyVisible(boolean visible) {
+        mainMenu.setLabelReadyVisible(visible);
+    }
+
+    private void destroyAllScreenObjects() {
         final List<Enemy> enemies = enemyPool.getActiveObjects();
+        final List<Asteroid> asteroids = asteroidPool.getActiveObjects();
+        final List<Bullet> bullets = bulletPool.getActiveObjects();
         for (Enemy enemy : enemies) {
             if (!enemy.isDestroyed()) {
                 enemy.destroy();
+            }
+        }
+        for (Asteroid asteroid : asteroids) {
+            if (!asteroid.isDestroyed()) {
+                asteroid.destroy();
+            }
+        }
+        for (Bullet bullet : bullets) {
+            if (!bullet.isDestroyed()) {
+                bullet.destroy();
             }
         }
     }
@@ -420,9 +457,13 @@ public class GameScreen extends BaseScreen {
             hpBar.update(delta);
             forceShield.update(delta);
             calculateFrags();
+            if (isBossDestroy) {
+                bossDestroyed(delta);
+            }
             mainMenu.setMenuVisible(false);
         } else {
             mainMenu.setMenuVisible(true);
+            mainMenu.setLabelReadyVisible(false);
             mainMenu.setSaveButtonVisible(!isBoss);
         }
         mainMenu.update();
@@ -457,9 +498,7 @@ public class GameScreen extends BaseScreen {
         }
         printInfo();
         batch.end();
-        if (state != State.PLAYING) {
-            mainMenu.draw();
-        }
+        mainMenu.draw();
     }
 
     private void free() {
@@ -526,7 +565,7 @@ public class GameScreen extends BaseScreen {
                     if (boss.isDestroyed()) {
                         mainShip.upgradeShip(atlas, boss.getBossType());
                         frags += 1;
-                        isBoss = false;
+                        isBossDestroy = true;
                     }
                 }
             }
@@ -595,12 +634,25 @@ public class GameScreen extends BaseScreen {
         }
     }
 
+    private void bossDestroyed(float delta) {
+        waitTimer += delta;
+        mainMenu.setLabelDoneVisible(true);
+        if (isBoss & waitTimer > WAIT_INTERVAL) {
+            mainMenu.setLabelDoneVisible(false);
+            waitTimer = 0f;
+            isBoss = false;
+            isBossDestroy = false;
+            musicOnOff();
+        }
+    }
+
     private void calculateFrags() {
         if (frags > 0) {
             if (frags % FRAGS_TO_LEVEL_UP == 0 & tempFrags != frags) {
                 levelUp();
                 generateBoss();
-            } else if (frags % FRAGS_TO_LIVE_ADD == 0 & tempFrags != frags) {
+            }
+            if (frags % FRAGS_TO_LIVE_ADD == 0 & tempFrags != frags) {
                 mainShip.addOneLive();
             }
             tempFrags = frags;
@@ -624,15 +676,17 @@ public class GameScreen extends BaseScreen {
     private void generateBoss() {
         switch (level) {
             case 5: {
-                destroyAllEnemies();
+                destroyAllScreenObjects();
                 bossEmitter.generate(1);
                 isBoss = true;
+                musicOnOff();
                 break;
             }
             case 10: {
-                destroyAllEnemies();
+                destroyAllScreenObjects();
                 bossEmitter.generate(2);
                 isBoss = true;
+                musicOnOff();
                 break;
             }
         }
