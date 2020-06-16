@@ -6,11 +6,11 @@
 
 ### Android
 
-Скачайте [APK](readme/SpaceShooter.apk) файл и установите его.
+Скачайте [APK](readme/SpaceShooter.apk?raw=true) файл и установите его.
 
 ### Windows/Linux/MacOS
 
-Скачайте [JAR](readme/SpaceShooter.jar) файл и запустите его. Для запуска необходима Java 1.8+. Скачать Java можно [здесь](https://www.java.com/ru/download/).
+Скачайте [JAR](readme/SpaceShooter.jar?raw=true) файл и запустите его. Для запуска необходима Java 1.8+. Скачать Java можно [здесь](https://www.java.com/ru/download/).
 
 ## Скриншоты
 
