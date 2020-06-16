@@ -20,11 +20,11 @@ Download [JAR](readme/SpaceShooter.jar?raw=true) and run it. This content requir
 
 ## Управление/Control
 
-PC версия: стрелки влево/вправо, нажатием мыши по экрану.
-Android версия: нажатие по экрану, акселерометр (по умолчанию выключен, включается в настройках).
+**PC версия**: стрелки влево/вправо, нажатием мыши по экрану.  
+**Android версия**: нажатие по экрану, акселерометр (по умолчанию выключен, включается в настройках).  
 
-PC version: left / right arrows, mouse clicking on the screen.
-Android version: screen tap, accelerometer (by default off, turns on in properties).
+**PC version**: left / right arrows, mouse clicking on the screen.  
+**Android version**: screen tap, accelerometer (by default off, turns on in properties).
 
 
 ## Скриншоты/Screenshots
