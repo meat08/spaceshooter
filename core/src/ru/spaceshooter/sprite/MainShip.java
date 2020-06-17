@@ -98,7 +98,7 @@ public class MainShip extends Ship {
             bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y + getHalfHeight());
             bullet3Pos.set(pos.x, pos.y + getHalfHeight()/2);
         }
-        if (screen.isNotNuked()) {
+        if (screen.isNotNuked() & screen.isNotMainShipDestroy()) {
             autoShoot(delta);
         }
         if (isShootBoost) {
@@ -246,7 +246,7 @@ public class MainShip extends Ship {
             super.destroy();
         } else {
             hp = maxHp;
-            screen.nuke();
+            screen.explodeMainShip();
         }
     }
 

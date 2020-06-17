@@ -28,6 +28,7 @@ public class EnemyEmitter {
 
     private static final float GENERATE_INTERVAL = 4.05f;
     private static final float BOOST_GENERATE_INTERVAL = 0.05f;
+    private static final int LEVEL_GAIN_ENEMY = 10;
 
     private static final float ENEMY_SMALL_HEIGHT = 0.08f;
     private static final int ENEMY_SMALL_HP = 3;
@@ -290,6 +291,6 @@ public class EnemyEmitter {
     }
 
     private int transform(int value) {
-        return (int)(value * diffFactor) > 0 ? (int)(value * diffFactor) : value;
+        return (int)(value * diffFactor * ((float)(level/LEVEL_GAIN_ENEMY) * 0.5f + 1f));
     }
 }

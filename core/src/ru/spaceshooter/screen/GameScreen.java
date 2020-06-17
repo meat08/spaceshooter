@@ -26,6 +26,8 @@ import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.Json;
 
 import java.util.List;
+import java.util.Locale;
+
 import ru.spaceshooter.base.BaseScreen;
 import ru.spaceshooter.base.Font;
 import ru.spaceshooter.base.State;
@@ -44,6 +46,7 @@ import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.Boss;
 import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.Enemy;
+import ru.spaceshooter.sprite.ExplosionCircle;
 import ru.spaceshooter.sprite.ExplosionNuke;
 import ru.spaceshooter.sprite.ForceShield;
 import ru.spaceshooter.sprite.HpBar;
@@ -66,9 +69,6 @@ public class GameScreen extends BaseScreen {
     private static final int FRAGS_TO_LIVE_ADD = 200;
     private static final int LEVEL_TO_INCREASE_HP = 3;
     private static final float STAR_SPEED_INCREASE = 0.007f;
-    private static final String FRAGS = "Убито: ";
-    private static final String LIVES = "Жизни: ";
-    private static final String LEVEL = "Уровень: ";
     private static final float WAIT_INTERVAL = 8f;
 
     private Texture bg;
@@ -92,6 +92,7 @@ public class GameScreen extends BaseScreen {
     private AsteroidEmitter asteroidEmitter;
     private BossEmitter bossEmitter;
     private ExplosionNuke explosionNuke;
+    private ExplosionCircle explosionCircle;
     private Music gameMusic;
     private Music bossMusic;
     private State previousState;
@@ -101,6 +102,9 @@ public class GameScreen extends BaseScreen {
     private int level;
     private int prevLevel;
     private Font font;
+    private String textFrags;
+    private String textLives;
+    private String textLevel;
     private StringBuilder sbFrags;
     private StringBuilder sbHp;
     private StringBuilder sbLevel;
@@ -108,6 +112,7 @@ public class GameScreen extends BaseScreen {
     private GameData gameData;
     private MainMenu mainMenu;
     private boolean isNuked;
+    private boolean isMainShipDestroy;
     private boolean isBoss;
     private boolean isBossDestroy;
     private float waitTimer;
@@ -146,6 +151,7 @@ public class GameScreen extends BaseScreen {
         asteroidEmitter = new AsteroidEmitter(atlas, asteroidPool);
         forceShield = new ForceShield(atlas);
         explosionNuke = new ExplosionNuke(atlas, this, worldBounds);
+        explosionCircle = new ExplosionCircle(atlas, this, worldBounds);
         hpBar = new HpBar(atlas);
         sbFrags = new StringBuilder();
         sbHp = new StringBuilder();
@@ -155,9 +161,11 @@ public class GameScreen extends BaseScreen {
         previousState = state;
         level = 1;
         isNuked = false;
+        isMainShipDestroy = false;
         isBoss = false;
         isBossDestroy = false;
         mainMenu = new MainMenu(multiplexer, this, fileHandle);
+        checkLocale();
     }
 
     @Override
@@ -202,6 +210,7 @@ public class GameScreen extends BaseScreen {
         font.dispose();
         mainMenu.dispose();
         explosionNuke.dispose();
+        explosionCircle.dispose();
         super.dispose();
     }
 
@@ -369,6 +378,7 @@ public class GameScreen extends BaseScreen {
         frags = 0;
         level = 1;
         isNuked = false;
+        isMainShipDestroy = false;
         enemyEmitter.setLevel(level);
         nebulaEmitter.setLevel(level);
         enemyEmitter.setDiffFactor(difficultyFactor);
@@ -387,6 +397,12 @@ public class GameScreen extends BaseScreen {
         destroyAllScreenObjects();
     }
 
+    public void explodeMainShip() {
+        explosionCircle.generate(mainShip.pos);
+        mainShip.setShield();
+        destroyAllScreenObjects();
+    }
+
     public void setNuked(boolean nuked) {
         isNuked = nuked;
     }
@@ -395,8 +411,29 @@ public class GameScreen extends BaseScreen {
         return !isNuked;
     }
 
+    public boolean isNotMainShipDestroy() {
+        return !isMainShipDestroy;
+    }
+
+    public void setMainShipDestroy(boolean mainShipDestroy) {
+        isMainShipDestroy = mainShipDestroy;
+    }
+
     public void setLabelReadyVisible(boolean visible) {
         mainMenu.setLabelReadyVisible(visible);
+    }
+
+    private void checkLocale() {
+        String locale = Locale.getDefault().toString();
+        if (locale.equals("ru_RU")) {
+            textFrags = "Убито: ";
+            textLives = "Жизни: ";
+            textLevel = "Уровень: ";
+        } else {
+            textFrags = "Frags: ";
+            textLives = "Lives: ";
+            textLevel = "Level: ";
+        }
     }
 
     private void destroyAllScreenObjects() {
@@ -440,6 +477,7 @@ public class GameScreen extends BaseScreen {
         }
         explosionPool.updateActiveSprites(delta);
         explosionNuke.update(delta);
+        explosionCircle.update(delta);
         if (state == State.PLAYING) {
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
@@ -449,7 +487,7 @@ public class GameScreen extends BaseScreen {
             hitExplodePool.updateActiveSprites(delta);
             explosionAsteroidPool.updateActiveSprites(delta);
             mainShip.update(delta);
-            if (!isNuked & !isBoss) {
+            if (!isNuked & !isBoss & !isMainShipDestroy) {
                 enemyEmitter.generate(delta);
                 asteroidEmitter.generate(delta);
             }
@@ -481,7 +519,7 @@ public class GameScreen extends BaseScreen {
             enemyPool.drawActiveSprites(batch);
             bossPool.drawActiveSprites(batch);
             bonusPool.drawActiveSprites(batch);
-            if (!isNuked) {
+            if (!isMainShipDestroy) {
                 mainShip.draw(batch);
                 if (mainShip.isShield()) {
                     forceShield.draw(batch);
@@ -495,6 +533,9 @@ public class GameScreen extends BaseScreen {
         explosionPool.drawActiveSprites(batch);
         if (!explosionNuke.isDestroyed()) {
             explosionNuke.draw(batch);
+        }
+        if (!explosionCircle.isDestroyed()) {
+            explosionCircle.draw(batch);
         }
         printInfo();
         batch.end();
@@ -696,8 +737,8 @@ public class GameScreen extends BaseScreen {
         sbFrags.setLength(0);
         sbHp.setLength(0);
         sbLevel.setLength(0);
-        font.draw(batch, sbFrags.append(FRAGS).append(frags), worldBounds.getLeft() + TEXT_MARGIN, worldBounds.getTop() - TEXT_MARGIN);
-        font.draw(batch, sbHp.append(LIVES).append(mainShip.getLives()), worldBounds.pos.x, worldBounds.getTop() - TEXT_MARGIN, Align.center);
-        font.draw(batch, sbLevel.append(LEVEL).append(level), worldBounds.getRight() - TEXT_MARGIN, worldBounds.getTop() - TEXT_MARGIN, Align.right);
+        font.draw(batch, sbFrags.append(textFrags).append(frags), worldBounds.getLeft() + TEXT_MARGIN, worldBounds.getTop() - TEXT_MARGIN);
+        font.draw(batch, sbHp.append(textLives).append(mainShip.getLives()), worldBounds.pos.x, worldBounds.getTop() - TEXT_MARGIN, Align.center);
+        font.draw(batch, sbLevel.append(textLevel).append(level), worldBounds.getRight() - TEXT_MARGIN, worldBounds.getTop() - TEXT_MARGIN, Align.right);
     }
 }

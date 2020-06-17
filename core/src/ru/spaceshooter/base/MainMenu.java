@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -35,11 +36,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.Locale;
+
 import ru.spaceshooter.screen.GameScreen;
 import ru.spaceshooter.screen.MenuScreen;
 
 public class MainMenu {
 
+    private String textPause, textGameOver, textReady, textDone, textSaveDone, textNewGame, textConf, textLoad, textExit, textBack, textResume, textSave, textEasy, textNormal, textHard;
     private Stage stage;
     private Game game;
     private MenuScreen menuScreen;
@@ -52,6 +56,7 @@ public class MainMenu {
     private Label labelGameOver;
     private Label labelReady;
     private Label labelDone;
+    private Label labelSave;
     private Table tableButtons;
     private TextButton btnNewGame;
     private TextButton btnConf;
@@ -93,22 +98,24 @@ public class MainMenu {
     }
 
     private void create(InputMultiplexer multiplexer) {
+        checkLocale();
         stage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         multiplexer.addProcessor(0, stage);
         tableRoot = new Table();
         labelMain = new Label("Space shooter", skin, "titleBig");
-        labelPause = new Label("ПАУЗА", skin, "title-plain-big");
-        labelGameOver = new Label("ИГРА ОКОНЧЕНА", skin, "title-plain-big");
-        labelReady = new Label("ПРИГОТОВЬТЕСЬ!", skin, "title-plain-big");
-        labelDone = new Label("ПРОТИВНИК УНИЧТОЖЕН!\nВАШ КОРАБЛЬ УЛУЧШЕН", skin, "title-plain-big");
+        labelPause = new Label(textPause, skin, "title-plain-big");
+        labelGameOver = new Label(textGameOver, skin, "title-plain-big");
+        labelReady = new Label(textReady, skin, "title-plain-big");
+        labelDone = new Label(textDone, skin, "title-plain-big");
+        labelSave = new Label(textSaveDone, skin, "title-plain-big");
         labelDone.setColor(Color.GREEN);
         labelGameOver.setColor(Color.RED);
         tableButtons = new Table();
-        btnNewGame = new TextButton("Новая игра", skin, "round");
-        btnConf = new TextButton("Настройки", skin, "round");
-        btnLoad = new TextButton("Загрузить", skin, "round");
-        btnExit = new TextButton("Выход", skin, "round");
+        btnNewGame = new TextButton(textNewGame, skin, "round");
+        btnConf = new TextButton(textConf, skin, "round");
+        btnLoad = new TextButton(textLoad, skin, "round");
+        btnExit = new TextButton(textExit, skin, "round");
         tableConf = new Table();
         btnMusic = new Button(skin, "music");
         sliderMusic = new Slider(0.1f, 1f, 0.05f, false, skin);
@@ -117,12 +124,50 @@ public class MainMenu {
         btnSound = new Button(skin, "sound");
         sliderAccel = new Slider(0.5f, 1.5f, 0.05f, false, skin);
         btnAccel = new Button(skin, "accel");
-        btnBack = new TextButton("Назад", skin, "round");
-        btnResume = new TextButton("Продолжить", skin, "round");
-        btnSave = new TextButton("Сохранить игру", skin, "round");
-        btnEasy = new TextButton("Легко", skin, "toggle-rus");
-        btnNormal = new TextButton("Нормально", skin, "toggle-rus");
-        btnHard = new TextButton("Сложно", skin, "toggle-rus");
+        btnBack = new TextButton(textBack, skin, "round");
+        btnResume = new TextButton(textResume, skin, "round");
+        btnSave = new TextButton(textSave, skin, "round");
+        btnEasy = new TextButton(textEasy, skin, "toggle-rus");
+        btnNormal = new TextButton(textNormal, skin, "toggle-rus");
+        btnHard = new TextButton(textHard, skin, "toggle-rus");
+    }
+
+
+    private void checkLocale() {
+        String locale = Locale.getDefault().toString();
+        if (locale.equals("ru_RU")) {
+            textPause = "ПАУЗА";
+            textGameOver = "ИГРА ОКОНЧЕНА";
+            textReady = "ПРИГОТОВЬТЕСЬ!";
+            textDone = "ПРОТИВНИК УНИЧТОЖЕН!\nВАШ КОРАБЛЬ УЛУЧШЕН";
+            textSaveDone = "СОХРАНЕНО";
+            textNewGame = "Новая игра";
+            textConf = "Настройки";
+            textLoad = "Загрузить";
+            textExit = "Выход";
+            textBack = "Назад";
+            textResume = "Продолжить";
+            textSave = "Сохранить игру";
+            textEasy = "Легко";
+            textNormal = "Нормально";
+            textHard = "Сложно";
+        } else {
+            textPause = "PAUSE";
+            textGameOver = "GAME OVER";
+            textReady = "GET READY!";
+            textDone = "ENEMY DESTROYED!\nYOUR SHIP IMPROVED";
+            textSaveDone = "SAVED";
+            textNewGame = "New game";
+            textConf = "Settings";
+            textLoad = "Load game";
+            textExit = "Exit";
+            textBack = "Back";
+            textResume = "Resume";
+            textSave = "Save game";
+            textEasy = "Easy";
+            textNormal = "Normal";
+            textHard = "Hard";
+        }
     }
 
     private void show() {
@@ -151,6 +196,8 @@ public class MainMenu {
             labelReady.setFontScale(getLabelScale(labelReady));
             labelDone.setFontScale(getLabelScale(labelDone));
             labelPause.setFontScale(getLabelScale(labelPause));
+            labelSave.setFontScale(getLabelScale(labelSave));
+            labelSave.setColor(Color.BLUE);
             tableButtons.add(labelPause).padBottom(2f).row();
             btnResume.getLabel().setFontScale(getButtonScale(btnResume));
             tableButtons.add(btnResume).width(widthRoot).height(heightRoot).row();
@@ -192,8 +239,10 @@ public class MainMenu {
         tableConf.add(btnBack).width(widthRoot).height(heightRoot).row();
         stage.addActor(labelReady);
         stage.addActor(labelDone);
+        stage.addActor(labelSave);
         labelReady.setVisible(false);
         labelDone.setVisible(false);
+        labelSave.setVisible(false);
     }
 
     private void buttonListener() {
@@ -237,6 +286,7 @@ public class MainMenu {
             public void clicked(InputEvent event, float x, float y){
                 if (gameScreen != null) {
                     gameScreen.saveGame();
+                    labelSave.addAction(Actions.sequence(Actions.visible(true), Actions.delay(0.8f), Actions.visible(false)));
                 }
             }
         });
@@ -485,6 +535,8 @@ public class MainMenu {
         labelReady.setFillParent(true);
         labelDone.setAlignment(Align.center);
         labelDone.setFillParent(true);
+        labelSave.setAlignment(Align.top);
+        labelSave.setFillParent(true);
     }
 
     public void update() {
