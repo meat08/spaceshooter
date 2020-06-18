@@ -29,7 +29,7 @@ import ru.spaceshooter.screen.GameScreen;
 public class Boss extends Ship {
 
     private static final float V_Y = -0.3f;
-    private static final float SPAWN_WAIT = 10f;
+    private static final float SPAWN_WAIT = 5f;
     private int bossType;
     private float spawnTimer;
     private boolean isSpawn;
@@ -118,6 +118,7 @@ public class Boss extends Ship {
         this.shootType = shootType;
         this.shipType = shipType;
         this.bossType = bossType;
+        this.v.setZero();
         isSpawn = true;
     }
 

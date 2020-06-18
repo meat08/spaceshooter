@@ -291,6 +291,6 @@ public class EnemyEmitter {
     }
 
     private int transform(int value) {
-        return (int)(value * diffFactor * ((float)(level/LEVEL_GAIN_ENEMY) * 0.5f + 1f));
+        return (int)(value * diffFactor);
     }
 }
