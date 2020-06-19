@@ -30,7 +30,6 @@ public class Asteroid extends Sprite {
     private static final float SIZE_MAX = 0.085f;
     private static final float SPEED = -0.1f;
 
-    private float animateTimer;
     private Rect worldBounds;
     private ExplosionAsteroidPool explosionAsteroidPool;
     private Vector2 v;
@@ -40,17 +39,15 @@ public class Asteroid extends Sprite {
         this.worldBounds = worldBounds;
         this.explosionAsteroidPool = explosionAsteroidPool;
         this.v = new Vector2();
+        this.baseAnimateInterval = ANIMATE_INTERVAL;
     }
 
     @Override
     public void update(float delta) {
+        super.update(delta);
         pos.mulAdd(v, delta);
-        animateTimer += delta;
-        if (animateTimer >= ANIMATE_INTERVAL) {
-            animateTimer = 0f;
-            if (++frame == regions.length) {
-                frame = 0;
-            }
+        if (isAnimateEnd) {
+            frame = 0;
         }
         if (getBottom() <= worldBounds.getBottom()) {
             destroy();

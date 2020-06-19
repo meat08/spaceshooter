@@ -24,7 +24,6 @@ import ru.spaceshooter.math.Rect;
 public class ForceShield extends Sprite {
 
     private Ship ship;
-    private float animateTimer;
 
     public ForceShield(TextureAtlas atlas) {
         super(atlas.findRegion("shield"), 2, 16, 30);
@@ -39,13 +38,10 @@ public class ForceShield extends Sprite {
 
     @Override
     public void update(float delta) {
+        super.update(delta);
         pos.set(ship.pos);
-        animateTimer += delta;
-        if (animateTimer >= ANIMATE_INTERVAL) {
-            animateTimer = 0f;
-            if (++frame == regions.length) {
-                frame = 0;
-            }
+        if (isAnimateEnd) {
+            frame = 0;
         }
     }
 

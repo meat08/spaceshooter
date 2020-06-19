@@ -28,7 +28,6 @@ public class ExplosionCircle extends Sprite {
 
     private static final float ANIMATE_INTERVAL = 0.12f;
 
-    private float animateTimer;
     private Sound sound;
     private GameScreen screen;
     private Rect worldBounds;
@@ -38,6 +37,7 @@ public class ExplosionCircle extends Sprite {
         this.sound = Gdx.audio.newSound(Gdx.files.internal("sounds/big_explosion.wav"));
         this.screen = screen;
         this.worldBounds = worldBounds;
+        this.baseAnimateInterval = ANIMATE_INTERVAL;
     }
 
     private void pew() {
@@ -57,13 +57,10 @@ public class ExplosionCircle extends Sprite {
 
     @Override
     public void update(float delta) {
-        animateTimer += delta;
-        if (animateTimer >= ANIMATE_INTERVAL) {
-            animateTimer = 0f;
-            if (++frame == regions.length) {
-                destroy();
-                screen.setMainShipDestroy(false);
-            }
+        super.update(delta);
+        if (isAnimateEnd) {
+            destroy();
+            screen.setMainShipDestroy(false);
         }
     }
 

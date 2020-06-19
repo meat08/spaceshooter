@@ -22,8 +22,6 @@ import ru.spaceshooter.math.Rnd;
 
 public class HitExplode extends Sprite {
 
-    private float animateTimer;
-
     public HitExplode(TextureAtlas atlas) {
         super(atlas.findRegion("hit"), 3, 3, 9);
     }
@@ -38,12 +36,9 @@ public class HitExplode extends Sprite {
 
     @Override
     public void update(float delta) {
-        animateTimer += delta;
-        if (animateTimer >= ANIMATE_INTERVAL) {
-            animateTimer = 0f;
-            if (++frame == regions.length) {
-                destroy();
-            }
+        super.update(delta);
+        if (isAnimateEnd) {
+            destroy();
         }
     }
 

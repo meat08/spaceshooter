@@ -28,7 +28,6 @@ public class Bonus extends Sprite {
     private static final float SIZE = 0.055f;
     private static final float SPEED = -0.15f;
 
-    private float animateTimer;
     private Rect worldBounds;
     private Vector2 v;
     private int bonusType;
@@ -36,17 +35,15 @@ public class Bonus extends Sprite {
     public Bonus(Rect worldBounds) {
         this.worldBounds = worldBounds;
         this.v = new Vector2();
+        this.baseAnimateInterval = ANIMATE_INTERVAL;
     }
 
     @Override
     public void update(float delta) {
         pos.mulAdd(v, delta);
-        animateTimer += delta;
-        if (animateTimer >= ANIMATE_INTERVAL) {
-            animateTimer = 0f;
-            if (++frame == regions.length) {
-                frame = 0;
-            }
+        super.update(delta);
+        if (isAnimateEnd) {
+            frame = 0;
         }
         if (getBottom() <= worldBounds.getBottom()) {
             destroy();

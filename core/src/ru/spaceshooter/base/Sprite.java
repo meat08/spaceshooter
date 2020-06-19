@@ -25,13 +25,17 @@ import ru.spaceshooter.utils.Regions;
 
 public class Sprite extends Rect {
 
-    protected static final float ANIMATE_INTERVAL = 0.017f;
+    protected static final float ANIMATE_INTERVAL = 0.018f;
 
     protected float angle;
     protected float scale = 1f;
     protected TextureRegion[] regions;
     protected int frame = 0;
     protected boolean destroyed;
+    protected boolean isAnimateEnd;
+    protected float baseAnimateInterval;
+
+    private float animateTimer;
 
     public Sprite() {
     }
@@ -43,6 +47,7 @@ public class Sprite extends Rect {
 
     public Sprite(TextureRegion region, int rows, int cols, int frames) {
         regions = Regions.split(region, rows, cols, frames);
+        this.baseAnimateInterval = ANIMATE_INTERVAL;
     }
 
     public void setHeightProportion(float height) {
@@ -52,6 +57,14 @@ public class Sprite extends Rect {
     }
 
     public void update(float delta) {
+        animateTimer += delta;
+        isAnimateEnd = false;
+        if (animateTimer >= baseAnimateInterval) {
+            animateTimer = 0f;
+            if (++frame == regions.length) {
+                isAnimateEnd = true;
+            }
+        }
     }
 
     public void draw(SpriteBatch batch) {

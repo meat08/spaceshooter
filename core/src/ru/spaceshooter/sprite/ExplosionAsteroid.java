@@ -24,10 +24,9 @@ public class ExplosionAsteroid extends Sprite {
 
     private static final float ANIMATE_INTERVAL = 0.2f;
 
-    private float animateTimer;
-
     public ExplosionAsteroid(TextureAtlas atlas) {
         super(atlas.findRegion("rock_explosion"), 1, 5, 5);
+        this.baseAnimateInterval = ANIMATE_INTERVAL;
     }
 
     public void set(float height, Vector2 pos) {
@@ -38,12 +37,9 @@ public class ExplosionAsteroid extends Sprite {
 
     @Override
     public void update(float delta) {
-        animateTimer += delta;
-        if (animateTimer >= ANIMATE_INTERVAL) {
-            animateTimer = 0f;
-            if (++frame == regions.length) {
-                destroy();
-            }
+        super.update(delta);
+        if (isAnimateEnd) {
+            destroy();
         }
     }
 

@@ -52,7 +52,6 @@ public class Ship extends Sprite {
     protected ShootType shootType;
     protected GameScreen screen;
     private boolean isDestroyBottom;
-    private float animateTimer;
 
 
     public Ship(TextureRegion region, int rows, int cols, int frames) {
@@ -79,13 +78,10 @@ public class Ship extends Sprite {
 
     @Override
     public void update(float delta) {
+        super.update(delta);
         pos.mulAdd(v, delta);
-        animateTimer += delta;
-        if (animateTimer >= ANIMATE_INTERVAL) {
-            animateTimer = 0f;
-            if (++frame == regions.length) {
-                frame = 0;
-            }
+        if (isAnimateEnd) {
+            frame = 0;
         }
     }
 
