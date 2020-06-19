@@ -216,7 +216,7 @@ public class MainMenu {
 
         tableConf.defaults().padBottom(20.0f);
         Table tmpTableDiff = new Table();
-        tmpTableDiff.defaults().pad(2);
+        tmpTableDiff.defaults().pad(3);
         btnEasy.getLabel().setFontScale(getButtonScale(btnEasy));
         btnNormal.getLabel().setFontScale(getButtonScale(btnNormal));
         btnHard.getLabel().setFontScale(getButtonScale(btnHard));

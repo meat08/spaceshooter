@@ -523,7 +523,7 @@ toggle-button
   xy: 1410, 1514
   size: 61, 31
   split: 29, 24, 6, 24
-  pad: 4, 4, 4, 11
+  pad: 18, 18, 12, 12
   orig: 61, 31
   offset: 0, 0
   index: -1
@@ -532,7 +532,7 @@ toggle-button-down
   xy: 1, 76
   size: 61, 31
   split: 29, 24, 6, 24
-  pad: 4, 4, 4, 11
+  pad: 18, 18, 12, 12
   orig: 61, 31
   offset: 0, 0
   index: -1
@@ -541,7 +541,7 @@ toggle-button-off
   xy: 99, 174
   size: 61, 31
   split: 29, 24, 6, 24
-  pad: 4, 4, 4, 11
+  pad: 18, 18, 12, 12
   orig: 61, 31
   offset: 0, 0
   index: -1
