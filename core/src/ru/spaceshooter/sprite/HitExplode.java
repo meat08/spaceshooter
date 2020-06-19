@@ -30,8 +30,8 @@ public class HitExplode extends Sprite {
 
     public void set(float height, float left, float right, float top, float bottom) {
         setHeightProportion(height);
-        float vx = Rnd.nextFloat(left, right);
-        float vy = Rnd.nextFloat(top, bottom);
+        final float vx = Rnd.nextFloat(left, right);
+        final float vy = Rnd.nextFloat(top, bottom);
         this.pos.set(vx, vy);
         frame = 0;
     }

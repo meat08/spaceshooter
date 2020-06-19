@@ -44,7 +44,6 @@ public class Asteroid extends Sprite {
 
     @Override
     public void update(float delta) {
-        super.update(delta);
         pos.mulAdd(v, delta);
         animateTimer += delta;
         if (animateTimer >= ANIMATE_INTERVAL) {
@@ -74,16 +73,14 @@ public class Asteroid extends Sprite {
     }
 
     private void boom() {
-        ExplosionAsteroid explosionAsteroid = explosionAsteroidPool.obtain();
-        explosionAsteroid.set(getHeight(), pos);
+        explosionAsteroidPool.obtain().set(getHeight(), pos);
     }
 
     public void set(TextureRegion[] regions) {
         this.regions = regions;
         this.hp = 20;
         v.set(0f, SPEED);
-        float size = Rnd.nextFloat(SIZE_MIN, SIZE_MAX);
-        setHeightProportion(size);
+        setHeightProportion(Rnd.nextFloat(SIZE_MIN, SIZE_MAX));
         setBottom(worldBounds.getTop());
         pos.x = Rnd.nextFloat(worldBounds.getLeft() + getHalfWidth(), worldBounds.getRight() - getHalfWidth());
     }

@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.spaceshooter.base.enums.ShootType;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.math.Rnd;
 import ru.spaceshooter.pool.BossPool;
@@ -33,8 +34,7 @@ public class BossEmitter {
     private static final float BOSS_ONE_BULLET_VY = -0.45f;
     private static final int BOSS_ONE_BULLET_DAMAGE = 10;
     private static final float BOSS_ONE_RELOAD_INTERVAL = 0.75f;
-    private static final int BOSS_ONE_SHOOT_TYPE = 7;
-    private static final int BOSS_ONE_SHIP_TYPE = 4;
+    private static final ShootType BOSS_ONE_SHOOT_TYPE = ShootType.BOSS0;
     private static final int BOSS_ONE_TYPE = 0;
 
     private static final float BOSS_TWO_HEIGHT = 0.25f;
@@ -44,8 +44,7 @@ public class BossEmitter {
     private static final float BOSS_TWO_BULLET_VY = -0.45f;
     private static final int BOSS_TWO_BULLET_DAMAGE = 10;
     private static final float BOSS_TWO_RELOAD_INTERVAL = 0.95f;
-    private static final int BOSS_TWO_SHOOT_TYPE = 6;
-    private static final int BOSS_TWO_SHIP_TYPE = 3;
+    private static final ShootType BOSS_TWO_SHOOT_TYPE = ShootType.BOSS1;
     private static final int BOSS_TWO_TYPE = 1;
 
     private Rect worldBounds;
@@ -63,10 +62,8 @@ public class BossEmitter {
     private float diffFactor;
 
     public BossEmitter(TextureAtlas atlas, BossPool bossPool) {
-        TextureRegion boss0 = atlas.findRegion("boss0");
-        this.bossOneRegion = Regions.split(boss0, 1, 4, 4);
-        TextureRegion boss1 = atlas.findRegion("boss1");
-        this.bossTwoRegion = Regions.split(boss1, 1, 4, 4);
+        this.bossOneRegion = Regions.split(atlas.findRegion("boss0"), 1, 4, 4);
+        this.bossTwoRegion = Regions.split(atlas.findRegion("boss1"), 1, 4, 4);
 
         this.bossOneV = new Vector2(BOSS_ONE_SPEED, 0f);
         this.bossTwoV = new Vector2(BOSS_TWO_SPEED, 0f);
@@ -103,7 +100,6 @@ public class BossEmitter {
                         transform(BOSS_ONE_HP),
                         BOSS_ONE_HEIGHT,
                         BOSS_ONE_SHOOT_TYPE,
-                        BOSS_ONE_SHIP_TYPE,
                         BOSS_ONE_TYPE
                 );
                 break;
@@ -121,7 +117,6 @@ public class BossEmitter {
                         transform(BOSS_TWO_HP),
                         BOSS_TWO_HEIGHT,
                         BOSS_TWO_SHOOT_TYPE,
-                        BOSS_TWO_SHIP_TYPE,
                         BOSS_TWO_TYPE
                 );
                 break;

@@ -38,6 +38,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.Locale;
 
+import ru.spaceshooter.base.enums.State;
 import ru.spaceshooter.screen.GameScreen;
 import ru.spaceshooter.screen.MenuScreen;
 

@@ -18,7 +18,6 @@ package ru.spaceshooter.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
@@ -30,7 +29,7 @@ import java.util.Locale;
 
 import ru.spaceshooter.base.BaseScreen;
 import ru.spaceshooter.base.Font;
-import ru.spaceshooter.base.State;
+import ru.spaceshooter.base.enums.State;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.AsteroidPool;
 import ru.spaceshooter.pool.BonusPool;
@@ -42,7 +41,6 @@ import ru.spaceshooter.pool.ExplosionPool;
 import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.pool.NebulaPool;
 import ru.spaceshooter.sprite.Asteroid;
-import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.Boss;
 import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.Enemy;
@@ -69,10 +67,8 @@ public class GameScreen extends BaseScreen {
     private static final int FRAGS_TO_LIVE_ADD = 200;
     private static final int LEVEL_TO_INCREASE_HP = 3;
     private static final float STAR_SPEED_INCREASE = 0.007f;
-    private static final float WAIT_INTERVAL = 5f;
+    private static final float WAIT_INTERVAL = 3f;
 
-    private Texture bg;
-    private Background background;
     private TextureAtlas atlas;
     private MainShip mainShip;
     private ForceShield forceShield;
@@ -106,7 +102,6 @@ public class GameScreen extends BaseScreen {
     private StringBuilder sbLevel;
     private Json json;
     private GameData gameData;
-    private MainMenu mainMenu;
     private int frags;
     private int tempFrags;
     private int level;
@@ -121,12 +116,10 @@ public class GameScreen extends BaseScreen {
         super.show();
         gameData = new GameData();
         json = new Json();
-        bg = new Texture("textures/bg.png");
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
         font = new Font("font/font.fnt", "font/font.png");
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/gameScreen.mp3"));
         bossMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/bossMusic.mp3"));
-        background = new Background(bg);
         mainMenu = new MainMenu(multiplexer, this, fileHandle);
         stars = new Star[128];
         for (int i = 0; i < stars.length; i++) {
@@ -188,7 +181,6 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void dispose() {
-        bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
         enemyPool.dispose();
@@ -351,8 +343,7 @@ public class GameScreen extends BaseScreen {
                     gameData.getHp(),
                     gameData.getMainShipX(),
                     gameData.getLives(),
-                    gameData.getUpgradeCount(),
-                    atlas
+                    gameData.getUpgradeCount()
             );
             freeActivePools();
             for (Star star : stars) {
@@ -436,7 +427,7 @@ public class GameScreen extends BaseScreen {
     }
 
     private void checkLocale() {
-        String locale = Locale.getDefault().toString();
+        final String locale = Locale.getDefault().toString();
         if (locale.equals("ru_RU")) {
             textFrags = "Убито: ";
             textLives = "Жизни: ";
@@ -616,7 +607,7 @@ public class GameScreen extends BaseScreen {
                     boss.damage(bullet.getDamage());
                     bullet.destroy();
                     if (boss.isDestroyed()) {
-                        mainShip.upgradeShip(atlas, boss.getBossType());
+                        mainShip.upgradeShip(boss.getBossType());
                         frags += 1;
                         isBossDestroy = true;
                     }

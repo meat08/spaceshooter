@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.spaceshooter.base.enums.ShootType;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.math.Rnd;
 import ru.spaceshooter.pool.EnemyPool;
@@ -28,7 +29,6 @@ public class EnemyEmitter {
 
     private static final float GENERATE_INTERVAL = 4.05f;
     private static final float BOOST_GENERATE_INTERVAL = 0.05f;
-    private static final int LEVEL_GAIN_ENEMY = 10;
 
     private static final float ENEMY_SMALL_HEIGHT = 0.08f;
     private static final int ENEMY_SMALL_HP = 3;
@@ -37,8 +37,7 @@ public class EnemyEmitter {
     private static final float ENEMY_SMALL_BULLET_VY = -0.3f;
     private static final int ENEMY_SMALL_BULLET_DAMAGE = 2;
     private static final float ENEMY_SMALL_RELOAD_INTERVAL = 1f;
-    private static final int ENEMY_SMALL_SHOOT_TYPE = 1;
-    private static final int ENEMY_SMALL_SHIP_TYPE = 1;
+    private static final ShootType ENEMY_SMALL_SHOOT_TYPE = ShootType.ONE;
 
     private static final float ENEMY_SMALL_V1_HEIGHT = 0.09f;
     private static final int ENEMY_SMALL_V1_HP = 5;
@@ -47,8 +46,7 @@ public class EnemyEmitter {
     private static final float ENEMY_SMALL_V1_BULLET_VY = -0.3f;
     private static final int ENEMY_SMALL_V1_BULLET_DAMAGE = 3;
     private static final float ENEMY_SMALL_V1_RELOAD_INTERVAL = 1f;
-    private static final int ENEMY_SMALL_V1_SHOOT_TYPE = 1;
-    private static final int ENEMY_SMALL_V1_SHIP_TYPE = 1;
+    private static final ShootType ENEMY_SMALL_V1_SHOOT_TYPE = ShootType.ONE;
 
     private static final float ENEMY_MEDIUM_HEIGHT = 0.12f;
     private static final int ENEMY_MEDIUM_HP = 8;
@@ -57,8 +55,7 @@ public class EnemyEmitter {
     private static final float ENEMY_MEDIUM_BULLET_VY = -0.25f;
     private static final int ENEMY_MEDIUM_BULLET_DAMAGE = 5;
     private static final float ENEMY_MEDIUM_RELOAD_INTERVAL = 2f;
-    private static final int ENEMY_MEDIUM_SHOOT_TYPE = 1;
-    private static final int ENEMY_MEDIUM_SHIP_TYPE = 1;
+    private static final ShootType ENEMY_MEDIUM_SHOOT_TYPE = ShootType.ONE;
 
     private static final float ENEMY_MEDIUM_V1_HEIGHT = 0.13f;
     private static final int ENEMY_MEDIUM_V1_HP = 10;
@@ -67,8 +64,7 @@ public class EnemyEmitter {
     private static final float ENEMY_MEDIUM_V1_BULLET_VY = -0.25f;
     private static final int ENEMY_MEDIUM_V1_BULLET_DAMAGE = 7;
     private static final float ENEMY_MEDIUM_V1_RELOAD_INTERVAL = 2f;
-    private static final int ENEMY_MEDIUM_V1_SHOOT_TYPE = 1;
-    private static final int ENEMY_MEDIUM_V1_SHIP_TYPE = 1;
+    private static final ShootType ENEMY_MEDIUM_V1_SHOOT_TYPE = ShootType.ONE;
 
     private static final float ENEMY_MEDIUM_V2_HEIGHT = 0.13f;
     private static final int ENEMY_MEDIUM_V2_HP = 15;
@@ -77,8 +73,7 @@ public class EnemyEmitter {
     private static final float ENEMY_MEDIUM_V2_BULLET_VY = -0.25f;
     private static final int ENEMY_MEDIUM_V2_BULLET_DAMAGE = 7;
     private static final float ENEMY_MEDIUM_V2_RELOAD_INTERVAL = 2f;
-    private static final int ENEMY_MEDIUM_V2_SHOOT_TYPE = 4;
-    private static final int ENEMY_MEDIUM_V2_SHIP_TYPE = 3;
+    private static final ShootType ENEMY_MEDIUM_V2_SHOOT_TYPE = ShootType.QUAD;
 
     private static final float ENEMY_BIG_HEIGHT = 0.15f;
     private static final int ENEMY_BIG_HP = 15;
@@ -87,8 +82,7 @@ public class EnemyEmitter {
     private static final float ENEMY_BIG_BULLET_VY = -0.3f;
     private static final int ENEMY_BIG_BULLET_DAMAGE = 10;
     private static final float ENEMY_BIG_RELOAD_INTERVAL = 2.5f;
-    private static final int ENEMY_BIG_SHOOT_TYPE = 2;
-    private static final int ENEMY_BIG_SHIP_TYPE = 2;
+    private static final ShootType ENEMY_BIG_SHOOT_TYPE = ShootType.DUAL;
 
     private static final float ENEMY_BIG_V1_HEIGHT = 0.16f;
     private static final int ENEMY_BIG_V1_HP = 18;
@@ -97,8 +91,7 @@ public class EnemyEmitter {
     private static final float ENEMY_BIG_V1_BULLET_VY = -0.3f;
     private static final int ENEMY_BIG_V1_BULLET_DAMAGE = 12;
     private static final float ENEMY_BIG_V1_RELOAD_INTERVAL = 2.5f;
-    private static final int ENEMY_BIG_V1_SHOOT_TYPE = 3;
-    private static final int ENEMY_BIG_V1_SHIP_TYPE = 2;
+    private static final ShootType ENEMY_BIG_V1_SHOOT_TYPE = ShootType.DUAL_SPIN;
 
     private Rect worldBounds;
     private float generateTimer;
@@ -127,20 +120,13 @@ public class EnemyEmitter {
     private float diffFactor;
 
     public EnemyEmitter(TextureAtlas atlas, EnemyPool enemyPool) {
-        TextureRegion enemy0 = atlas.findRegion("enemy0");
-        this.enemySmallRegions = Regions.split(enemy0, 1, 4, 4);
-        TextureRegion enemy0T1 = atlas.findRegion("enemy0_type1");
-        this.enemySmallT1Regions = Regions.split(enemy0T1, 1, 4, 4);
-        TextureRegion enemy1 = atlas.findRegion("enemy1");
-        this.enemyMediumRegions = Regions.split(enemy1, 1, 4, 4);
-        TextureRegion enemy1T1 = atlas.findRegion("enemy1_type1");
-        this.enemyMediumT1Regions = Regions.split(enemy1T1, 1, 4, 4);
-        TextureRegion enemy1T2 = atlas.findRegion("enemy1_type2");
-        this.enemyMediumT2Regions = Regions.split(enemy1T2, 1, 4, 4);
-        TextureRegion enemy2 = atlas.findRegion("enemy2");
-        this.enemyBigRegions = Regions.split(enemy2, 1, 4, 4);
-        TextureRegion enemy2T1 = atlas.findRegion("enemy2_type1");
-        this.enemyBigT1Regions = Regions.split(enemy2T1, 1, 4, 4);
+        this.enemySmallRegions = Regions.split(atlas.findRegion("enemy0"), 1, 4, 4);
+        this.enemySmallT1Regions = Regions.split(atlas.findRegion("enemy0_type1"), 1, 4, 4);
+        this.enemyMediumRegions = Regions.split(atlas.findRegion("enemy1"), 1, 4, 4);
+        this.enemyMediumT1Regions = Regions.split(atlas.findRegion("enemy1_type1"), 1, 4, 4);
+        this.enemyMediumT2Regions = Regions.split(atlas.findRegion("enemy1_type2"), 1, 4, 4);
+        this.enemyBigRegions = Regions.split(atlas.findRegion("enemy2"), 1, 4, 4);
+        this.enemyBigT1Regions = Regions.split(atlas.findRegion("enemy2_type1"), 1, 4, 4);
 
         this.enemySmallV = new Vector2(0, ENEMY_SMALL_SPEED);
         this.enemySmallV1 = new Vector2(0, ENEMY_SMALL_V1_SPEED);
@@ -175,7 +161,7 @@ public class EnemyEmitter {
         generateTimer += delta;
         if (generateTimer >= (Math.max(GENERATE_INTERVAL - (level * BOOST_GENERATE_INTERVAL), 1.5f))) {
             generateTimer = 0f;
-            Enemy enemy = enemyPool.obtain();
+            final Enemy enemy = enemyPool.obtain();
             float type = (float) Math.random();
             if (type < 0.5f) {
                 float typeSmall = (float) Math.random();
@@ -190,8 +176,7 @@ public class EnemyEmitter {
                             ENEMY_SMALL_V1_RELOAD_INTERVAL,
                             transform(ENEMY_SMALL_V1_HP),
                             ENEMY_SMALL_V1_HEIGHT,
-                            ENEMY_SMALL_V1_SHOOT_TYPE,
-                            ENEMY_SMALL_V1_SHIP_TYPE
+                            ENEMY_SMALL_V1_SHOOT_TYPE
                     );
                 } else {
                     enemy.set(
@@ -204,8 +189,7 @@ public class EnemyEmitter {
                             ENEMY_SMALL_RELOAD_INTERVAL,
                             transform(ENEMY_SMALL_HP),
                             ENEMY_SMALL_HEIGHT,
-                            ENEMY_SMALL_SHOOT_TYPE,
-                            ENEMY_SMALL_SHIP_TYPE
+                            ENEMY_SMALL_SHOOT_TYPE
                     );
                 }
             } else if (type < 0.8f) {
@@ -221,8 +205,7 @@ public class EnemyEmitter {
                             ENEMY_MEDIUM_V1_RELOAD_INTERVAL,
                             transform(ENEMY_MEDIUM_V1_HP),
                             ENEMY_MEDIUM_V1_HEIGHT,
-                            ENEMY_MEDIUM_V1_SHOOT_TYPE,
-                            ENEMY_MEDIUM_V1_SHIP_TYPE
+                            ENEMY_MEDIUM_V1_SHOOT_TYPE
                     );
                 } else if (typeMedium < 0.8f & level > 6) {
                     enemy.set(
@@ -235,8 +218,7 @@ public class EnemyEmitter {
                             ENEMY_MEDIUM_V2_RELOAD_INTERVAL,
                             transform(ENEMY_MEDIUM_V2_HP),
                             ENEMY_MEDIUM_V2_HEIGHT,
-                            ENEMY_MEDIUM_V2_SHOOT_TYPE,
-                            ENEMY_MEDIUM_V2_SHIP_TYPE
+                            ENEMY_MEDIUM_V2_SHOOT_TYPE
                     );
                 } else {
                     enemy.set(
@@ -249,8 +231,7 @@ public class EnemyEmitter {
                             ENEMY_MEDIUM_RELOAD_INTERVAL,
                             transform(ENEMY_MEDIUM_HP),
                             ENEMY_MEDIUM_HEIGHT,
-                            ENEMY_MEDIUM_SHOOT_TYPE,
-                            ENEMY_MEDIUM_SHIP_TYPE
+                            ENEMY_MEDIUM_SHOOT_TYPE
                     );
                 }
             } else {
@@ -266,8 +247,7 @@ public class EnemyEmitter {
                             ENEMY_BIG_V1_RELOAD_INTERVAL,
                             transform(ENEMY_BIG_V1_HP),
                             ENEMY_BIG_V1_HEIGHT,
-                            ENEMY_BIG_V1_SHOOT_TYPE,
-                            ENEMY_BIG_V1_SHIP_TYPE
+                            ENEMY_BIG_V1_SHOOT_TYPE
                     );
                 } else {
                     enemy.set(
@@ -280,8 +260,7 @@ public class EnemyEmitter {
                             ENEMY_BIG_RELOAD_INTERVAL,
                             transform(ENEMY_BIG_HP),
                             ENEMY_BIG_HEIGHT,
-                            ENEMY_BIG_SHOOT_TYPE,
-                            ENEMY_BIG_SHIP_TYPE
+                            ENEMY_BIG_SHOOT_TYPE
                     );
                 }
             }

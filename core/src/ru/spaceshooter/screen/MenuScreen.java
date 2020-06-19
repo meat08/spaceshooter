@@ -19,14 +19,12 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import ru.spaceshooter.base.BaseScreen;
-import ru.spaceshooter.base.State;
+import ru.spaceshooter.base.enums.State;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.HitExplodePool;
-import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.LogoMainMenu;
 import ru.spaceshooter.sprite.Star;
 import ru.spaceshooter.base.MainMenu;
@@ -34,14 +32,11 @@ import ru.spaceshooter.base.MainMenu;
 public class MenuScreen extends BaseScreen {
 
     private final Game game;
-    private Texture bg;
-    private Background background;
     private TextureAtlas atlas;
     private LogoMainMenu logoMainMenu;
     private HitExplodePool hitExplodePool;
     private Star[] stars;
     private Music menuMusic;
-    private MainMenu mainMenu;
 
     public MenuScreen(Game game) {
         this.game = game;
@@ -51,9 +46,7 @@ public class MenuScreen extends BaseScreen {
     public void show() {
         super.show();
         state = State.ACTIVE;
-        bg = new Texture("textures/bg.png");
         atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
-        background = new Background(bg);
         stars = new Star[256];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
@@ -84,7 +77,6 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public void dispose() {
-        bg.dispose();
         atlas.dispose();
         menuMusic.dispose();
         mainMenu.dispose();

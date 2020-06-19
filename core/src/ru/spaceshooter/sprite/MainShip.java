@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.base.Ship;
+import ru.spaceshooter.base.enums.ShootType;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
@@ -41,6 +42,7 @@ public class MainShip extends Ship {
     private static final int HP = 100;
     private static final int LIVES = 3;
 
+    private TextureAtlas atlas;
     private float sense;
     private int leftPointer;
     private int rightPointer;
@@ -60,43 +62,53 @@ public class MainShip extends Ship {
 
     public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, HitExplodePool hitExplodePool, GameScreen screen) {
         super(atlas.findRegion("main_ship"), 1, 4, 4);
+        this.atlas = atlas;
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
         this.hitExplodePool = hitExplodePool;
         this.screen = screen;
+        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
+        accelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
+        sense = screen.getSenseAccel();
         bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
         bulletHeight = 0.025f;
-        damage = 1;
         v0.set(0.4f, 0);
+        shootType = ShootType.ONE;
+        damage = 1;
+        upgradeCount = -1;
         leftPointer = INVALID_POINTER;
         rightPointer = INVALID_POINTER;
         reloadInterval = DEFAULT_RELOAD_INTERVAL;
         reloadTimer = reloadInterval;
-        shootType = 1;
+        lives = LIVES;
         maxHp = HP;
         hp = maxHp;
-        lives = LIVES;
-        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
-        accelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
         isTouched = false;
         isShield = false;
         isShootBoost = false;
-        sense = screen.getSenseAccel();
+        isShootMulti = false;
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        if (shootType == 1) {
-            bulletPos.set(pos.x, pos.y + getHalfHeight()/2);
-        } else if (shootType == 2) {
-            bulletPos.set(pos.x - getHalfWidth()/2, pos.y + getHalfHeight());
-            bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y + getHalfHeight());
-        } else if (shootType == 5) {
-            bulletPos.set(pos.x - getHalfWidth()/2, pos.y + getHalfHeight());
-            bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y + getHalfHeight());
-            bullet3Pos.set(pos.x, pos.y + getHalfHeight()/2);
+        switch (shootType) {
+            case ONE: {
+                bulletPos.set(pos.x, pos.y + getHalfHeight()/2);
+                break;
+            }
+            case DUAL: {
+                bulletPos.set(pos.x - getHalfWidth()/2, pos.y + getHalfHeight());
+                bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y + getHalfHeight());
+                break;
+            }
+            case TRIPLE: {
+                bulletPos.set(pos.x - getHalfWidth()/2, pos.y + getHalfHeight());
+                bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y + getHalfHeight());
+                bullet3Pos.set(pos.x, pos.y + getHalfHeight()/2);
+                break;
+            }
         }
         if (screen.isNotNuked() & screen.isNotMainShipDestroy()) {
             autoShoot(delta);
@@ -138,6 +150,7 @@ public class MainShip extends Ship {
 
     public void dispose() {
         sound.dispose();
+        atlas.dispose();
     }
 
     @Override
@@ -247,20 +260,27 @@ public class MainShip extends Ship {
         } else {
             hp = maxHp;
             screen.explodeMainShip();
+            Gdx.input.vibrate(300);
         }
     }
 
-    public void upgradeShip(TextureAtlas atlas, int upgradeCount) {
-        if (upgradeCount > 0) {
-            this.regions = Regions.split(atlas.findRegion("main_ship_guns"), 1, 4, 4);
-            this.upgradeCount = upgradeCount;
-            if (upgradeCount == 1) {
-                this.shootType = 2;
-            } else if (upgradeCount == 2) {
-                this.shootType = 5;
+    public void upgradeShip(int upgradeCount) {
+        this.upgradeCount = upgradeCount;
+        switch (upgradeCount) {
+            case 0: {
+                maxHp += 50;
+                break;
             }
-        } else {
-            maxHp += 50;
+            case 1: {
+                this.regions = changeRegion();
+                this.shootType = ShootType.DUAL;
+                break;
+            }
+            case 2: {
+                this.regions = changeRegion();
+                this.shootType = ShootType.TRIPLE;
+                break;
+            }
         }
     }
 
@@ -270,10 +290,6 @@ public class MainShip extends Ship {
 
     public void setSense(float sense) {
         this.sense = sense;
-    }
-
-    public TextureRegion[] getRegions() {
-        return this.regions;
     }
 
     public boolean isBulletCollision(Bullet bullet) {
@@ -292,13 +308,17 @@ public class MainShip extends Ship {
         }
     }
 
+    public void addMaxHp(int hp) {
+        this.maxHp += hp;
+    }
+
     public void addOneLive() {
         this.lives += 1;
     }
 
     public void shootSpeedBoost() {
-        isShootBoost = !isShootBoost;
-        isShootMulti = !isShootMulti;
+        isShootBoost = true;
+        isShootMulti = true;
         reloadInterval = reloadInterval * BOOST_SHOOT_FACTOR;
     }
 
@@ -312,6 +332,14 @@ public class MainShip extends Ship {
 
     public int getUpgradeCount() {
         return upgradeCount;
+    }
+
+    private TextureRegion[] changeRegion() {
+        if (upgradeCount > 0) {
+            return  Regions.split(atlas.findRegion("main_ship_guns"), 1, 4, 4);
+        } else {
+            return  Regions.split(atlas.findRegion("main_ship"), 1, 4, 4);
+        }
     }
 
     private void activateShield(float delta) {
@@ -349,7 +377,7 @@ public class MainShip extends Ship {
         stop();
         maxHp = HP;
         hp = maxHp;
-        shootType = 1;
+        shootType = ShootType.ONE;
         lives = LIVES;
         reloadInterval = DEFAULT_RELOAD_INTERVAL;
         isTouched = false;
@@ -361,21 +389,24 @@ public class MainShip extends Ship {
         leftPointer = INVALID_POINTER;
         rightPointer = INVALID_POINTER;
         pos.x = 0f;
+        upgradeCount = -1;
+        this.regions = changeRegion();
     }
 
-    public void loadGame(int maxHp, int hp, float x, int lives, int upgradeCount, TextureAtlas atlas) {
+    public void loadGame(int maxHp, int hp, float x, int lives, int upgradeCount) {
         flushDestroy();
         stop();
         this.maxHp = maxHp;
         this.hp = hp;
         this.lives = lives;
         if (upgradeCount > 0) {
-            upgradeShip(atlas, upgradeCount);
+            upgradeShip(upgradeCount);
         }
         pos.x = x;
         reloadInterval = DEFAULT_RELOAD_INTERVAL;
         isTouched = false;
         isShield = false;
+        isShootMulti = false;
         isShootBoost = false;
         pressedRight = false;
         pressedLeft = false;

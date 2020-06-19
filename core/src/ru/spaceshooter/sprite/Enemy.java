@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.base.Ship;
+import ru.spaceshooter.base.enums.ShootType;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
@@ -39,16 +40,23 @@ public class Enemy extends Ship {
         super.update(delta);
         if (getTop() < worldBounds.getTop()) {
             v.set(v0);
-            if (shipType == 3) {
-                bulletPos.set(pos.x - getHalfHeight(), pos.y - getHalfHeight()/2);
-                bullet2Pos.set(pos.x - getHalfHeight()/2, pos.y - getHalfHeight()/2);
-                bullet3Pos.set(pos.x + getHalfHeight()/2, pos.y - getHalfHeight()/2);
-                bullet4Pos.set(pos.x + getHalfHeight(), pos.y - getHalfHeight()/2);
-            } else if (shipType == 2) {
-                bulletPos.set(pos.x - getHalfWidth()/2, pos.y - getHalfHeight()/2);
-                bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y - getHalfHeight()/2);
-            } else {
-                bulletPos.set(pos.x, pos.y - getHalfHeight());
+            switch (shootType) {
+                case ONE: {
+                    bulletPos.set(pos.x, pos.y - getHalfHeight());
+                    break;
+                }
+                case DUAL:
+                case DUAL_SPIN: {
+                    bulletPos.set(pos.x - getHalfWidth()/2, pos.y - getHalfHeight()/2);
+                    bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y - getHalfHeight()/2);
+                    break;
+                }
+                case QUAD: {
+                    bulletPos.set(pos.x - getHalfHeight(), pos.y - getHalfHeight()/2);
+                    bullet2Pos.set(pos.x - 0.02f, pos.y - getHalfHeight()/2);
+                    bullet3Pos.set(pos.x + 0.02f, pos.y - getHalfHeight()/2);
+                    bullet4Pos.set(pos.x + getHalfHeight(), pos.y - getHalfHeight()/2);
+                }
             }
             if (screen.isNotNuked()) {
                 autoShoot(delta);
@@ -66,8 +74,7 @@ public class Enemy extends Ship {
             float reloadInterval,
             int hp,
             float height,
-            int shootType,
-            int shipType
+            ShootType shootType
     ) {
         this.regions = regions;
         this.v0.set(v0);
@@ -81,7 +88,6 @@ public class Enemy extends Ship {
         setHeightProportion(height);
         this.v.set(0, V_Y);
         this.shootType = shootType;
-        this.shipType = shipType;
     }
 
     public boolean isBulletCollision(Bullet bullet) {

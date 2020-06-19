@@ -46,8 +46,7 @@ public class LogoMainMenu extends Sprite {
         animateTimer += delta;
         if (animateTimer >= ANIMATE_INTERVAL) {
             animateTimer = 0f;
-            HitExplode hitExplode = hitExplodePool.obtain();
-            hitExplode.set(getHeight()/2, getLeft(), getRight(), getTop(), getBottom());
+            hitExplodePool.obtain().set(getHeight()/2, getLeft(), getRight(), getTop(), getBottom());
         }
     }
 }

@@ -22,13 +22,16 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.spaceshooter.base.enums.State;
 import ru.spaceshooter.math.MatrixUtils;
 import ru.spaceshooter.math.Rect;
+import ru.spaceshooter.sprite.Background;
 
 public class BaseScreen implements Screen, InputProcessor {
 
@@ -36,6 +39,9 @@ public class BaseScreen implements Screen, InputProcessor {
     protected FileHandle fileHandle;
     protected Preferences preferences;
     protected Rect worldBounds;
+    protected Texture bg;
+    protected Background background;
+    protected MainMenu mainMenu;
     protected boolean isMusicOn;
     protected boolean isSoundOn;
     protected boolean isAccelerometerOn;
@@ -55,6 +61,8 @@ public class BaseScreen implements Screen, InputProcessor {
     public void show() {
         multiplexer = new InputMultiplexer(this);
         Gdx.input.setInputProcessor(multiplexer);
+        bg = new Texture("textures/bg.png");
+        background = new Background(bg);
         batch = new SpriteBatch();
         screenBounds = new Rect();
         worldBounds = new Rect();
@@ -116,6 +124,7 @@ public class BaseScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
         batch.dispose();
+        bg.dispose();
     }
 
     @Override
@@ -176,7 +185,7 @@ public class BaseScreen implements Screen, InputProcessor {
         return false;
     }
 
-    public State getState() {
+    public ru.spaceshooter.base.enums.State getState() {
         return state;
     }
 

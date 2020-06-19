@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.base.Ship;
+import ru.spaceshooter.base.enums.ShootType;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
@@ -58,20 +59,20 @@ public class Boss extends Ship {
     }
 
     private void shoot(float delta) {
-        if (shipType == 4) {
-            bulletPos.set(pos.x - getHalfWidth()/2, pos.y - getHalfHeight()/2);
-            bullet2Pos.set(pos.x, pos.y - getHalfHeight());
-            bullet3Pos.set(pos.x + getHalfWidth()/2, pos.y - getHalfHeight()/2);
-        } else if (shipType == 3) {
-            bulletPos.set(pos.x - getHalfHeight()/2, pos.y - getHalfHeight()/2);
-            bullet2Pos.set(pos.x - 0.02f, pos.y - getHalfHeight()/2);
-            bullet3Pos.set(pos.x + 0.02f, pos.y - getHalfHeight()/2);
-            bullet4Pos.set(pos.x + getHalfHeight()/2, pos.y - getHalfHeight()/2);
-        } else if (shipType == 2) {
-            bulletPos.set(pos.x - getHalfWidth()/2, pos.y - getHalfHeight()/2);
-            bullet2Pos.set(pos.x + getHalfWidth()/2, pos.y - getHalfHeight()/2);
-        } else {
-            bulletPos.set(pos.x, pos.y - getHalfHeight());
+        switch (shootType) {
+            case BOSS0: {
+                bulletPos.set(pos.x - getHalfWidth()/2, pos.y - getHalfHeight()/2);
+                bullet2Pos.set(pos.x, pos.y - getHalfHeight());
+                bullet3Pos.set(pos.x + getHalfWidth()/2, pos.y - getHalfHeight()/2);
+                break;
+            }
+            case BOSS1: {
+                bulletPos.set(pos.x - getHalfHeight()/2, pos.y - getHalfHeight()/2);
+                bullet2Pos.set(pos.x - 0.02f, pos.y - getHalfHeight()/2);
+                bullet3Pos.set(pos.x + 0.02f, pos.y - getHalfHeight()/2);
+                bullet4Pos.set(pos.x + getHalfHeight()/2, pos.y - getHalfHeight()/2);
+                break;
+            }
         }
         if (screen.isNotNuked()) {
             autoShoot(delta);
@@ -100,8 +101,7 @@ public class Boss extends Ship {
             float reloadInterval,
             int hp,
             float height,
-            int shootType,
-            int shipType,
+            ShootType shootType,
             int bossType
     ) {
         this.regions = regions;
@@ -116,7 +116,6 @@ public class Boss extends Ship {
         this.hp = hp;
         setHeightProportion(height);
         this.shootType = shootType;
-        this.shipType = shipType;
         this.bossType = bossType;
         this.v.setZero();
         isSpawn = true;

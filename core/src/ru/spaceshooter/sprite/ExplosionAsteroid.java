@@ -36,13 +36,6 @@ public class ExplosionAsteroid extends Sprite {
         frame = 0;
     }
 
-    public void set(float height, float halfWidth, Vector2 pos) {
-        setHeightProportion(height);
-        setWidth(halfWidth);
-        this.pos.set(pos);
-        frame = 0;
-    }
-
     @Override
     public void update(float delta) {
         animateTimer += delta;

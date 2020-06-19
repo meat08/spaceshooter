@@ -19,19 +19,17 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.spaceshooter.base.enums.ShootType;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
 import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.screen.GameScreen;
-import ru.spaceshooter.sprite.Bullet;
-import ru.spaceshooter.sprite.Explosion;
-import ru.spaceshooter.sprite.HitExplode;
 
 public class Ship extends Sprite {
 
-    protected final Vector2 v0;
-    protected final Vector2 v;
+    protected Vector2 v0;
+    protected Vector2 v;
     protected Rect worldBounds;
     protected ExplosionPool explosionPool;
     protected BulletPool bulletPool;
@@ -51,8 +49,7 @@ public class Ship extends Sprite {
     protected Sound sound;
     protected int hp;
     protected int maxHp;
-    protected int shootType;
-    protected int shipType;
+    protected ShootType shootType;
     protected GameScreen screen;
     private boolean isDestroyBottom;
     private float animateTimer;
@@ -60,14 +57,8 @@ public class Ship extends Sprite {
 
     public Ship(TextureRegion region, int rows, int cols, int frames) {
         super(region, rows, cols, frames);
-        v0 = new Vector2();
-        v = new Vector2();
-        bulletV = new Vector2();
-        bulletPos = new Vector2();
-        bullet2Pos = new Vector2();
-        bullet3Pos = new Vector2();
-        isShootMulti = false;
         isDestroyBottom = false;
+        initVector();
     }
 
     public Ship(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound, HitExplodePool hitExplodePool, GameScreen screen) {
@@ -77,13 +68,7 @@ public class Ship extends Sprite {
         this.worldBounds = worldBounds;
         this.sound = sound;
         this.screen = screen;
-        v0 = new Vector2();
-        v = new Vector2();
-        bulletV = new Vector2();
-        bulletPos = new Vector2();
-        bullet2Pos = new Vector2();
-        bullet3Pos = new Vector2();
-        bullet4Pos = new Vector2();
+        initVector();
     }
 
     @Override
@@ -94,7 +79,6 @@ public class Ship extends Sprite {
 
     @Override
     public void update(float delta) {
-        super.update(delta);
         pos.mulAdd(v, delta);
         animateTimer += delta;
         if (animateTimer >= ANIMATE_INTERVAL) {
@@ -108,27 +92,42 @@ public class Ship extends Sprite {
     protected void autoShoot(float delta) {
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
-            if (isShootMulti) {
-                if (shootType > 1) {
-                    shootMultiDual();
-                } else {
-                    shootMulti();
+            switch (shootType) {
+                case ONE: {
+                    if (isShootMulti) {
+                        shootMulti();
+                    } else {
+                        shoot();
+                    }
+                    break;
                 }
-            } else {
-                if (shootType == 1) {
-                    shoot();
-                } else if (shootType == 2) {
-                    shootDual();
-                } else if (shootType == 3) {
-                    shootSpinDual();
-                } else if (shootType == 4) {
+                case DUAL: {
+                    if (isShootMulti) {
+                        shootMultiDual();
+                    } else {
+                        shootDual(false);
+                    }
+                    break;
+                }
+                case DUAL_SPIN: {
+                    shootDual(true);
+                    break;
+                }
+                case QUAD: {
                     shootQuad();
-                } else if (shootType == 5) {
+                    break;
+                }
+                case TRIPLE: {
                     shootTriple();
-                } else if (shootType == 6) {
+                    break;
+                }
+                case BOSS0: {
                     shootBoss0();
-                } else if (shootType == 7) {
+                    break;
+                }
+                case BOSS1: {
                     shootBoss1();
+                    break;
                 }
             }
             reloadTimer = 0f;
@@ -156,8 +155,14 @@ public class Ship extends Sprite {
         isDestroyBottom = destroyBottom;
     }
 
-    public void addMaxHp(int hp) {
-        this.maxHp += hp;
+    private void initVector() {
+        v0 = new Vector2();
+        v = new Vector2();
+        bulletV = new Vector2();
+        bulletPos = new Vector2();
+        bullet2Pos = new Vector2();
+        bullet3Pos = new Vector2();
+        bullet4Pos = new Vector2();
     }
 
     private void pew() {
@@ -167,101 +172,65 @@ public class Ship extends Sprite {
     }
 
     private void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
         pew();
     }
 
-    private void shootSpinDual() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, true);
-        Bullet bullet1 = bulletPool.obtain();
-        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, true);
-        pew();
-    }
-
-    private void shootDual() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet1 = bulletPool.obtain();
-        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+    private void shootDual(boolean spin) {
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, spin);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, spin);
         pew();
     }
 
     private void shootTriple() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet1 = bulletPool.obtain();
-        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet2 = bulletPool.obtain();
-        bullet2.set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
         pew();
     }
 
     private void shootQuad() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet1 = bulletPool.obtain();
-        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet2 = bulletPool.obtain();
-        bullet2.set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet3 = bulletPool.obtain();
-        bullet3.set(this, bulletRegion, bullet4Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        pew();
-    }
-
-    private void shootBoss0() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion1, bulletPos, bulletV.cpy().add(-0.06f, 0f), bulletHeight, worldBounds, damage, false);
-        Bullet bullet1 = bulletPool.obtain();
-        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet2 = bulletPool.obtain();
-        bullet2.set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet3 = bulletPool.obtain();
-        bullet3.set(this, bulletRegion1, bullet4Pos, bulletV.cpy().add(0.06f, 0f), bulletHeight, worldBounds, damage, false);
-        pew();
-    }
-
-    private void shootBoss1() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion1, bulletPos, bulletV.cpy().add(-0.07f, 0f), bulletHeight, worldBounds, damage, true);
-        Bullet bullet1 = bulletPool.obtain();
-        bullet1.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet2 = bulletPool.obtain();
-        bullet2.set(this, bulletRegion1, bullet3Pos, bulletV.cpy().add(0.07f, 0f), bulletHeight, worldBounds, damage, true);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet4Pos, bulletV, bulletHeight, worldBounds, damage, false);
         pew();
     }
 
     private void shootMulti() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet1 = bulletPool.obtain();
-        bullet1.set(this, bulletRegion, bulletPos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
-        Bullet bullet2 = bulletPool.obtain();
-        bullet2.set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
         pew();
     }
 
     private void shootMultiDual() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet1 = bulletPool.obtain();
-        bullet1.set(this, bulletRegion, bulletPos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
-        Bullet bullet2 = bulletPool.obtain();
-        bullet2.set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
-        Bullet bullet3 = bulletPool.obtain();
-        bullet3.set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        Bullet bullet4 = bulletPool.obtain();
-        bullet4.set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
-        Bullet bullet5 = bulletPool.obtain();
-        bullet5.set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
+        pew();
+    }
 
+    private void shootBoss0() {
+        bulletPool.obtain().set(this, bulletRegion1, bulletPos, bulletV.cpy().add(-0.07f, 0f), bulletHeight, worldBounds, damage, true);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion1, bullet3Pos, bulletV.cpy().add(0.07f, 0f), bulletHeight, worldBounds, damage, true);
+        pew();
+    }
+
+    private void shootBoss1() {
+        bulletPool.obtain().set(this, bulletRegion1, bulletPos, bulletV.cpy().add(-0.06f, 0f), bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion1, bullet4Pos, bulletV.cpy().add(0.06f, 0f), bulletHeight, worldBounds, damage, false);
         pew();
     }
 
     public void damage(int damage) {
-        final HitExplode hitExplode = hitExplodePool.obtain();
-        hitExplode.set(getHeight(), getLeft(), getRight(), getTop(), getBottom());
+        hitExplodePool.obtain().set(getHeight(), getLeft(), getRight(), getTop(), getBottom());
         hp -= damage;
         if (hp <= 0) {
             hp = 0;
@@ -270,11 +239,10 @@ public class Ship extends Sprite {
     }
 
     private void boom() {
-        Explosion explosion = explosionPool.obtain();
         if (isDestroyBottom) {
-            explosion.set(getHeight(), worldBounds.getHalfWidth(), pos);
+            explosionPool.obtain().set(getHeight(), worldBounds.getHalfWidth(), pos);
         } else {
-            explosion.set(getHeight(), pos);
+            explosionPool.obtain().set(getHeight(), pos);
         }
     }
 }

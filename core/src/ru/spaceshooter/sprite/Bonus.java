@@ -40,7 +40,6 @@ public class Bonus extends Sprite {
 
     @Override
     public void update(float delta) {
-        super.update(delta);
         pos.mulAdd(v, delta);
         animateTimer += delta;
         if (animateTimer >= ANIMATE_INTERVAL) {
