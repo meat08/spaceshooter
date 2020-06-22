@@ -66,7 +66,8 @@ public class Boss extends Ship {
                 bullet3Pos.set(pos.x + getHalfWidth()/2, pos.y - getHalfHeight()/2);
                 break;
             }
-            case BOSS1: {
+            case BOSS1:
+            case BOSS2: {
                 bulletPos.set(pos.x - getHalfHeight()/2, pos.y - getHalfHeight()/2);
                 bullet2Pos.set(pos.x - 0.02f, pos.y - getHalfHeight()/2);
                 bullet3Pos.set(pos.x + 0.02f, pos.y - getHalfHeight()/2);

@@ -7,5 +7,7 @@ public enum ShootType {
     QUAD,
     TRIPLE,
     BOSS0,
-    BOSS1
+    BOSS1,
+    BOSS2,
+    BOSS3
 }

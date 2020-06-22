@@ -45,6 +45,7 @@ public class Ship extends Sprite {
     protected int damage;
     protected float reloadInterval;
     protected float reloadTimer;
+    protected float extraReloadTimer;
     protected boolean isShootMulti;
     protected Sound sound;
     protected int hp;
@@ -123,6 +124,10 @@ public class Ship extends Sprite {
                 }
                 case BOSS1: {
                     shootBoss1();
+                    break;
+                }
+                case BOSS2: {
+                    shootBoss2(delta);
                     break;
                 }
             }
@@ -222,6 +227,23 @@ public class Ship extends Sprite {
         bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
         bulletPool.obtain().set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
         bulletPool.obtain().set(this, bulletRegion1, bullet4Pos, bulletV.cpy().add(0.06f, 0f), bulletHeight, worldBounds, damage, false);
+        pew();
+    }
+
+    private void shootBoss2(float delta) {
+        extraReloadTimer += delta;
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.09f, 0f), bulletHeight, worldBounds, damage, true);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(-0.04f, 0f), bulletHeight, worldBounds, damage, true);
+        if (extraReloadTimer >= reloadInterval/7) {
+            for (int i = 1; i <= 15; i++) {
+                bulletPool.obtain().set(this, bulletRegion1, bulletPos, bulletV.cpy().add(0f, -0.2f*i), bulletHeight, worldBounds, damage, false);
+                bulletPool.obtain().set(this, bulletRegion1, bullet4Pos, bulletV.cpy().add(0f, -0.2f*i), bulletHeight, worldBounds, damage, false);
+                pew();
+            }
+            extraReloadTimer = 0f;
+        }
+        bulletPool.obtain().set(this, bulletRegion, bullet3Pos, bulletV.cpy().add(0.04f, 0f), bulletHeight, worldBounds, damage, true);
+        bulletPool.obtain().set(this, bulletRegion, bullet4Pos, bulletV.cpy().add(0.09f, 0f), bulletHeight, worldBounds, damage, true);
         pew();
     }
 

@@ -281,6 +281,10 @@ public class MainShip extends Ship {
                 this.shootType = ShootType.TRIPLE;
                 break;
             }
+            case 3: {
+                maxHp += 250;
+                break;
+            }
         }
     }
 
@@ -399,7 +403,7 @@ public class MainShip extends Ship {
         this.maxHp = maxHp;
         this.hp = hp;
         this.lives = lives;
-        if (upgradeCount > 0) {
+        if (upgradeCount > 0 & upgradeCount != 3) {
             upgradeShip(upgradeCount);
         }
         pos.x = x;

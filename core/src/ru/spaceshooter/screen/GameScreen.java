@@ -730,6 +730,10 @@ public class GameScreen extends BaseScreen {
                 generateBoss(2);
                 break;
             }
+            case 20: {
+                generateBoss(3);
+                break;
+            }
         }
     }
 
