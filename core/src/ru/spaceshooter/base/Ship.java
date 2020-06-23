@@ -115,19 +115,11 @@ public class Ship extends Sprite {
                     break;
                 }
                 case TRIPLE: {
-                    shootTriple();
-                    break;
-                }
-                case BOSS0: {
-                    shootBoss0();
-                    break;
-                }
-                case BOSS1: {
-                    shootBoss1();
-                    break;
-                }
-                case BOSS2: {
-                    shootBoss2(delta);
+                    if (isShootMulti) {
+                        shootMultiDual();
+                    } else {
+                        shootTriple();
+                    }
                     break;
                 }
             }
@@ -166,7 +158,7 @@ public class Ship extends Sprite {
         bullet4Pos = new Vector2();
     }
 
-    private void pew() {
+    public void pew() {
         if (screen.isSoundOn() & screen.isNotNuked()) {
             sound.play(screen.getVolumeSound());
         }
@@ -212,38 +204,6 @@ public class Ship extends Sprite {
         bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
         bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(0.05f, 0f), bulletHeight, worldBounds, damage, false);
         bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(-0.05f, 0f), bulletHeight, worldBounds, damage, false);
-        pew();
-    }
-
-    private void shootBoss0() {
-        bulletPool.obtain().set(this, bulletRegion1, bulletPos, bulletV.cpy().add(-0.07f, 0f), bulletHeight, worldBounds, damage, true);
-        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        bulletPool.obtain().set(this, bulletRegion1, bullet3Pos, bulletV.cpy().add(0.07f, 0f), bulletHeight, worldBounds, damage, true);
-        pew();
-    }
-
-    private void shootBoss1() {
-        bulletPool.obtain().set(this, bulletRegion1, bulletPos, bulletV.cpy().add(-0.06f, 0f), bulletHeight, worldBounds, damage, false);
-        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        bulletPool.obtain().set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
-        bulletPool.obtain().set(this, bulletRegion1, bullet4Pos, bulletV.cpy().add(0.06f, 0f), bulletHeight, worldBounds, damage, false);
-        pew();
-    }
-
-    private void shootBoss2(float delta) {
-        extraReloadTimer += delta;
-        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.09f, 0f), bulletHeight, worldBounds, damage, true);
-        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(-0.04f, 0f), bulletHeight, worldBounds, damage, true);
-        if (extraReloadTimer >= reloadInterval/7) {
-            for (int i = 1; i <= 15; i++) {
-                bulletPool.obtain().set(this, bulletRegion1, bulletPos, bulletV.cpy().add(0f, -0.2f*i), bulletHeight, worldBounds, damage, false);
-                bulletPool.obtain().set(this, bulletRegion1, bullet4Pos, bulletV.cpy().add(0f, -0.2f*i), bulletHeight, worldBounds, damage, false);
-                pew();
-            }
-            extraReloadTimer = 0f;
-        }
-        bulletPool.obtain().set(this, bulletRegion, bullet3Pos, bulletV.cpy().add(0.04f, 0f), bulletHeight, worldBounds, damage, true);
-        bulletPool.obtain().set(this, bulletRegion, bullet4Pos, bulletV.cpy().add(0.09f, 0f), bulletHeight, worldBounds, damage, true);
         pew();
     }
 

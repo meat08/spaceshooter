@@ -398,6 +398,13 @@ public class GameScreen extends BaseScreen {
         mainMenu.setLabelReadyVisible(visible);
     }
 
+    public EnemyEmitter getEnemyEmitter() {
+        return enemyEmitter;
+    }
+
+    public boolean isBoss() {
+        return isBoss;
+    }
 
     private void startInit() {
         state = State.PLAYING;
@@ -592,7 +599,7 @@ public class GameScreen extends BaseScreen {
                 if (enemy.isBulletCollision(bullet)) {
                     enemy.damage(bullet.getDamage());
                     bullet.destroy();
-                    if (enemy.isDestroyed()) {
+                    if (enemy.isDestroyed() & !isBoss) {
                         frags += 1;
                     }
                 }
@@ -692,12 +699,12 @@ public class GameScreen extends BaseScreen {
 
     private void calculateFrags() {
         if (frags > 0) {
+            if (frags % FRAGS_TO_LIVE_ADD == 0 & tempFrags != frags) {
+                mainShip.addOneLive();
+            }
             if (frags % FRAGS_TO_LEVEL_UP == 0 & tempFrags != frags) {
                 levelUp();
                 generateBosses();
-            }
-            if (frags % FRAGS_TO_LIVE_ADD == 0 & tempFrags != frags) {
-                mainShip.addOneLive();
             }
             tempFrags = frags;
         }
@@ -732,6 +739,10 @@ public class GameScreen extends BaseScreen {
             }
             case 20: {
                 generateBoss(3);
+                break;
+            }
+            case 50: {
+                generateBoss(4);
                 break;
             }
         }

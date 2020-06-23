@@ -57,15 +57,27 @@ public class BossEmitter {
     private static final ShootType BOSS_THREE_SHOOT_TYPE = ShootType.BOSS2;
     private static final int BOSS_THREE_TYPE = 2;
 
+    private static final float BOSS_FOUR_HEIGHT = 0.35f;
+    private static final int BOSS_FOUR_HP = 250;
+    private static final float BOSS_FOUR_SPEED = -0.07f;
+    private static final float BOSS_FOUR_BULLET_HEIGHT = 0.045f;
+    private static final float BOSS_FOUR_BULLET_VY = -0.45f;
+    private static final int BOSS_FOUR_BULLET_DAMAGE = 20;
+    private static final float BOSS_FOUR_RELOAD_INTERVAL = 0.95f;
+    private static final ShootType BOSS_FOUR_SHOOT_TYPE = ShootType.BOSS3;
+    private static final int BOSS_FOUR_TYPE = 3;
+
     private Rect worldBounds;
 
     private final TextureRegion[] bossOneRegion;
     private final TextureRegion[] bossTwoRegion;
     private final TextureRegion[] bossThreeRegion;
+    private final TextureRegion[] bossFourRegion;
 
     private final Vector2 bossOneV;
     private final Vector2 bossTwoV;
     private final Vector2 bossThreeV;
+    private final Vector2 bossFourV;
 
     private final TextureRegion bulletRegion;
     private final TextureRegion bulletRegionMoon;
@@ -77,10 +89,12 @@ public class BossEmitter {
         this.bossOneRegion = Regions.split(atlas.findRegion("boss0"), 1, 4, 4);
         this.bossTwoRegion = Regions.split(atlas.findRegion("boss1"), 1, 4, 4);
         this.bossThreeRegion = Regions.split(atlas.findRegion("boss2"), 1, 4, 4);
+        this.bossFourRegion = Regions.split(atlas.findRegion("boss3"), 1, 4, 4);
 
         this.bossOneV = new Vector2(BOSS_ONE_SPEED, 0f);
         this.bossTwoV = new Vector2(BOSS_TWO_SPEED, 0f);
         this.bossThreeV = new Vector2(BOSS_THREE_SPEED, 0f);
+        this.bossFourV = new Vector2(BOSS_FOUR_SPEED, 0f);
 
         this.bulletRegion = atlas.findRegion("bulletEnemy");
         this.bulletRegionMoon = atlas.findRegion("bulletEnemy_type1");
@@ -149,6 +163,23 @@ public class BossEmitter {
                         BOSS_THREE_HEIGHT,
                         BOSS_THREE_SHOOT_TYPE,
                         BOSS_THREE_TYPE
+                );
+                break;
+            }
+            case 4: {
+                boss.set(
+                        bossFourRegion,
+                        bossFourV,
+                        bulletRegionMoon,
+                        bulletRegion,
+                        BOSS_FOUR_BULLET_HEIGHT,
+                        BOSS_FOUR_BULLET_VY,
+                        transform(BOSS_FOUR_BULLET_DAMAGE),
+                        BOSS_FOUR_RELOAD_INTERVAL,
+                        transform(BOSS_FOUR_HP),
+                        BOSS_FOUR_HEIGHT,
+                        BOSS_FOUR_SHOOT_TYPE,
+                        BOSS_FOUR_TYPE
                 );
                 break;
             }

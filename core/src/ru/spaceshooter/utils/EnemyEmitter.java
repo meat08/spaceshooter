@@ -23,6 +23,7 @@ import ru.spaceshooter.base.enums.ShootType;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.math.Rnd;
 import ru.spaceshooter.pool.EnemyPool;
+import ru.spaceshooter.sprite.Boss;
 import ru.spaceshooter.sprite.Enemy;
 
 public class EnemyEmitter {
@@ -267,6 +268,41 @@ public class EnemyEmitter {
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
             enemy.setBottom(worldBounds.getTop());
         }
+    }
+
+    public void generateSmallShips(Boss boss) {
+        final Enemy enemy = enemyPool.obtain();
+        float typeSmall = (float) Math.random();
+        if (typeSmall < 0.5f) {
+            enemy.set(
+                    enemySmallT1Regions,
+                    enemySmallV1.cpy().scl(0.5f),
+                    bulletRegionMoon,
+                    ENEMY_SMALL_V1_BULLET_HEIGHT,
+                    ENEMY_SMALL_V1_BULLET_VY,
+                    transform(ENEMY_SMALL_V1_BULLET_DAMAGE) * 2,
+                    ENEMY_SMALL_V1_RELOAD_INTERVAL,
+                    transform(ENEMY_SMALL_V1_HP) * 2,
+                    ENEMY_SMALL_V1_HEIGHT,
+                    ENEMY_SMALL_V1_SHOOT_TYPE
+            );
+        } else {
+            enemy.set(
+                    enemySmallRegions,
+                    enemySmallV.cpy().scl(0.5f),
+                    bulletRegion,
+                    ENEMY_SMALL_BULLET_HEIGHT,
+                    ENEMY_SMALL_BULLET_VY,
+                    transform(ENEMY_SMALL_BULLET_DAMAGE) * 2,
+                    ENEMY_SMALL_RELOAD_INTERVAL,
+                    transform(ENEMY_SMALL_HP) * 2,
+                    ENEMY_SMALL_HEIGHT,
+                    ENEMY_SMALL_SHOOT_TYPE
+            );
+        }
+        enemy.pos.set(boss.pos);
+        final float x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
+        enemy.setV(x, boss.getBottom());
     }
 
     private int transform(int value) {

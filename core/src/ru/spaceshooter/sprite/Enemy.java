@@ -30,16 +30,26 @@ import ru.spaceshooter.screen.GameScreen;
 public class Enemy extends Ship {
 
     private static final float V_Y = -0.3f;
+    private static final float V_LEN = 0.003f;
+
+    private Vector2 dst;
 
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound sound, HitExplodePool hitExplodePool, GameScreen screen) {
         super(bulletPool, explosionPool, worldBounds, sound, hitExplodePool, screen);
+        dst = new Vector2();
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
         if (getTop() < worldBounds.getTop()) {
-            v.set(v0);
+            if (screen.isBoss()) {
+                if (dst.dst(pos) < V_LEN) {
+                    v.set(v0);
+                }
+            } else {
+                v.set(v0);
+            }
             switch (shootType) {
                 case ONE: {
                     bulletPos.set(pos.x, pos.y - getHalfHeight());
@@ -88,6 +98,11 @@ public class Enemy extends Ship {
         setHeightProportion(height);
         this.v.set(0, V_Y);
         this.shootType = shootType;
+    }
+
+    public void setV(float x, float y) {
+        this.dst.set(x, y);
+        this.v.set(dst.cpy().sub(pos));
     }
 
     public boolean isBulletCollision(Bullet bullet) {

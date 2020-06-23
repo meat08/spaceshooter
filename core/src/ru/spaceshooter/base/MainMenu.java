@@ -112,6 +112,7 @@ public class MainMenu {
         labelSave = new Label(textSaveDone, skin, "title-plain-big");
         labelDone.setColor(Color.GREEN);
         labelGameOver.setColor(Color.RED);
+        labelSave.setColor(Color.GOLD);
         tableButtons = new Table();
         btnNewGame = new TextButton(textNewGame, skin, "round");
         btnConf = new TextButton(textConf, skin, "round");
@@ -198,7 +199,6 @@ public class MainMenu {
             labelDone.setFontScale(getLabelScale(labelDone));
             labelPause.setFontScale(getLabelScale(labelPause));
             labelSave.setFontScale(getLabelScale(labelSave));
-            labelSave.setColor(Color.BLUE);
             tableButtons.add(labelPause).padBottom(2f).row();
             btnResume.getLabel().setFontScale(getButtonScale(btnResume));
             tableButtons.add(btnResume).width(widthRoot).height(heightRoot).row();

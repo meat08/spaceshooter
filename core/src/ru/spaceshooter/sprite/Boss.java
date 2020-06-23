@@ -54,30 +54,97 @@ public class Boss extends Ship {
         }
         if (getTop() < worldBounds.getTop()) {
             move();
-            shoot(delta);
+            if (screen.isNotNuked()) {
+                autoShoot(delta);
+            }
         }
     }
 
-    private void shoot(float delta) {
-        switch (shootType) {
-            case BOSS0: {
-                bulletPos.set(pos.x - getHalfWidth()/2, pos.y - getHalfHeight()/2);
-                bullet2Pos.set(pos.x, pos.y - getHalfHeight());
-                bullet3Pos.set(pos.x + getHalfWidth()/2, pos.y - getHalfHeight()/2);
-                break;
+    @Override
+    protected void autoShoot(float delta) {
+        reloadTimer += delta;
+        if (reloadTimer >= reloadInterval) {
+            switch (shootType) {
+                case BOSS0: {
+                    shootBoss0();
+                    break;
+                }
+                case BOSS1: {
+                    shootBoss1();
+                }
+                case BOSS2: {
+                    shootBoss2(delta);
+                    break;
+                }
+                case BOSS3: {
+                    shootBoss3(delta);
+                    break;
+                }
             }
-            case BOSS1:
-            case BOSS2: {
-                bulletPos.set(pos.x - getHalfHeight()/2, pos.y - getHalfHeight()/2);
-                bullet2Pos.set(pos.x - 0.02f, pos.y - getHalfHeight()/2);
-                bullet3Pos.set(pos.x + 0.02f, pos.y - getHalfHeight()/2);
-                bullet4Pos.set(pos.x + getHalfHeight()/2, pos.y - getHalfHeight()/2);
-                break;
+            reloadTimer = 0f;
+        }
+    }
+
+    private void shootBoss0() {
+        bulletPos.set(pos.x - getHalfWidth()/2, pos.y - getHalfHeight()/2);
+        bullet2Pos.set(pos.x, pos.y - getHalfHeight());
+        bullet3Pos.set(pos.x + getHalfWidth()/2, pos.y - getHalfHeight()/2);
+        bulletPool.obtain().set(this, bulletRegion1, bulletPos, bulletV.cpy().add(-0.07f, 0f), bulletHeight, worldBounds, damage, true);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion1, bullet3Pos, bulletV.cpy().add(0.07f, 0f), bulletHeight, worldBounds, damage, true);
+        pew();
+    }
+
+    private void shootBoss1() {
+        bulletPos.set(pos.x - getHalfHeight()/2, pos.y - getHalfHeight()/2);
+        bullet2Pos.set(pos.x - 0.02f, pos.y - getHalfHeight()/2);
+        bullet3Pos.set(pos.x + 0.02f, pos.y - getHalfHeight()/2);
+        bullet4Pos.set(pos.x + getHalfHeight()/2, pos.y - getHalfHeight()/2);
+        bulletPool.obtain().set(this, bulletRegion1, bulletPos, bulletV.cpy().add(-0.06f, 0f), bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion, bullet3Pos, bulletV, bulletHeight, worldBounds, damage, false);
+        bulletPool.obtain().set(this, bulletRegion1, bullet4Pos, bulletV.cpy().add(0.06f, 0f), bulletHeight, worldBounds, damage, false);
+        pew();
+    }
+
+    private void shootBoss2(float delta) {
+        extraReloadTimer += delta;
+        bulletPos.set(pos.x - getHalfHeight()/2, pos.y - getHalfHeight()/2);
+        bullet2Pos.set(pos.x - 0.02f, pos.y - getHalfHeight()/2);
+        bullet3Pos.set(pos.x + 0.02f, pos.y - getHalfHeight()/2);
+        bullet4Pos.set(pos.x + getHalfHeight()/2, pos.y - getHalfHeight()/2);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.09f, 0f), bulletHeight, worldBounds, damage, true);
+        bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(-0.04f, 0f), bulletHeight, worldBounds, damage, true);
+        if (extraReloadTimer >= reloadInterval/7) {
+            for (int i = 1; i <= 15; i++) {
+                bulletPool.obtain().set(this, bulletRegion1, bulletPos, bulletV.cpy().add(0f, -0.2f*i), bulletHeight, worldBounds, damage, false);
+                bulletPool.obtain().set(this, bulletRegion1, bullet4Pos, bulletV.cpy().add(0f, -0.2f*i), bulletHeight, worldBounds, damage, false);
+                pew();
             }
+            extraReloadTimer = 0f;
         }
-        if (screen.isNotNuked()) {
-            autoShoot(delta);
+        bulletPool.obtain().set(this, bulletRegion, bullet3Pos, bulletV.cpy().add(0.04f, 0f), bulletHeight, worldBounds, damage, true);
+        bulletPool.obtain().set(this, bulletRegion, bullet4Pos, bulletV.cpy().add(0.09f, 0f), bulletHeight, worldBounds, damage, true);
+        pew();
+    }
+
+    private void shootBoss3(float delta) {
+        extraReloadTimer += delta;
+        bulletPos.set(pos.x - getHalfHeight()/3, pos.y - getHalfHeight()/2);
+        bullet2Pos.set(pos.x - 0.02f, pos.y - getHalfHeight()/2);
+        bullet3Pos.set(pos.x + 0.02f, pos.y - getHalfHeight()/2);
+        bullet4Pos.set(pos.x + getHalfHeight()/3, pos.y - getHalfHeight()/2);
+        bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.04f, 0f), bulletHeight, worldBounds, damage, false);
+       if (extraReloadTimer >= reloadInterval/7) {
+            for (int i = 0; i < 6; i++) {
+                screen.getEnemyEmitter().generateSmallShips(this);
+                bulletPool.obtain().set(this, bulletRegion1, bullet2Pos, bulletV.cpy().add(0f, -0.2f*i), bulletHeight, worldBounds, damage, false);
+                bulletPool.obtain().set(this, bulletRegion1, bullet3Pos, bulletV.cpy().add(0f, -0.2f*i), bulletHeight, worldBounds, damage, false);
+            }
+            extraReloadTimer = 0f;
         }
+        bulletPool.obtain().set(this, bulletRegion, bullet4Pos, bulletV.cpy().add(0.04f, 0f), bulletHeight, worldBounds, damage, false);
+        pew();
     }
 
     private void move() {
