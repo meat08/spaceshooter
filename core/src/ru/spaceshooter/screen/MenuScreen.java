@@ -1,27 +1,41 @@
+/*    Copyright (C) 2020  Ilya Mafov <i.mafov@gmail.com>
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package ru.spaceshooter.screen;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
 
 import ru.spaceshooter.base.BaseScreen;
+import ru.spaceshooter.base.enums.State;
 import ru.spaceshooter.math.Rect;
+import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.sprite.Background;
-import ru.spaceshooter.sprite.ButtonExit;
-import ru.spaceshooter.sprite.ButtonPlay;
+import ru.spaceshooter.sprite.LogoMainMenu;
 import ru.spaceshooter.sprite.Star;
+import ru.spaceshooter.base.MainMenu;
+import ru.spaceshooter.utils.Assets;
 
 public class MenuScreen extends BaseScreen {
 
     private final Game game;
-    private Texture bg;
-    private Background background;
     private TextureAtlas atlas;
-    private ButtonExit buttonExit;
-    private ButtonPlay buttonPlay;
+    private LogoMainMenu logoMainMenu;
+    private HitExplodePool hitExplodePool;
     private Star[] stars;
     private Music menuMusic;
 
@@ -32,29 +46,29 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
-        bg = new Texture("textures/bg.png");
+        state = State.ACTIVE;
+        atlas = Assets.getInstance().getAssetManager().get("textures/menuAtlas.tpack");
+        menuMusic = Assets.getInstance().getAssetManager().get("sounds/mainScreen.mp3");
+        bg = Assets.getInstance().getAssetManager().get("textures/bg.png");
         background = new Background(bg);
-        atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
-        buttonExit = new ButtonExit(atlas);
-        buttonPlay = new ButtonPlay(atlas, game);
         stars = new Star[256];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
-        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/mainScreen.mp3"));
-        menuMusic.play();
-        menuMusic.setVolume(0.5f);
-        menuMusic.setLooping(true);
+        hitExplodePool = new HitExplodePool(atlas);
+        logoMainMenu = new LogoMainMenu(atlas, hitExplodePool);
+        musicOnOff();
+        mainMenu = new MainMenu(multiplexer, game, this, fileHandle);
     }
 
     @Override
     public void resize(Rect worldBounds) {
         background.resize(worldBounds);
-        buttonExit.resize(worldBounds);
-        buttonPlay.resize(worldBounds);
+        logoMainMenu.resize(worldBounds);
         for (Star star : stars) {
             star.resize(worldBounds);
         }
+        mainMenu.resize();
     }
 
     @Override
@@ -66,30 +80,51 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public void dispose() {
-        bg.dispose();
         atlas.dispose();
         menuMusic.dispose();
+        mainMenu.dispose();
+        bg.dispose();
         super.dispose();
     }
 
     @Override
-    public boolean touchDown(Vector2 touch, int pointer, int button) {
-        buttonExit.touchDown(touch, pointer, button);
-        buttonPlay.touchDown(touch, pointer, button);
+    public boolean keyDown(int keycode) {
+        if (state == State.CONFIG) {
+            if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.BACK) {
+                exitConfig();
+                flushPreference();
+            }
+        }
         return false;
+    }
+
+    public void exitConfig() {
+        state = State.ACTIVE;
+        mainMenu.hideConf();
+    }
+
+    public void musicOnOff() {
+        if (isMusicOn) {
+            menuMusic.play();
+            menuMusic.setLooping(true);
+        } else {
+            menuMusic.stop();
+        }
     }
 
     @Override
-    public boolean touchUp(Vector2 touch, int pointer, int button) {
-        buttonExit.touchUp(touch, pointer, button);
-        buttonPlay.touchUp(touch, pointer, button);
-        return false;
+    public void setVolumeMusic(float volumeMusic) {
+        super.setVolumeMusic(volumeMusic);
+        menuMusic.setVolume(volumeMusic);
     }
 
     private void update(float delta) {
+        logoMainMenu.update(delta);
+        hitExplodePool.updateActiveSprites(delta);
         for (Star star : stars) {
             star.update(delta);
         }
+        mainMenu.update();
     }
 
     private void draw() {
@@ -98,9 +133,12 @@ public class MenuScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
-        buttonExit.draw(batch);
-        buttonPlay.draw(batch);
+        if (state == State.ACTIVE) {
+            logoMainMenu.draw(batch);
+            hitExplodePool.drawActiveSprites(batch);
+        }
         batch.end();
+        mainMenu.draw();
     }
 
 }

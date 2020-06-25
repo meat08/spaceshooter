@@ -1,25 +1,26 @@
 
 menuAtlas.png
+size: 1162,364
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
-btPlay
+hit
   rotate: false
-  xy: 8, 268
-  size: 234, 256
-  orig: 234, 256
+  xy: 904, 106
+  size: 256, 256
+  orig: 256, 256
   offset: 0, 0
   index: -1
-btExit
+menu_logo_ship
   rotate: false
-  xy: 8, 26
-  size: 234, 234
-  orig: 234, 234
+  xy: 2, 2
+  size: 900, 360
+  orig: 900, 360
   offset: 0, 0
   index: -1
 star
   rotate: false
-  xy: 8, 8
+  xy: 904, 94
   size: 11, 10
   orig: 11, 10
   offset: 0, 0
