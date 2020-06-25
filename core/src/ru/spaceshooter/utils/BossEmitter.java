@@ -53,7 +53,7 @@ public class BossEmitter {
     private static final float BOSS_THREE_BULLET_HEIGHT = 0.04f;
     private static final float BOSS_THREE_BULLET_VY = -0.45f;
     private static final int BOSS_THREE_BULLET_DAMAGE = 15;
-    private static final float BOSS_THREE_RELOAD_INTERVAL = 0.95f;
+    private static final float BOSS_THREE_RELOAD_INTERVAL = 1.6f;
     private static final ShootType BOSS_THREE_SHOOT_TYPE = ShootType.BOSS2;
     private static final int BOSS_THREE_TYPE = 2;
 

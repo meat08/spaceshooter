@@ -15,13 +15,13 @@
  */
 package ru.spaceshooter.pool;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import ru.spaceshooter.base.SpritesPool;
 import ru.spaceshooter.screen.GameScreen;
 import ru.spaceshooter.sprite.Explosion;
+import ru.spaceshooter.utils.Assets;
 
 public class ExplosionPool extends SpritesPool<Explosion> {
 
@@ -32,7 +32,7 @@ public class ExplosionPool extends SpritesPool<Explosion> {
     public ExplosionPool(TextureAtlas atlas, GameScreen screen) {
         this.atlas = atlas;
         this.screen = screen;
-        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        sound = Assets.getInstance().getAssetManager().get("sounds/explosion.wav");
     }
 
     @Override

@@ -16,7 +16,6 @@
 package ru.spaceshooter.screen;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -25,9 +24,11 @@ import ru.spaceshooter.base.BaseScreen;
 import ru.spaceshooter.base.enums.State;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.pool.HitExplodePool;
+import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.LogoMainMenu;
 import ru.spaceshooter.sprite.Star;
 import ru.spaceshooter.base.MainMenu;
+import ru.spaceshooter.utils.Assets;
 
 public class MenuScreen extends BaseScreen {
 
@@ -46,14 +47,16 @@ public class MenuScreen extends BaseScreen {
     public void show() {
         super.show();
         state = State.ACTIVE;
-        atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
+        atlas = Assets.getInstance().getAssetManager().get("textures/menuAtlas.tpack");
+        menuMusic = Assets.getInstance().getAssetManager().get("sounds/mainScreen.mp3");
+        bg = Assets.getInstance().getAssetManager().get("textures/bg.png");
+        background = new Background(bg);
         stars = new Star[256];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
         hitExplodePool = new HitExplodePool(atlas);
         logoMainMenu = new LogoMainMenu(atlas, hitExplodePool);
-        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/mainScreen.mp3"));
         musicOnOff();
         mainMenu = new MainMenu(multiplexer, game, this, fileHandle);
     }
@@ -80,6 +83,7 @@ public class MenuScreen extends BaseScreen {
         atlas.dispose();
         menuMusic.dispose();
         mainMenu.dispose();
+        bg.dispose();
         super.dispose();
     }
 

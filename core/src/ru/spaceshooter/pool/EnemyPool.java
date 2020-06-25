@@ -15,13 +15,13 @@
  */
 package ru.spaceshooter.pool;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
 import ru.spaceshooter.base.SpritesPool;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.screen.GameScreen;
 import ru.spaceshooter.sprite.Enemy;
+import ru.spaceshooter.utils.Assets;
 
 public class EnemyPool extends SpritesPool<Enemy> {
 
@@ -38,7 +38,7 @@ public class EnemyPool extends SpritesPool<Enemy> {
         this.hitExplodePool = hitExplodePool;
         this.worldBounds = worldBounds;
         this.screen = screen;
-        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        sound = Assets.getInstance().getAssetManager().get("sounds/bullet.wav");
     }
 
     @Override

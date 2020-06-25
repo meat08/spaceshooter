@@ -61,8 +61,6 @@ public class BaseScreen implements Screen, InputProcessor {
     public void show() {
         multiplexer = new InputMultiplexer(this);
         Gdx.input.setInputProcessor(multiplexer);
-        bg = new Texture("textures/bg.png");
-        background = new Background(bg);
         batch = new SpriteBatch();
         screenBounds = new Rect();
         worldBounds = new Rect();
@@ -124,7 +122,6 @@ public class BaseScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
         batch.dispose();
-        bg.dispose();
     }
 
     @Override

@@ -41,6 +41,8 @@ import java.util.Locale;
 import ru.spaceshooter.base.enums.State;
 import ru.spaceshooter.screen.GameScreen;
 import ru.spaceshooter.screen.MenuScreen;
+import ru.spaceshooter.screen.ScreenManager;
+import ru.spaceshooter.utils.Assets;
 
 public class MainMenu {
 
@@ -101,7 +103,7 @@ public class MainMenu {
     private void create(InputMultiplexer multiplexer) {
         checkLocale();
         stage = new Stage(new ScreenViewport());
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        skin = Assets.getInstance().getAssetManager().get("skin/uiskin.json");
         multiplexer.addProcessor(0, stage);
         tableRoot = new Table();
         labelMain = new Label("Space shooter", skin, "titleBig");
@@ -146,7 +148,7 @@ public class MainMenu {
             textNewGame = "Новая игра";
             textConf = "Настройки";
             textLoad = "Загрузить";
-            textExit = "Выход";
+            textExit = (gameScreen != null) ? "Выход в меню" : "Выход";
             textBack = "Назад";
             textResume = "Продолжить";
             textSave = "Сохранить игру";
@@ -162,7 +164,7 @@ public class MainMenu {
             textNewGame = "New game";
             textConf = "Settings";
             textLoad = "Load game";
-            textExit = "Exit";
+            textExit = (gameScreen != null) ? "Main menu" : "Exit";
             textBack = "Back";
             textResume = "Resume";
             textSave = "Save game";
@@ -250,7 +252,7 @@ public class MainMenu {
         btnNewGame.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
                 if (menuScreen != null) {
-                    game.setScreen(new GameScreen());
+                    ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAME);
                 } else if (gameScreen != null) {
                     newGame();
                     gameScreen.startNewGame();
@@ -294,7 +296,7 @@ public class MainMenu {
         btnExit.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
                 if (gameScreen != null) {
-                    Gdx.app.exit();
+                    ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.MENU);
                 } else if (menuScreen != null) {
                     Gdx.app.exit();
                 }
@@ -536,7 +538,7 @@ public class MainMenu {
         labelReady.setFillParent(true);
         labelDone.setAlignment(Align.center);
         labelDone.setFillParent(true);
-        labelSave.setAlignment(Align.top);
+        labelSave.setAlignment(Align.bottom);
         labelSave.setFillParent(true);
     }
 

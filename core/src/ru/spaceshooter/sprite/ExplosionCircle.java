@@ -15,7 +15,6 @@
  */
 package ru.spaceshooter.sprite;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -23,6 +22,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.spaceshooter.base.Sprite;
 import ru.spaceshooter.math.Rect;
 import ru.spaceshooter.screen.GameScreen;
+import ru.spaceshooter.utils.Assets;
 
 public class ExplosionCircle extends Sprite {
 
@@ -34,7 +34,7 @@ public class ExplosionCircle extends Sprite {
 
     public ExplosionCircle(TextureAtlas atlas, GameScreen screen, Rect worldBounds) {
         super(atlas.findRegion("circleExplosion"), 4, 4, 16);
-        this.sound = Gdx.audio.newSound(Gdx.files.internal("sounds/big_explosion.wav"));
+        this.sound = Assets.getInstance().getAssetManager().get("sounds/big_explosion.wav");
         this.screen = screen;
         this.worldBounds = worldBounds;
         this.baseAnimateInterval = ANIMATE_INTERVAL;

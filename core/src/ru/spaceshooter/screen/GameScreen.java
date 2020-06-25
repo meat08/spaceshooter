@@ -15,7 +15,6 @@
  */
 package ru.spaceshooter.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -41,6 +40,7 @@ import ru.spaceshooter.pool.ExplosionPool;
 import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.pool.NebulaPool;
 import ru.spaceshooter.sprite.Asteroid;
+import ru.spaceshooter.sprite.Background;
 import ru.spaceshooter.sprite.Boss;
 import ru.spaceshooter.sprite.Bullet;
 import ru.spaceshooter.sprite.Enemy;
@@ -52,6 +52,7 @@ import ru.spaceshooter.sprite.Bonus;
 import ru.spaceshooter.sprite.MainShip;
 import ru.spaceshooter.sprite.Star;
 import ru.spaceshooter.base.MainMenu;
+import ru.spaceshooter.utils.Assets;
 import ru.spaceshooter.utils.AsteroidEmitter;
 import ru.spaceshooter.utils.BonusEmitter;
 import ru.spaceshooter.utils.BossEmitter;
@@ -116,10 +117,12 @@ public class GameScreen extends BaseScreen {
         super.show();
         gameData = new GameData();
         json = new Json();
-        atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
         font = new Font("font/font.fnt", "font/font.png");
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/gameScreen.mp3"));
-        bossMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/bossMusic.mp3"));
+        bg = Assets.getInstance().getAssetManager().get("textures/bg.png");
+        background = new Background(bg);
+        atlas = Assets.getInstance().getAssetManager().get("textures/mainAtlas.tpack");
+        gameMusic = Assets.getInstance().getAssetManager().get("sounds/gameScreen.mp3");
+        bossMusic = Assets.getInstance().getAssetManager().get("sounds/bossMusic.mp3");
         mainMenu = new MainMenu(multiplexer, this, fileHandle);
         stars = new Star[128];
         for (int i = 0; i < stars.length; i++) {
@@ -196,6 +199,7 @@ public class GameScreen extends BaseScreen {
         mainMenu.dispose();
         explosionNuke.dispose();
         explosionCircle.dispose();
+        bg.dispose();
         super.dispose();
     }
 
@@ -614,7 +618,7 @@ public class GameScreen extends BaseScreen {
                     boss.damage(bullet.getDamage());
                     bullet.destroy();
                     if (boss.isDestroyed()) {
-                        mainShip.upgradeShip(boss.getBossType());
+                        mainShip.upgradeShip(boss.getBossType(), false);
                         frags += 1;
                         isBossDestroy = true;
                     }
@@ -733,11 +737,11 @@ public class GameScreen extends BaseScreen {
                 generateBoss(1);
                 break;
             }
-            case 10: {
+            case 15: {
                 generateBoss(2);
                 break;
             }
-            case 20: {
+            case 25: {
                 generateBoss(3);
                 break;
             }

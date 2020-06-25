@@ -71,6 +71,7 @@ public class Boss extends Ship {
                 }
                 case BOSS1: {
                     shootBoss1();
+                    break;
                 }
                 case BOSS2: {
                     shootBoss2(delta);
@@ -115,7 +116,7 @@ public class Boss extends Ship {
         bullet4Pos.set(pos.x + getHalfHeight()/2, pos.y - getHalfHeight()/2);
         bulletPool.obtain().set(this, bulletRegion, bulletPos, bulletV.cpy().add(-0.09f, 0f), bulletHeight, worldBounds, damage, true);
         bulletPool.obtain().set(this, bulletRegion, bullet2Pos, bulletV.cpy().add(-0.04f, 0f), bulletHeight, worldBounds, damage, true);
-        if (extraReloadTimer >= reloadInterval/7) {
+        if (extraReloadTimer >= reloadInterval/12) {
             for (int i = 1; i <= 15; i++) {
                 bulletPool.obtain().set(this, bulletRegion1, bulletPos, bulletV.cpy().add(0f, -0.2f*i), bulletHeight, worldBounds, damage, false);
                 bulletPool.obtain().set(this, bulletRegion1, bullet4Pos, bulletV.cpy().add(0f, -0.2f*i), bulletHeight, worldBounds, damage, false);

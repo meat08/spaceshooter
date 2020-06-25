@@ -28,6 +28,7 @@ import ru.spaceshooter.pool.BulletPool;
 import ru.spaceshooter.pool.ExplosionPool;
 import ru.spaceshooter.pool.HitExplodePool;
 import ru.spaceshooter.screen.GameScreen;
+import ru.spaceshooter.utils.Assets;
 import ru.spaceshooter.utils.Regions;
 
 public class MainShip extends Ship {
@@ -67,7 +68,7 @@ public class MainShip extends Ship {
         this.explosionPool = explosionPool;
         this.hitExplodePool = hitExplodePool;
         this.screen = screen;
-        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
+        sound = Assets.getInstance().getAssetManager().get("sounds/laser.wav");
         accelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
         sense = screen.getSenseAccel();
         bulletRegion = atlas.findRegion("bulletMainShip");
@@ -264,11 +265,14 @@ public class MainShip extends Ship {
         }
     }
 
-    public void upgradeShip(int upgradeCount) {
+    public void upgradeShip(int upgradeCount, boolean isLoad) {
         this.upgradeCount = upgradeCount;
         switch (upgradeCount) {
             case 0: {
-                maxHp += 50;
+                if (!isLoad) {
+                    maxHp += 50;
+                    hp = maxHp;
+                }
                 break;
             }
             case 1: {
@@ -282,7 +286,12 @@ public class MainShip extends Ship {
                 break;
             }
             case 3: {
-                maxHp += 250;
+                if (!isLoad) {
+                    maxHp += 250;
+                    hp = maxHp;
+                }
+                this.regions = changeRegion();
+                this.shootType = ShootType.TRIPLE;
                 break;
             }
         }
@@ -403,9 +412,7 @@ public class MainShip extends Ship {
         this.maxHp = maxHp;
         this.hp = hp;
         this.lives = lives;
-        if (upgradeCount > 0 & upgradeCount != 3) {
-            upgradeShip(upgradeCount);
-        }
+        upgradeShip(upgradeCount, true);
         pos.x = x;
         reloadInterval = DEFAULT_RELOAD_INTERVAL;
         isTouched = false;
