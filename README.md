@@ -290,4 +290,4 @@ Ilya Mafov <i.mafov@gmail.com>
 <br>
 <h2> Лицензия/License</h2>
 
-GNU GPLv3 <a href="LICENCE">LICENCE</a>
+GNU GPLv3 <a href="https://github.com/meat08/SpaceShooter/blob/master/LICENSE">LICENCE</a>
