@@ -263,9 +263,9 @@ Download <a href="readme/SpaceShooter.apk" download> APK</a> and install it.
 
 <h2> Windows/Linux/MacOS</h2>
 <p>
-Скачайте <a href="readme/SpaceShooter.jar" download> JAR</a> файл и запустите его. Для запуска необходима Java 1.8+. Скачать Java можно <a href="https://www.java.com/ru/download/">здесь</a>.
+Скачайте <a href="readme/SpaceShooter.jar" download> JAR</a> файл и запустите его. Для запуска необходима Java 1.8+. Скачать Java можно <a href="https://www.java.com/ru/download/" target="_blank">здесь</a>.
 <br><br>
-Download <a href="readme/SpaceShooter.jar" download> JAR</a> and run it. This content requires Java 1.8+. You can download Java <a href="https://www.java.com/ru/download/">here</a>.
+Download <a href="readme/SpaceShooter.jar" download> JAR</a> and run it. This content requires Java 1.8+. You can download Java <a href="https://www.java.com/ru/download/" target="_blank">here</a>.
 </p>
     
 <h2> Управление/Control</h2>
@@ -290,4 +290,4 @@ Ilya Mafov <i.mafov@gmail.com>
 <br>
 <h2> Лицензия/License</h2>
 
-GNU GPLv3 <a href="https://github.com/meat08/SpaceShooter/blob/master/LICENSE">LICENCE</a>
+GNU GPLv3 <a href="https://github.com/meat08/SpaceShooter/blob/master/LICENSE" target="_blank">LICENCE</a>
