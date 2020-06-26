@@ -45,11 +45,12 @@ import ru.spaceshooter.utils.Assets;
 
 public class MainMenu {
 
-    private String textPause, textGameOver, textReady, textDone, textSaveDone, textNewGame, textConf, textLoad, textExit, textBack, textResume, textSave, textEasy, textNormal, textHard;
+    private String textPause, textGameOver, textReady, textDone, textSaveDone, textNewGame, textConf, textLoad, textExit, textBack, textResume, textSave, textEasy, textNormal, textHard, textLoadManual, textLoadAuto, textCancel;
     private Stage stage;
     private MenuScreen menuScreen;
     private GameScreen gameScreen;
     private FileHandle fileHandle;
+    private FileHandle fileHandleAuto;
     private Skin skin;
     private Table tableRoot;
     private Label labelMain;
@@ -76,6 +77,10 @@ public class MainMenu {
     private TextButton btnEasy;
     private TextButton btnNormal;
     private TextButton btnHard;
+    private TextButton btnLoadManual;
+    private TextButton btnLoadAuto;
+    private TextButton btnCancel;
+    private Table tableLoad;
 
     private Value widthRoot;
     private Value heightRoot;
@@ -83,16 +88,18 @@ public class MainMenu {
     private Value confButtonSize;
     private Value sliderWidth;
 
-    public MainMenu(InputMultiplexer multiplexer, MenuScreen menuScreen, FileHandle fileHandle) {
+    public MainMenu(InputMultiplexer multiplexer, MenuScreen menuScreen, FileHandle fileHandle, FileHandle fileHandleAuto) {
         this.menuScreen = menuScreen;
         this.fileHandle = fileHandle;
+        this.fileHandleAuto = fileHandleAuto;
         create(multiplexer);
         show();
     }
 
-    public MainMenu(InputMultiplexer multiplexer, GameScreen gameScreen, FileHandle fileHandle) {
+    public MainMenu(InputMultiplexer multiplexer, GameScreen gameScreen, FileHandle fileHandle, FileHandle fileHandleAuto) {
         this.gameScreen = gameScreen;
         this.fileHandle = fileHandle;
+        this.fileHandleAuto = fileHandleAuto;
         create(multiplexer);
         show();
     }
@@ -131,6 +138,10 @@ public class MainMenu {
         btnEasy = new TextButton(textEasy, skin, "toggle-rus");
         btnNormal = new TextButton(textNormal, skin, "toggle-rus");
         btnHard = new TextButton(textHard, skin, "toggle-rus");
+        btnLoadAuto = new TextButton(textLoadAuto, skin, "round");
+        btnLoadManual = new TextButton(textLoadManual, skin, "round");
+        btnCancel = new TextButton(textCancel, skin, "round");
+        tableLoad = new Table();
     }
 
 
@@ -152,6 +163,9 @@ public class MainMenu {
             textEasy = "Легко";
             textNormal = "Нормально";
             textHard = "Сложно";
+            textLoadManual = "Ручное сохранение";
+            textLoadAuto = "Автосохранение";
+            textCancel = "Отмена";
         } else {
             textPause = "PAUSE";
             textGameOver = "GAME OVER";
@@ -168,6 +182,9 @@ public class MainMenu {
             textEasy = "Easy";
             textNormal = "Normal";
             textHard = "Hard";
+            textLoadManual = "Manual save";
+            textLoadAuto = "Auto save";
+            textCancel = "Cancel";
         }
     }
 
@@ -189,10 +206,17 @@ public class MainMenu {
             btnNewGame.getLabel().setFontScale(getButtonScale(btnNewGame));
             tableButtons.add(btnNewGame).width(widthRoot).height(heightRoot).row();
             btnLoad.getLabel().setFontScale(getButtonScale(btnLoad));
+            btnLoadAuto.getLabel().setFontScale(getButtonScale(btnLoadAuto));
+            btnLoadManual.getLabel().setFontScale(getButtonScale(btnLoadManual));
+            btnCancel.getLabel().setFontScale(getButtonScale(btnCancel));
             tableButtons.add(btnLoad).width(widthRoot).height(heightRoot).row();
             sliderMusic.setValue(menuScreen.getVolumeMusic());
             sliderSound.setValue(menuScreen.getVolumeSound());
             sliderAccel.setValue(menuScreen.getSenseAccel());
+            tableLoad.defaults().pad(3);
+            tableLoad.add(btnLoadAuto).width(widthRoot).height(heightRoot).row();
+            tableLoad.add(btnLoadManual).width(widthRoot).height(heightRoot).row();
+            tableLoad.add(btnCancel).width(widthRoot).height(heightRoot).row();
         } else if (gameScreen != null) {
             labelReady.setFontScale(getLabelScale(labelReady));
             labelDone.setFontScale(getLabelScale(labelDone));
@@ -258,9 +282,31 @@ public class MainMenu {
         });
         btnLoad.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
+                if (fileHandle.exists() | fileHandleAuto.exists()) {
+                    showLoad();
+                }
+            }
+        });
+        btnLoadManual.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y){
                 if (fileHandle.exists()) {
                     newGame();
-                    loadGame();
+                    loadGame(false);
+                }
+            }
+        });
+        btnLoadAuto.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y){
+                if (fileHandleAuto.exists()) {
+                    newGame();
+                    loadGame(true);
+                }
+            }
+        });
+        btnCancel.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y){
+                if (fileHandle.exists()) {
+                    hideLoad();
                 }
             }
         });
@@ -285,7 +331,7 @@ public class MainMenu {
         btnSave.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
                 if (gameScreen != null) {
-                    gameScreen.saveGame();
+                    gameScreen.saveGame(false);
                     labelSave.addAction(Actions.sequence(Actions.visible(true), Actions.delay(0.8f), Actions.visible(false)));
                 }
             }
@@ -375,10 +421,11 @@ public class MainMenu {
         sliderWidth = Value.percentWidth(0.65f, tableRoot);
     }
 
-    private void loadGame() {
-        if (fileHandle.exists()) {
+    private void loadGame(boolean isAuto) {
+        if (fileHandle.exists() | fileHandleAuto.exists()) {
             ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAME);
             ScreenManager.getInstance().getGameScreen().setGameLoad(true);
+            ScreenManager.getInstance().getGameScreen().setAutoLoad(isAuto);
         }
     }
 
@@ -466,6 +513,11 @@ public class MainMenu {
         tableRoot.add(tableConf).row();
     }
 
+    private void showLoad() {
+        tableButtons.remove();
+        tableRoot.add(tableLoad).row();
+    }
+
     private void setConfState() {
         if (gameScreen != null) {
             gameScreen.setState(State.CONFIG);
@@ -486,6 +538,11 @@ public class MainMenu {
 
     public void hideConf() {
         tableConf.remove();
+        tableRoot.add(tableButtons).row();
+    }
+
+    public void hideLoad() {
+        tableLoad.remove();
         tableRoot.add(tableButtons).row();
     }
 

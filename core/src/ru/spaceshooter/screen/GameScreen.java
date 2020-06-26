@@ -112,6 +112,7 @@ public class GameScreen extends BaseScreen {
     private boolean isBoss;
     private boolean isBossDestroy;
     private boolean isGameLoad;
+    private boolean isAutoLoad;
 
     @Override
     public void show() {
@@ -124,7 +125,7 @@ public class GameScreen extends BaseScreen {
         atlas = Assets.getInstance().getAssetManager().get("textures/mainAtlas.tpack");
         gameMusic = Assets.getInstance().getAssetManager().get("sounds/gameScreen.mp3");
         bossMusic = Assets.getInstance().getAssetManager().get("sounds/bossMusic.mp3");
-        mainMenu = new MainMenu(multiplexer, this, fileHandle);
+        mainMenu = new MainMenu(multiplexer, this, fileHandle, fileHandleAuto);
         stars = new Star[128];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
@@ -157,7 +158,7 @@ public class GameScreen extends BaseScreen {
         musicOnOff();
         checkLocale();
         if (isGameLoad) {
-            loadGame();
+            loadGame(isAutoLoad);
         }
     }
 
@@ -210,6 +211,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void pause() {
         if (state != State.PAUSE) {
+            saveGame(true);
             previousState = state;
             state = State.PAUSE;
             musicPause(true);
@@ -320,7 +322,7 @@ public class GameScreen extends BaseScreen {
         bossEmitter.setDiffFactor(diff);
     }
 
-    public void saveGame() {
+    public void saveGame(boolean isAuto) {
         gameData.saveGameData(
                 frags,
                 level,
@@ -334,34 +336,46 @@ public class GameScreen extends BaseScreen {
             gameData.saveStarV(star.getVY());
         }
         if (gameData != null) {
-            fileHandle.writeString(Base64Coder.encodeString(json.prettyPrint(gameData)),false);
+            if (isAuto) {
+                fileHandleAuto.writeString(Base64Coder.encodeString(json.prettyPrint(gameData)),false);
+            } else {
+                fileHandle.writeString(Base64Coder.encodeString(json.prettyPrint(gameData)),false);
+            }
         }
     }
 
-    private void loadGame() {
-        if (fileHandle.exists()) {
+    private void loadGame(boolean isAuto) {
+        if (isAuto & fileHandleAuto.exists()) {
+            gameData = json.fromJson(GameData.class,
+                    Base64Coder.decodeString(fileHandleAuto.readString()));
+            loadGameData();
+        } else if (fileHandle.exists()) {
             gameData = json.fromJson(GameData.class,
                     Base64Coder.decodeString(fileHandle.readString()));
-            frags = gameData.getFrags();
-            level = gameData.getLevel();
-            setLevel(level);
-            setDifficultyFactor(difficultyFactor);
-            mainShip.loadGame(
-                    gameData.getMaxHp(),
-                    gameData.getHp(),
-                    gameData.getMainShipX(),
-                    gameData.getLives(),
-                    gameData.getUpgradeCount()
-            );
-            freeActivePools();
-            for (Star star : stars) {
-                for (float vy : gameData.getStarV()) {
-                    star.setVY(vy);
-                }
-            }
-            state = State.PAUSE;
-            isGameLoad = false;
+            loadGameData();
         }
+    }
+
+    private void loadGameData() {
+        frags = gameData.getFrags();
+        level = gameData.getLevel();
+        setLevel(level);
+        setDifficultyFactor(difficultyFactor);
+        mainShip.loadGame(
+                gameData.getMaxHp(),
+                gameData.getHp(),
+                gameData.getMainShipX(),
+                gameData.getLives(),
+                gameData.getUpgradeCount()
+        );
+        freeActivePools();
+        for (Star star : stars) {
+            for (float vy : gameData.getStarV()) {
+                star.setVY(vy);
+            }
+        }
+        state = State.PAUSE;
+        isGameLoad = false;
     }
 
     public void startNewGame() {
@@ -417,6 +431,10 @@ public class GameScreen extends BaseScreen {
 
     public void setGameLoad(boolean gameLoad) {
         isGameLoad = gameLoad;
+    }
+
+    public void setAutoLoad(boolean autoLoad) {
+        isAutoLoad = autoLoad;
     }
 
     private void startInit() {

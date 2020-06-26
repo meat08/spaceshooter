@@ -37,6 +37,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
     protected FileHandle fileHandle;
+    protected FileHandle fileHandleAuto;
     protected Preferences preferences;
     protected Rect worldBounds;
     protected Texture bg;
@@ -69,6 +70,7 @@ public class BaseScreen implements Screen, InputProcessor {
         screenToWorld = new Matrix3();
         touch = new Vector2();
         fileHandle = Gdx.files.local("bin/GameData.json");
+        fileHandleAuto = Gdx.files.local("bin/GameDataAuto.json");
         preferences = Gdx.app.getPreferences("GamePreference");
         isMusicOn = preferences.getBoolean("isMusicOn", true);
         isAccelerometerOn = preferences.getBoolean("isAccelOn", false);

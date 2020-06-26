@@ -52,7 +52,7 @@ public class MenuScreen extends BaseScreen {
         hitExplodePool = new HitExplodePool(atlas);
         logoMainMenu = new LogoMainMenu(atlas, hitExplodePool);
         musicOnOff();
-        mainMenu = new MainMenu(multiplexer, this, fileHandle);
+        mainMenu = new MainMenu(multiplexer, this, fileHandle, fileHandleAuto);
     }
 
     @Override
