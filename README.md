@@ -14,7 +14,7 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
   <li>В игре имеется возможность сохранить прогресс. Каждое следующее сохранение перезаписывает предыдущее.</li>
   <li>Победа над боссом улучшает корабль. 1 босс - +50 прочности, 2 босс - двойные пушки, 3 босс - тройные пушки, 4 босс - +250 к прочности.</li>
   </ul>
-  
+  <br>
   <details>
   <summary>EN</summary>
 
@@ -27,7 +27,7 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
    <li>Victory over the boss improves the ship. 1 boss - +50 durability, 2 boss - double guns, 3 boss - triple guns, 4 boss - +250 durability.</li>
    </ul>
   </details>
-  
+
 <h3><details><summary>Подробней</summary>  
   <br>
 <ul>
