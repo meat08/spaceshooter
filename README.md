@@ -261,7 +261,7 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
 Download <a href="readme/SpaceShooter.apk" download> APK</a> and install it.
 </p>
 
-<h2> Windows/Linux/MacOS</h2>
+<h3> Windows/Linux/MacOS</h3>
 <p>
 Скачайте <a href="readme/SpaceShooter.jar" download> JAR</a> файл и запустите его. Для запуска необходима Java 1.8+. Скачать Java можно <a href="https://www.java.com/ru/download/" target="_blank">здесь</a>.
 <br><br>
