@@ -14,7 +14,7 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
   <li>В игре имеется возможность сохранить прогресс. Каждое следующее сохранение перезаписывает предыдущее.</li>
   <li>Победа над боссом улучшает корабль. 1 босс - +50 прочности, 2 босс - двойные пушки, 3 босс - тройные пушки, 4 босс - +250 к прочности.</li>
   </ul>
-  <br>
+
   <details>
   <summary>EN</summary>
 
@@ -27,7 +27,7 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
    <li>Victory over the boss improves the ship. 1 boss - +50 durability, 2 boss - double guns, 3 boss - triple guns, 4 boss - +250 durability.</li>
    </ul>
   </details>
-
+<br><br>
 <h3><details><summary>Подробней</summary>  
   <br>
 <ul>
@@ -272,7 +272,7 @@ Download <a href="readme/SpaceShooter.jar" download> JAR</a> and run it. This co
 
 <b>PC версия</b>: стрелки влево/вправо, нажатием мыши по экрану.<br>
 <b>Android версия</b>: нажатие по экрану, акселерометр (по умолчанию выключен, включается в настройках).  
-<br><br>
+<br>
 <b>PC version</b>: left / right arrows, mouse clicking on the screen.<br>
 <b>Android version</b>: screen tap, accelerometer (by default off, turns on in properties).<br>
 
@@ -290,4 +290,4 @@ Ilya Mafov <i.mafov@gmail.com>
 <br>
 <h2> Лицензия/License</h2>
 
-GNU GPLv3 [LICENSE](LICENSE)
+GNU GPLv3 <a href="LICENCE">LICENCE</a>
