@@ -11,7 +11,7 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
   <li>Изначально дается <b>3</b> жизни. За каждые <b>200</b> фрагов добавляется 1 жизнь.</li>
   <li>Каждые 3 уровня прочность корабля увеличивается в зависимости от выбранной сложности (легкая - на 20, нормальная - на 10, сложная - на 5).</li>
   <li>В игре 4 босса. Боссы появляются на <b>5, 15, 25 и 50</b> уровнях.</li>
-  <li>В игре имеется возможность сохранить прогресс. Каждое следующее сохранение перезаписывает предыдущее.</li>
+  <li>В игре имеется возможность сохранить прогресс. Ручное сохранение перезаписывает предыдущее. Автосохранение сохраняет игру в состоянии паузы.</li>
   <li>Победа над боссом улучшает корабль. 1 босс - +50 прочности, 2 босс - двойные пушки, 3 босс - тройные пушки, 4 босс - +250 к прочности.</li>
   </ul>
 
@@ -23,7 +23,7 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
    <li>Initially, the ship has <b>3</b> lives. For every <b>200</b> frags, 1 life is added.</li>
    <li>Each 3 levels of ship durability increase depending on the chosen complexity (easy - by 20, normal - by 10, hard - by 5).</li>
    <li>The game has 4 bosses. Bosses appear at <b>5, 15, 25 and 50</b> levels.</li>
-   <li>The game has the ability to save progress. Each subsequent save overwrites the previous one.</li>
+   <li>The game has the ability to save progress. Manual save overwrites the previous. Auto save is performed while paused.</li>
    <li>Victory over the boss improves the ship. 1 boss - +50 durability, 2 boss - double guns, 3 boss - triple guns, 4 boss - +250 durability.</li>
    </ul>
   </details>
