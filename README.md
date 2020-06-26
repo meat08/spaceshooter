@@ -134,6 +134,7 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
     </tr>
   </table>
 </details></li>
+</ul>
 </details></h3>
   
 <h3><details><summary>More details</summary>  
@@ -245,6 +246,7 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
     </tr>
   </table>
 </details></li>
+</ul>
 </details></h3>
 
 ## Установка/Installation
