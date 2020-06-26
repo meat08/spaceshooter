@@ -15,7 +15,6 @@
  */
 package ru.spaceshooter.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -32,16 +31,11 @@ import ru.spaceshooter.utils.Assets;
 
 public class MenuScreen extends BaseScreen {
 
-    private final Game game;
     private TextureAtlas atlas;
     private LogoMainMenu logoMainMenu;
     private HitExplodePool hitExplodePool;
     private Star[] stars;
     private Music menuMusic;
-
-    public MenuScreen(Game game) {
-        this.game = game;
-    }
 
     @Override
     public void show() {
@@ -58,7 +52,7 @@ public class MenuScreen extends BaseScreen {
         hitExplodePool = new HitExplodePool(atlas);
         logoMainMenu = new LogoMainMenu(atlas, hitExplodePool);
         musicOnOff();
-        mainMenu = new MainMenu(multiplexer, game, this, fileHandle);
+        mainMenu = new MainMenu(multiplexer, this, fileHandle);
     }
 
     @Override

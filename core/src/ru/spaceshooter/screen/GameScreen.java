@@ -111,6 +111,7 @@ public class GameScreen extends BaseScreen {
     private boolean isMainShipDestroy;
     private boolean isBoss;
     private boolean isBossDestroy;
+    private boolean isGameLoad;
 
     @Override
     public void show() {
@@ -155,6 +156,9 @@ public class GameScreen extends BaseScreen {
         startInit();
         musicOnOff();
         checkLocale();
+        if (isGameLoad) {
+            loadGame();
+        }
     }
 
     @Override
@@ -334,7 +338,7 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    public void loadGame() {
+    private void loadGame() {
         if (fileHandle.exists()) {
             gameData = json.fromJson(GameData.class,
                     Base64Coder.decodeString(fileHandle.readString()));
@@ -356,6 +360,7 @@ public class GameScreen extends BaseScreen {
                 }
             }
             state = State.PAUSE;
+            isGameLoad = false;
         }
     }
 
@@ -408,6 +413,10 @@ public class GameScreen extends BaseScreen {
 
     public boolean isBoss() {
         return isBoss;
+    }
+
+    public void setGameLoad(boolean gameLoad) {
+        isGameLoad = gameLoad;
     }
 
     private void startInit() {

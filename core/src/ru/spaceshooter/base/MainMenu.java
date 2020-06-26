@@ -15,7 +15,6 @@
  */
 package ru.spaceshooter.base;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
@@ -48,7 +47,6 @@ public class MainMenu {
 
     private String textPause, textGameOver, textReady, textDone, textSaveDone, textNewGame, textConf, textLoad, textExit, textBack, textResume, textSave, textEasy, textNormal, textHard;
     private Stage stage;
-    private Game game;
     private MenuScreen menuScreen;
     private GameScreen gameScreen;
     private FileHandle fileHandle;
@@ -85,8 +83,7 @@ public class MainMenu {
     private Value confButtonSize;
     private Value sliderWidth;
 
-    public MainMenu(InputMultiplexer multiplexer, Game game, MenuScreen menuScreen, FileHandle fileHandle) {
-        this.game = game;
+    public MainMenu(InputMultiplexer multiplexer, MenuScreen menuScreen, FileHandle fileHandle) {
         this.menuScreen = menuScreen;
         this.fileHandle = fileHandle;
         create(multiplexer);
@@ -380,13 +377,8 @@ public class MainMenu {
 
     private void loadGame() {
         if (fileHandle.exists()) {
-            if (gameScreen == null) {
-                GameScreen gameScreen = new GameScreen();
-                game.setScreen(gameScreen);
-                gameScreen.loadGame();
-            } else {
-                gameScreen.loadGame();
-            }
+            ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAME);
+            ScreenManager.getInstance().getGameScreen().setGameLoad(true);
         }
     }
 

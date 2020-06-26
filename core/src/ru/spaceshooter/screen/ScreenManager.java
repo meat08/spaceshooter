@@ -25,7 +25,7 @@ public class ScreenManager {
     public void init(SpaceShooter game) {
         this.game = game;
         this.gameScreen = new GameScreen();
-        this.menuScreen = new MenuScreen(game);
+        this.menuScreen = new MenuScreen();
     }
 
     public void changeScreen(ScreenType type) {
@@ -43,6 +43,10 @@ public class ScreenManager {
                 break;
             }
         }
+    }
+
+    public GameScreen getGameScreen() {
+        return gameScreen;
     }
 
     public void goToTarget() {
