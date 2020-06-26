@@ -1,7 +1,7 @@
 <h1> SpaceShooter </h1>
 <p>
 Простая игра, где вам нужно уничтожать вражеские корабли и не дать врагу уничтожить ваш корабль. У игры нет конца (кроме проигрыша) и нет ограничений по уровню.
-
+<br><br>
 A simple game where you need to destroy enemy ships and not let enemy destroy your ship. The game does not have a end (except for a loss) and not level restrictions.
 </p>
 
@@ -257,24 +257,24 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
 <h3> Android</h3>
 <p>
 Скачайте <a href="readme/SpaceShooter.apk" download> APK</a> файл и установите его.
-
+<br><br>
 Download <a href="readme/SpaceShooter.apk" download> APK</a> and install it.
 </p>
 
-<h2> Windows/Linux/MacOS<h2>
+<h2> Windows/Linux/MacOS</h2>
 <p>
 Скачайте <a href="readme/SpaceShooter.jar" download> JAR</a> файл и запустите его. Для запуска необходима Java 1.8+. Скачать Java можно <a href="https://www.java.com/ru/download/">здесь</a>.
-
+<br><br>
 Download <a href="readme/SpaceShooter.jar" download> JAR</a> and run it. This content requires Java 1.8+. You can download Java <a href="https://www.java.com/ru/download/">here</a>.
 </p>
     
 <h2> Управление/Control</h2>
 
-<b>PC версия</b>: стрелки влево/вправо, нажатием мыши по экрану.  
+<b>PC версия</b>: стрелки влево/вправо, нажатием мыши по экрану.<br>
 <b>Android версия</b>: нажатие по экрану, акселерометр (по умолчанию выключен, включается в настройках).  
-
-<b>PC version</b>: left / right arrows, mouse clicking on the screen.  
-<b>Android version</b>: screen tap, accelerometer (by default off, turns on in properties).
+<br><br>
+<b>PC version</b>: left / right arrows, mouse clicking on the screen.<br>
+<b>Android version</b>: screen tap, accelerometer (by default off, turns on in properties).<br>
 
 <h2><details>
   <summary>Скриншоты/Screenshots</summary>
@@ -287,7 +287,7 @@ Download <a href="readme/SpaceShooter.jar" download> JAR</a> and run it. This co
 <h2> Автор/Author</h2>
 
 Ilya Mafov <i.mafov@gmail.com>
-
+<br>
 <h2> Лицензия/License</h2>
 
 GNU GPLv3 [LICENSE](LICENSE)
