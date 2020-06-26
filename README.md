@@ -27,7 +27,7 @@ A simple game where you need to destroy enemy ships and not let enemy destroy yo
    <li>Victory over the boss improves the ship. 1 boss - +50 durability, 2 boss - double guns, 3 boss - triple guns, 4 boss - +250 durability.</li>
    </ul>
   </details>
-<br><br>
+<br>
 <h3><details><summary>Подробней</summary>  
   <br>
 <ul>
