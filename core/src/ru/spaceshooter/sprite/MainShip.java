@@ -281,15 +281,15 @@ public class MainShip extends Ship {
                 break;
             }
             case 2: {
+                if (!isLoad) {
+                    maxHp += 100;
+                    hp = maxHp;
+                }
                 this.regions = changeRegion();
-                this.shootType = ShootType.TRIPLE;
+                this.shootType = ShootType.DUAL;
                 break;
             }
             case 3: {
-                if (!isLoad) {
-                    maxHp += 250;
-                    hp = maxHp;
-                }
                 this.regions = changeRegion();
                 this.shootType = ShootType.TRIPLE;
                 break;

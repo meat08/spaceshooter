@@ -749,7 +749,6 @@ public class GameScreen extends BaseScreen {
         }
         if (level % LEVEL_TO_INCREASE_HP == 0 ) {
             mainShip.addMaxHp((int)(10 / difficultyFactor));
-            mainShip.addHp(mainShip.getMaxHp() - mainShip.getHp());
         }
     }
 
