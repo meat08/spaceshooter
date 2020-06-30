@@ -116,76 +116,108 @@ public class BossEmitter {
         Boss boss = bossPool.obtain();
         switch (type) {
             case 1: {
-                boss.set(
-                        bossOneRegion,
-                        bossOneV,
-                        bulletRegionMoon,
-                        bulletRegion,
-                        BOSS_ONE_BULLET_HEIGHT,
-                        BOSS_ONE_BULLET_VY,
-                        transform(BOSS_ONE_BULLET_DAMAGE),
-                        BOSS_ONE_RELOAD_INTERVAL,
-                        transform(BOSS_ONE_HP),
-                        BOSS_ONE_HEIGHT,
-                        BOSS_ONE_SHOOT_TYPE,
-                        BOSS_ONE_TYPE
-                );
+                spawnBossOne(boss, 1, 0);
                 break;
             }
             case 2: {
-                boss.set(
-                        bossTwoRegion,
-                        bossTwoV,
-                        bulletRegion,
-                        bulletRegionMoon,
-                        BOSS_TWO_BULLET_HEIGHT,
-                        BOSS_TWO_BULLET_VY,
-                        transform(BOSS_TWO_BULLET_DAMAGE),
-                        BOSS_TWO_RELOAD_INTERVAL,
-                        transform(BOSS_TWO_HP),
-                        BOSS_TWO_HEIGHT,
-                        BOSS_TWO_SHOOT_TYPE,
-                        BOSS_TWO_TYPE
-                );
+                spawnBossTwo(boss, 1, 0);
                 break;
             }
             case 3: {
-                boss.set(
-                        bossThreeRegion,
-                        bossThreeV,
-                        bulletRegion,
-                        bulletRegion,
-                        BOSS_THREE_BULLET_HEIGHT,
-                        BOSS_THREE_BULLET_VY,
-                        transform(BOSS_THREE_BULLET_DAMAGE),
-                        BOSS_THREE_RELOAD_INTERVAL,
-                        transform(BOSS_THREE_HP),
-                        BOSS_THREE_HEIGHT,
-                        BOSS_THREE_SHOOT_TYPE,
-                        BOSS_THREE_TYPE
-                );
+                spawnBossThree(boss, 1, 0);
                 break;
             }
             case 4: {
-                boss.set(
-                        bossFourRegion,
-                        bossFourV,
-                        bulletRegionMoon,
-                        bulletRegion,
-                        BOSS_FOUR_BULLET_HEIGHT,
-                        BOSS_FOUR_BULLET_VY,
-                        transform(BOSS_FOUR_BULLET_DAMAGE),
-                        BOSS_FOUR_RELOAD_INTERVAL,
-                        transform(BOSS_FOUR_HP),
-                        BOSS_FOUR_HEIGHT,
-                        BOSS_FOUR_SHOOT_TYPE,
-                        BOSS_FOUR_TYPE
-                );
+                spawnBossFour(boss, 1, 0);
+                break;
+            }
+            case 5: {
+                spawnBossOne(boss, 2, 4);
+                break;
+            }
+            case 6: {
+                spawnBossTwo(boss, 2, 4);
+                break;
+            }
+            case 7: {
+                spawnBossThree(boss, 2, 4);
+                break;
+            }
+            case 8: {
+                spawnBossFour(boss, 2, 4);
                 break;
             }
         }
         boss.pos.x = Rnd.nextFloat(worldBounds.getLeft() + boss.getHalfWidth(), worldBounds.getRight() - boss.getHalfWidth());
         boss.setBottom(worldBounds.getTop());
+    }
+
+    private void spawnBossOne(Boss boss, int factor, int typesFactor) {
+        boss.set(
+                bossOneRegion,
+                bossOneV,
+                bulletRegionMoon,
+                bulletRegion,
+                BOSS_ONE_BULLET_HEIGHT,
+                BOSS_ONE_BULLET_VY,
+                transform(BOSS_ONE_BULLET_DAMAGE) * factor,
+                BOSS_ONE_RELOAD_INTERVAL,
+                transform(BOSS_ONE_HP) * factor,
+                BOSS_ONE_HEIGHT,
+                BOSS_ONE_SHOOT_TYPE,
+                (BOSS_ONE_TYPE + typesFactor)
+        );
+    }
+
+    private void spawnBossTwo(Boss boss, int factor, int typesFactor) {
+        boss.set(
+                bossTwoRegion,
+                bossTwoV,
+                bulletRegion,
+                bulletRegionMoon,
+                BOSS_TWO_BULLET_HEIGHT,
+                BOSS_TWO_BULLET_VY,
+                transform(BOSS_TWO_BULLET_DAMAGE) * factor,
+                BOSS_TWO_RELOAD_INTERVAL,
+                transform(BOSS_TWO_HP) * factor,
+                BOSS_TWO_HEIGHT,
+                BOSS_TWO_SHOOT_TYPE,
+                (BOSS_TWO_TYPE + typesFactor)
+        );
+    }
+
+    private void spawnBossThree(Boss boss, int factor, int typesFactor) {
+        boss.set(
+                bossThreeRegion,
+                bossThreeV,
+                bulletRegion,
+                bulletRegion,
+                BOSS_THREE_BULLET_HEIGHT,
+                BOSS_THREE_BULLET_VY,
+                transform(BOSS_THREE_BULLET_DAMAGE) * factor,
+                BOSS_THREE_RELOAD_INTERVAL,
+                transform(BOSS_THREE_HP) * factor,
+                BOSS_THREE_HEIGHT,
+                BOSS_THREE_SHOOT_TYPE,
+                (BOSS_THREE_TYPE + typesFactor)
+        );
+    }
+
+    private void spawnBossFour(Boss boss, int factor, int typesFactor) {
+        boss.set(
+                bossFourRegion,
+                bossFourV,
+                bulletRegionMoon,
+                bulletRegion,
+                BOSS_FOUR_BULLET_HEIGHT,
+                BOSS_FOUR_BULLET_VY,
+                transform(BOSS_FOUR_BULLET_DAMAGE) * factor,
+                BOSS_FOUR_RELOAD_INTERVAL,
+                transform(BOSS_FOUR_HP) * factor,
+                BOSS_FOUR_HEIGHT,
+                BOSS_FOUR_SHOOT_TYPE,
+                (BOSS_FOUR_TYPE + typesFactor)
+        );
     }
 
     private int transform(int value) {

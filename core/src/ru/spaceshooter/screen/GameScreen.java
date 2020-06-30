@@ -66,7 +66,7 @@ public class GameScreen extends BaseScreen {
     private static final float FONT_SIZE = 0.02f;
     private static final int FRAGS_TO_LEVEL_UP = 20;
     private static final int FRAGS_TO_LIVE_ADD = 200;
-    private static final int LEVEL_TO_INCREASE_HP = 3;
+    private static final int LEVEL_TO_INCREASE_HP = 4;
     private static final float STAR_SPEED_INCREASE = 0.007f;
     private static final float WAIT_INTERVAL = 3f;
 
@@ -106,6 +106,7 @@ public class GameScreen extends BaseScreen {
     private int frags;
     private int tempFrags;
     private int level;
+    private int bossType;
     private float waitTimer;
     private boolean isNuked;
     private boolean isMainShipDestroy;
@@ -647,6 +648,7 @@ public class GameScreen extends BaseScreen {
                     if (boss.isDestroyed()) {
                         mainShip.upgradeShip(boss.getBossType(), false);
                         frags += 1;
+                        bossType = boss.getBossType();
                         isBossDestroy = true;
                     }
                 }
@@ -718,9 +720,9 @@ public class GameScreen extends BaseScreen {
 
     private void bossDestroyed(float delta) {
         waitTimer += delta;
-        mainMenu.setLabelDoneVisible(true);
+        mainMenu.setLabelDone(true, bossType);
         if (isBoss & waitTimer > WAIT_INTERVAL) {
-            mainMenu.setLabelDoneVisible(false);
+            mainMenu.setLabelDone(false, -1);
             waitTimer = 0f;
             isBoss = false;
             isBossDestroy = false;
@@ -748,7 +750,9 @@ public class GameScreen extends BaseScreen {
             star.addVY(level * STAR_SPEED_INCREASE);
         }
         if (level % LEVEL_TO_INCREASE_HP == 0 ) {
-            mainShip.addMaxHp((int)(10 / difficultyFactor));
+            final int hp = (int)(10 / difficultyFactor);
+            mainShip.addMaxHp(hp);
+            mainShip.addHp(hp);
         }
     }
 
@@ -773,6 +777,22 @@ public class GameScreen extends BaseScreen {
             }
             case 50: {
                 generateBoss(4);
+                break;
+            }
+            case 60: {
+                generateBoss(5);
+                break;
+            }
+            case 75: {
+                generateBoss(6);
+                break;
+            }
+            case 100: {
+                generateBoss(7);
+                break;
+            }
+            case 125: {
+                generateBoss(8);
                 break;
             }
         }

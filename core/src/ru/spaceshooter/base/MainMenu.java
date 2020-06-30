@@ -45,7 +45,9 @@ import ru.spaceshooter.utils.Assets;
 
 public class MainMenu {
 
-    private String textPause, textGameOver, textReady, textDone, textSaveDone, textNewGame, textConf, textLoad, textExit, textBack, textResume, textSave, textEasy, textNormal, textHard, textLoadManual, textLoadAuto, textCancel;
+    private String textPause, textGameOver, textReady, textDone, textSaveDone, textNewGame,
+            textConf, textLoad, textExit, textBack, textResume, textSave, textEasy, textNormal,
+            textHard, textLoadManual, textLoadAuto, textCancel, textGrade1, textGrade2, textGrade3;
     private Stage stage;
     private MenuScreen menuScreen;
     private GameScreen gameScreen;
@@ -114,7 +116,7 @@ public class MainMenu {
         labelPause = new Label(textPause, skin, "title-plain-big");
         labelGameOver = new Label(textGameOver, skin, "title-plain-big");
         labelReady = new Label(textReady, skin, "title-plain-big");
-        labelDone = new Label(textDone, skin, "title-plain-big");
+        labelDone = new Label(textDone+textGrade1, skin, "title-plain-big");
         labelSave = new Label(textSaveDone, skin, "title-plain-big");
         labelDone.setColor(Color.GREEN);
         labelGameOver.setColor(Color.RED);
@@ -151,7 +153,10 @@ public class MainMenu {
             textPause = "ПАУЗА";
             textGameOver = "ИГРА ОКОНЧЕНА";
             textReady = "ПРИГОТОВЬТЕСЬ!";
-            textDone = "ПРОТИВНИК УНИЧТОЖЕН!\nВАШ КОРАБЛЬ УЛУЧШЕН";
+            textDone = "ПРОТИВНИК УНИЧТОЖЕН!";
+            textGrade1 = "\nПРОЧНОСТЬ КОРАБЛЯ УВЕЛИЧЕНА";
+            textGrade2 = "\nОРУДИЯ КОРАБЛЯ УЛУЧШЕНЫ";
+            textGrade3 = "\nВРАГИ СТАЛИ СИЛЬНЕЙ!";
             textSaveDone = "СОХРАНЕНО";
             textNewGame = "Новая игра";
             textConf = "Настройки";
@@ -170,7 +175,10 @@ public class MainMenu {
             textPause = "PAUSE";
             textGameOver = "GAME OVER";
             textReady = "GET READY!";
-            textDone = "ENEMY DESTROYED!\nYOUR SHIP IMPROVED";
+            textDone = "ENEMY DESTROYED!";
+            textGrade1 = "\nSHIP DURABILITY INCREASED";
+            textGrade2 = "\nSHIP WEAPONS IMPROVED";
+            textGrade3 = "\nENEMIES HAS BECOME STRONGER!";
             textSaveDone = "SAVED";
             textNewGame = "New game";
             textConf = "Settings";
@@ -558,7 +566,27 @@ public class MainMenu {
         labelReady.setVisible(visible);
     }
 
-    public void setLabelDoneVisible(boolean visible) {
+    public void setLabelDone(boolean visible, int bossType) {
+        switch (bossType) {
+            case 0:
+            case 2: {
+                labelDone.setText(textDone+textGrade1);
+                break;
+            }
+            case 1:
+            case 3: {
+                labelDone.setText(textDone+textGrade2);
+                break;
+            }
+            case 7: {
+                labelDone.setText(textDone+textGrade3);
+                break;
+            }
+            default: {
+                labelDone.setText(textDone);
+                break;
+            }
+        }
         labelDone.setVisible(visible);
     }
 

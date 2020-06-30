@@ -289,7 +289,7 @@ public class MainShip extends Ship {
                 this.shootType = ShootType.DUAL;
                 break;
             }
-            case 3: {
+            default: {
                 this.regions = changeRegion();
                 this.shootType = ShootType.TRIPLE;
                 break;

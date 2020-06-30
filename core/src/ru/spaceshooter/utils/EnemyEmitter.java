@@ -306,6 +306,6 @@ public class EnemyEmitter {
     }
 
     private int transform(int value) {
-        return (int)(value * diffFactor);
+        return (int)(value * diffFactor * (level > 125 ? 1.5f : 1));
     }
 }
